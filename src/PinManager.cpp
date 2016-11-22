@@ -48,7 +48,7 @@ PinManager::PinManager()
 // TODO: unmap gpio memory
 PinManager::~PinManager() {}
 
-PinManager& PinManager::BindFunction(uint8_t pin_index, PinType pin_type) {
+Pin PinManager::BindFunction(uint8_t pin_index, PinType pin_type) {
   // Start critical section for editing gpio function register
   size_t function_register_index = MakeFunctionRegisterIndex(pin_index);
   std::lock_guard<std::mutex> lock(pin_function_locks_[function_register_index]);
@@ -57,6 +57,8 @@ PinManager& PinManager::BindFunction(uint8_t pin_index, PinType pin_type) {
   size_t shift_value = MakeShiftValue(pin_index);
   gpio_base_[function_register_index] &= MakeClearFunctionValue(shift_value);
   gpio_base_[function_register_index] |= MakeSetFunctionValue(shift_value, pin_type);
+
+  return Pin(pin_index);
 }
 
 uint32_t PinManager::MakeClearFunctionValue(size_t shift_value) const {

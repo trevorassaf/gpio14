@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "PinType.h"
+#include "Pin.h"
 
 namespace gpio {
 
@@ -17,7 +18,7 @@ class PinManager {
 		~PinManager();
 
     // Configures pin for designated function.
-		PinManager& BindFunction(uint8_t pin_index, PinType pin_type);
+		Pin BindFunction(uint8_t pin_index, PinType pin_type);
 
   private:
     inline uint32_t MakeClearFunctionValue(size_t shift_value) const;
