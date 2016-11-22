@@ -34,7 +34,7 @@ GPIO_SOURCE_FILES = $(SOURCE_FILES) $(MAIN_SOURCE)
 GPIO_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(GPIO_SOURCE_FILES:%.cpp=%.o))
 GPIO_OBJECT_FILES = $(GPIO_SOURCE_FILES:%.cpp=%.o)
 
-#Declaration of variables
+# Declaration of variables
 CC = g++
 CC_FLAGS = -w -I$(INCLUDE_DIR) -std=c++1y
 

@@ -5,14 +5,14 @@
 namespace gpio {
 
 enum class PinType : uint8_t {
-	INPUT,
-	OUTPUT,
-	ALT_0,
-	ALT_1,
-	ALT_2,
-	ALT_3,
-	ALT_4,
-	ALT_5
+	INPUT		= 0b000,
+	OUTPUT	= 0b001,
+	ALT_0		= 0b100,
+	ALT_1		= 0b101,
+	ALT_2		= 0b110,
+	ALT_3		= 0b111,
+	ALT_4		= 0b011,
+	ALT_5		= 0b010
 };
 
 } // namespace gpio
