@@ -15,11 +15,11 @@ class SysUtils {
 			return std::make_unique<char[]>(size);
 		}
 
-		static std::string GetErrorString() {
-			return GetErrorString(errno);
+		static std::string GetErrorMessage() {
+			return GetErrorMessage(errno);
 		}
 
-		static std::string GetErrorString(int error_num) {
+		static std::string GetErrorMessage(int error_num) {
 			// Initialize and clear buffer
 			std::unique_ptr<char[]> buffer = GetBuffer(ERROR_STRING_BUFFER_SIZE+1);
 			std::memset(
