@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "Pin.h"
 
 namespace gpio {
@@ -9,7 +11,7 @@ class InputPin {
   InputPin(Pin pin);
   ~InputPin();
 
-  const Pin& GetPin() const;
+  uint8_t GetPinIndex() const;
 
  private:
   Pin pin_;

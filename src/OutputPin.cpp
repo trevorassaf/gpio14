@@ -8,8 +8,8 @@ OutputPin::OutputPin(Pin pin) : pin_(std::move(pin)) {}
 
 OutputPin::~OutputPin() {}
 
-const Pin& OutputPin::GetPin() const {
-  return pin_;
+uint8_t OutputPin::GetPinIndex() const {
+  return pin_.GetIndex();
 }
 
 } // namespace gpio
