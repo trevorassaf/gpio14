@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <mutex>
 #include <vector>
+#include <unordered_map>
 
 #include "PinType.h"
 #include "Pin.h"
@@ -18,30 +19,52 @@ class PinManager {
 		~PinManager();
 
     // Configures pin for designated function.
-		Pin BindFunction(uint8_t pin_index, PinType pin_type);
+		Pin BindPinFunction(uint8_t pin_index, PinType pin_type);
 
   private:
-    inline uint32_t MakeClearFunctionValue(size_t shift_value) const;
-    inline uint32_t MakeSetFunctionValue(size_t shift_value, PinType pin_type) const;
-    inline size_t MakeShiftValue(uint8_t pin_index) const;
-    inline size_t MakeFunctionRegisterIndex(uint8_t pin_index) const;
+    // Returns offset for register that controls pin function.
+    //
+    // Note: this does not return the byte offset, but the register offset.
+    //    To get the byte offset, simply multiply by WORD_SIZE.
+    size_t GetSelectPinFunctionRegisterOffset(uint8_t pin_index) const;
+
+    // Returns offset for first bit in select function code for specified pin.
+    size_t GetSelectPinFunctionBitOffset(uint8_t pin_index) const;
+
+    // Initialize mutexes in 'memory_mutex_map_ 'that will protect access to specified
+    // registers.
+    //
+    // @param offset: The key of the first mutex stored in the map. Keys for mutexes
+    //    initialized in batch increment.
+    // @param register_count: The number of registers to protect. Each register
+    //    is protected by its own mutex.
+    //
+    // Ex. offset = 0 and register_count = 3 will initialize three mutexes at keys 0, 1, and 2.
+    //
+    // @pre-condition: There may be no collisiions with existing mutexes.
+    void InitMutexes(size_t offset, size_t register_count);
 
 	private:
-    // BCM2835 maps gpio peripherals into this address in physical memory. We will access this region
-    // of physical memory by applying mmap() to /dev/mem
-    static constexpr uint64_t GPIO_PHYSICAL_MEMORY_OFFSET = 0x2200000;
+    // BCM2835 maps gpio peripherals into this address in physical memory. This region of
+    // of physical memory is accessed by applying mmap() to /dev/mem.
+    static constexpr size_t GPIO_PHYSICAL_MEMORY_OFFSET = 0x2200000;
 
-    // We will map an entire page into memory.
+    // Used to map an entire page into memory.
     static constexpr size_t PAGE_SIZE = 4096;
 
-    // There are 5 memory locations that modulate the functions of the gpio pins. We protect address
-    // with a mutex.
-		static constexpr size_t PIN_FUNCTION_REGISTER_COUNT = 5;
-    static constexpr size_t PINS_PER_FUNCTION_REGISTER = 10;
-		std::vector<std::mutex> pin_function_locks_;
+    // Number of bytes in a word of memory on the BCM2835.
+    static constexpr size_t WORD_SIZE = 4;
 
-    static constexpr size_t BITS_PER_FUNCTION = 3;
+    // Select pin function constants.
+    static constexpr size_t SELECT_PIN_FUNCTION_BASE_OFFSET = 0;
+    static constexpr size_t BITS_PER_SELECT_PIN_FUNCTION_CODE = 3;
+    static constexpr size_t CODES_PER_SELECT_PIN_FUNCTION_REGISTER = 10;
+    static constexpr size_t SELECT_PIN_FUNCTION_REGISTER_COUNT = 6;
 
+    // Map of register offset to mutex protecting register in question.
+    std::unordered_map<size_t, std::mutex> memory_mutex_map_;
+
+    // Pointer to base register of peripheral address space.
     volatile uint32_t*  gpio_base_;
 };
 

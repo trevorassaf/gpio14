@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <iostream>
 #include <cassert>
 #include <cstring>
 #include <stdexcept>
@@ -17,7 +18,6 @@
 namespace gpio {
 
 PinManager::PinManager()
-	: pin_function_locks_(PIN_FUNCTION_REGISTER_COUNT)
 {
 	// Map gpio peripherals into memory
 	int fd = open("/dev/mem", O_RDWR | O_SYNC);
@@ -26,9 +26,7 @@ PinManager::PinManager()
     throw std::runtime_error(SysUtils::GetErrorMessage());
   }
 
-  ScopeGuard<int> close_file_guard(fd, [] (int& fd) -> void {
-    close(fd);
-  });
+  ScopeGuard<int> close_file_guard(fd, [] (int& fd) -> void { close(fd); });
 
   void* memory = mmap(
       nullptr,
@@ -43,38 +41,46 @@ PinManager::PinManager()
   }
 
   gpio_base_ = static_cast<volatile uint32_t*>(memory);
+
+  // Initialize memory locks
+  InitMutexes(SELECT_PIN_FUNCTION_BASE_OFFSET, SELECT_PIN_FUNCTION_REGISTER_COUNT);
 }
 
 // TODO: unmap gpio memory
 PinManager::~PinManager() {}
 
-Pin PinManager::BindFunction(uint8_t pin_index, PinType pin_type) {
+Pin PinManager::BindPinFunction(uint8_t pin_index, PinType pin_type) {
   // Start critical section for editing gpio function register
-  size_t function_register_index = MakeFunctionRegisterIndex(pin_index);
-  std::lock_guard<std::mutex> lock(pin_function_locks_[function_register_index]);
+  size_t register_offset = GetSelectPinFunctionRegisterOffset(pin_index);
+  assert(memory_mutex_map_.count(register_offset) == 1);
+  std::lock_guard<std::mutex> lock(memory_mutex_map_[register_offset]);
 
-  // First, clear existing function. Then, set new function.
-  size_t shift_value = MakeShiftValue(pin_index);
-  gpio_base_[function_register_index] &= MakeClearFunctionValue(shift_value);
-  gpio_base_[function_register_index] |= MakeSetFunctionValue(shift_value, pin_type);
+  // First, read existing select pin code into temporary. Next, clear current function
+  // for desired pin. Then, set new function for desired pin. Finally, write code back
+  // to register.
+  size_t bit_offset = GetSelectPinFunctionBitOffset(pin_index);
+  uint32_t select_pin_function_codes = static_cast<uint32_t>(gpio_base_[register_offset]);
+  select_pin_function_codes &= ~(0x111 << bit_offset);
+  select_pin_function_codes |= static_cast<uint32_t>(pin_type) << bit_offset;
+  gpio_base_[register_offset] = select_pin_function_codes;
 
   return Pin(pin_index);
 }
 
-uint32_t PinManager::MakeClearFunctionValue(size_t shift_value) const {
-  return ~(0b111 << shift_value); 
+size_t PinManager::GetSelectPinFunctionRegisterOffset(uint8_t pin_index) const {
+  return pin_index / CODES_PER_SELECT_PIN_FUNCTION_REGISTER;
 }
 
-uint32_t PinManager::MakeSetFunctionValue(size_t shift_value, PinType pin_type) const {
-  return static_cast<size_t>(pin_type) << shift_value;
+size_t PinManager::GetSelectPinFunctionBitOffset(uint8_t pin_index) const {
+  return (pin_index % CODES_PER_SELECT_PIN_FUNCTION_REGISTER) * BITS_PER_SELECT_PIN_FUNCTION_CODE;
 }
 
-size_t PinManager::MakeShiftValue(uint8_t pin_index) const {
-  return (pin_index % PINS_PER_FUNCTION_REGISTER) * BITS_PER_FUNCTION;
-}
-
-size_t PinManager::MakeFunctionRegisterIndex(uint8_t pin_index) const {
-  return pin_index / PINS_PER_FUNCTION_REGISTER;
+void PinManager::InitMutexes(size_t offset, size_t register_count) {
+  size_t limit = offset + register_count * WORD_SIZE;
+  for (int i = offset; i < limit; i += WORD_SIZE) {
+    assert(memory_mutex_map_.count(i) == 0);
+    memory_mutex_map_[i]; // initialize new std::mutex
+  }
 }
 
 } // namespace gpio
