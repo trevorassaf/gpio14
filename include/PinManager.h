@@ -25,6 +25,12 @@ class PinManager {
     void SetPin(const Pin& pin);
 
   private:
+    // Asserts the specified bit.
+    void SetBit(uint8_t pin_index, size_t base_offset);
+
+    // Deasserts the specified bit.
+    void ClearBit(uint8_t pin_index, size_t base_offset);
+
     // Returns offset for register that controls pin function.
     //
     // Note: this does not return the byte offset, but the register offset.

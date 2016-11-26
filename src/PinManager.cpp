@@ -72,6 +72,16 @@ void PinManager::SetPin(const Pin& pin) {
   *reg |= 0x1 << GetBitOffset(pin.GetIndex());
 }
 
+void PinManager::SetBit(uint8_t pin_index, size_t base_offset) {
+  volatile uint32_t* reg = GetRegisterPtr(pin_index, base_offset);
+  *reg |= 0x1 << GetBitOffset(pin_index);
+}
+
+void PinManager::ClearBit(uint8_t pin_index, size_t base_offset) {
+  volatile uint32_t* reg = GetRegisterPtr(pin_index, base_offset);
+  *reg &= ~(0x1 << GetBitOffset(pin_index));
+}
+
 size_t PinManager::GetSelectPinFunctionRegisterOffset(uint8_t pin_index) const {
   return pin_index / CODES_PER_SELECT_PIN_FUNCTION_REGISTER;
 }
