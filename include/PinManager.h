@@ -21,6 +21,9 @@ class PinManager {
     // Configures pin for designated function.
 		Pin BindPinFunction(uint8_t pin_index, PinType pin_type);
 
+    // Asserts specified pin.
+    void SetPin(const Pin& pin);
+
   private:
     // Returns offset for register that controls pin function.
     //
@@ -44,10 +47,16 @@ class PinManager {
     // @pre-condition: There may be no collisiions with existing mutexes.
     void InitMutexes(size_t offset, size_t register_count);
 
+    // Returns pointer to register of interest.
+    volatile uint32_t* GetRegisterPtr(uint8_t pin_index, size_t base_offset) const;
+
+    // Returns bit offset corresponding to desired pin.
+    size_t GetBitOffset(uint8_t pin_index) const;
+
 	private:
     // BCM2835 maps gpio peripherals into this address in physical memory. This region of
     // of physical memory is accessed by applying mmap() to /dev/mem.
-    static constexpr size_t GPIO_PHYSICAL_MEMORY_OFFSET = 0x2200000;
+    static constexpr size_t GPIO_PHYSICAL_MEMORY_BYTE_OFFSET = 0x2200000;
 
     // Used to map an entire page into memory.
     static constexpr size_t PAGE_SIZE = 4096;
@@ -56,10 +65,13 @@ class PinManager {
     static constexpr size_t WORD_SIZE = 4;
 
     // Select pin function constants.
-    static constexpr size_t SELECT_PIN_FUNCTION_BASE_OFFSET = 0;
+    static constexpr size_t SELECT_PIN_FUNCTION_BASE_BYTE_OFFSET = 0;
     static constexpr size_t BITS_PER_SELECT_PIN_FUNCTION_CODE = 3;
     static constexpr size_t CODES_PER_SELECT_PIN_FUNCTION_REGISTER = 10;
     static constexpr size_t SELECT_PIN_FUNCTION_REGISTER_COUNT = 6;
+
+    // Base byte offset for pin assertion.
+    static constexpr size_t SET_PIN_BASE_BYTE_OFFSET = 0x1C;
 
     // Map of register offset to mutex protecting register in question.
     std::unordered_map<size_t, std::mutex> memory_mutex_map_;

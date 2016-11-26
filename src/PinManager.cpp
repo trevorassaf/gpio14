@@ -34,7 +34,7 @@ PinManager::PinManager()
       PROT_READ | PROT_WRITE,
       MAP_SHARED,
       fd,
-      GPIO_PHYSICAL_MEMORY_OFFSET);
+      GPIO_PHYSICAL_MEMORY_BYTE_OFFSET);
 
   if (memory == MAP_FAILED) {
     throw std::runtime_error(SysUtils::GetErrorMessage());
@@ -43,7 +43,7 @@ PinManager::PinManager()
   gpio_base_ = static_cast<volatile uint32_t*>(memory);
 
   // Initialize memory locks
-  InitMutexes(SELECT_PIN_FUNCTION_BASE_OFFSET, SELECT_PIN_FUNCTION_REGISTER_COUNT);
+  InitMutexes(SELECT_PIN_FUNCTION_BASE_BYTE_OFFSET, SELECT_PIN_FUNCTION_REGISTER_COUNT);
 }
 
 // TODO: unmap gpio memory
@@ -67,6 +67,11 @@ Pin PinManager::BindPinFunction(uint8_t pin_index, PinType pin_type) {
   return Pin(pin_index);
 }
 
+void PinManager::SetPin(const Pin& pin) {
+  volatile uint32_t* reg = GetRegisterPtr(pin.GetIndex(), SET_PIN_BASE_BYTE_OFFSET);
+  *reg |= 0x1 << GetBitOffset(pin.GetIndex());
+}
+
 size_t PinManager::GetSelectPinFunctionRegisterOffset(uint8_t pin_index) const {
   return pin_index / CODES_PER_SELECT_PIN_FUNCTION_REGISTER;
 }
@@ -81,6 +86,14 @@ void PinManager::InitMutexes(size_t offset, size_t register_count) {
     assert(memory_mutex_map_.count(i) == 0);
     memory_mutex_map_[i]; // initialize new std::mutex
   }
+}
+
+volatile uint32_t* PinManager::GetRegisterPtr(uint8_t pin_index, size_t base_byte_offset) const {
+  return gpio_base_ + base_byte_offset / WORD_SIZE + pin_index / (WORD_SIZE * 8);
+}
+
+size_t PinManager::GetBitOffset(uint8_t pin_index) const {
+  return pin_index / (WORD_SIZE * 8);
 }
 
 } // namespace gpio
