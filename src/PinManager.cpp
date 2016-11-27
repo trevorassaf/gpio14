@@ -49,11 +49,16 @@ PinManager::PinManager()
 // TODO: unmap gpio memory
 PinManager::~PinManager() {}
 
-Pin PinManager::BindPinFunction(uint8_t pin_index, PinType pin_type) {
+void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
+  std::lock_guard<std::mutex> register_pin_type_critical_section(pin_type_map_mutex_);
+  assert(pin_type_map_.count(pin_index) == 0);
+  pin_type_map_[pin_index] = pin_type;
+
   // Start critical section for editing gpio function register
   size_t register_offset = GetSelectPinFunctionRegisterOffset(pin_index);
   assert(memory_mutex_map_.count(register_offset) == 1);
-  std::lock_guard<std::mutex> lock(memory_mutex_map_[register_offset]);
+  std::lock_guard<std::mutex> select_pin_function_critical_section(
+      memory_mutex_map_[register_offset]);
 
   // First, read existing select pin code into temporary. Next, clear current function
   // for desired pin. Then, set new function for desired pin. Finally, write code back
@@ -63,16 +68,20 @@ Pin PinManager::BindPinFunction(uint8_t pin_index, PinType pin_type) {
   select_pin_function_codes &= ~(0x111 << bit_offset);
   select_pin_function_codes |= static_cast<uint32_t>(pin_type) << bit_offset;
   gpio_base_[register_offset] = select_pin_function_codes;
-
-  return Pin(pin_index);
 }
 
-void PinManager::SetPin(const Pin& pin) {
-  SetBit(pin.GetIndex(), SET_PIN_BASE_BYTE_OFFSET);
+void PinManager::ReleasePin(uint8_t pin_index) {
+  std::lock_guard<std::mutex> unset_pin_type_critical_section(pin_type_map_mutex_);
+  assert(pin_type_map_.count(pin_index) == 1);
+  pin_type_map_.erase(pin_index);
 }
 
-void PinManager::ClearPin(const Pin& pin) {
-  SetBit(pin.GetIndex(), SET_PIN_BASE_BYTE_OFFSET);
+void PinManager::SetPin(uint8_t pin_index) {
+  SetBit(pin_index, SET_PIN_BASE_BYTE_OFFSET);
+}
+
+void PinManager::ClearPin(uint8_t pin_index) {
+  SetBit(pin_index, SET_PIN_BASE_BYTE_OFFSET);
 }
 
 void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {

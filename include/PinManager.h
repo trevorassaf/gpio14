@@ -6,7 +6,6 @@
 #include <unordered_map>
 
 #include "PinType.h"
-#include "Pin.h"
 
 namespace gpio {
 
@@ -19,13 +18,19 @@ class PinManager {
 		~PinManager();
 
     // Configures pin for designated function.
-		Pin BindPinFunction(uint8_t pin_index, PinType pin_type);
+    //
+    // Reconfigure the pin by calling ReleasePin() and then BindPin() with the
+    // new function type.
+		void BindPin(uint8_t pin_index, PinType pin_type);
+
+    // Reverts pin to 'unused' state.
+    void ReleasePin(uint8_t pin_index);
 
     // Asserts specified pin.
-    void SetPin(const Pin& pin);
+    void SetPin(uint8_t pin_index);
 
     // Deasserts specified pin.
-    void ClearPin(const Pin& pin);
+    void ClearPin(uint8_t pin_index);
 
   private:
     // Asserts the specified bit.
@@ -83,10 +88,16 @@ class PinManager {
     static constexpr size_t SET_PIN_BASE_BYTE_OFFSET = 0x1C;
 
     // Base byte offset for pin deassertion.
-    static constexpr size_t SET_PIN_BASE_BYTE_OFFSET = 0x28;
+    static constexpr size_t CLEAR_PIN_BASE_BYTE_OFFSET = 0x28;
 
     // Map of register offset to mutex protecting register in question.
     std::unordered_map<size_t, std::mutex> memory_mutex_map_;
+
+    // Map of function type for each pin currently in use.
+    std::unordered_map<uint8_t, PinType> pin_type_map_;
+    
+    // Lock protecting the 'pin_type_map_'
+    std::mutex pin_type_map_mutex_;
 
     // Pointer to base register of peripheral address space.
     volatile uint32_t*  gpio_base_;
