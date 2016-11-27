@@ -24,12 +24,15 @@ class PinManager {
     // Asserts specified pin.
     void SetPin(const Pin& pin);
 
+    // Deasserts specified pin.
+    void ClearPin(const Pin& pin);
+
   private:
     // Asserts the specified bit.
-    void SetBit(uint8_t pin_index, size_t base_offset);
+    void SetBit(uint8_t pin_index, size_t base_byte_offset);
 
     // Deasserts the specified bit.
-    void ClearBit(uint8_t pin_index, size_t base_offset);
+    void ClearBit(uint8_t pin_index, size_t base_byte_offset);
 
     // Returns offset for register that controls pin function.
     //
@@ -78,6 +81,9 @@ class PinManager {
 
     // Base byte offset for pin assertion.
     static constexpr size_t SET_PIN_BASE_BYTE_OFFSET = 0x1C;
+
+    // Base byte offset for pin deassertion.
+    static constexpr size_t SET_PIN_BASE_BYTE_OFFSET = 0x28;
 
     // Map of register offset to mutex protecting register in question.
     std::unordered_map<size_t, std::mutex> memory_mutex_map_;
