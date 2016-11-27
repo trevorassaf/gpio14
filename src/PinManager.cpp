@@ -84,6 +84,10 @@ void PinManager::ClearPin(uint8_t pin_index) {
   SetBit(pin_index, SET_PIN_BASE_BYTE_OFFSET);
 }
 
+bool PinManager::ReadPin(uint8_t pin_index) const {
+  return ReadBit(pin_index, READ_PIN_LEVEL_BASE_BYTE_OFFSET);
+}
+
 void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {
   volatile uint32_t* reg = GetRegisterPtr(pin_index, base_byte_offset);
   *reg |= 0x1 << GetBitOffset(pin_index);
@@ -92,6 +96,11 @@ void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {
 void PinManager::ClearBit(uint8_t pin_index, size_t base_byte_offset) {
   volatile uint32_t* reg = GetRegisterPtr(pin_index, base_byte_offset);
   *reg &= ~(0x1 << GetBitOffset(pin_index));
+}
+
+bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) const {
+  volatile uint32_t* reg = GetRegisterPtr(pin_index, base_byte_offset);
+  return *reg & (0x1 << GetBitOffset(pin_index));
 }
 
 size_t PinManager::GetSelectPinFunctionRegisterOffset(uint8_t pin_index) const {

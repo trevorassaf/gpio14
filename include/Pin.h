@@ -24,6 +24,9 @@ class Pin {
 
     // Deasserts this pin.
     void Clear();
+
+    // Returns true iff pin is asserted.
+    bool Read() const;
     
 	private:
 		uint8_t index_;

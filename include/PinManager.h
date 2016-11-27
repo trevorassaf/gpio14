@@ -32,12 +32,20 @@ class PinManager {
     // Deasserts specified pin.
     void ClearPin(uint8_t pin_index);
 
+    // Returns true if pin is asserted.
+    bool ReadPin(uint8_t pin_index) const;
+
   private:
     // Asserts the specified bit.
     void SetBit(uint8_t pin_index, size_t base_byte_offset);
 
     // Deasserts the specified bit.
     void ClearBit(uint8_t pin_index, size_t base_byte_offset);
+
+    // Returns true if specified bit is set.
+    //
+    // This function is not thread-safe. Protect with mutex if necessary.
+    bool ReadBit(uint8_t pin_index, size_t base_byte_offset) const;
 
     // Returns offset for register that controls pin function.
     //
@@ -89,6 +97,9 @@ class PinManager {
 
     // Base byte offset for pin deassertion.
     static constexpr size_t CLEAR_PIN_BASE_BYTE_OFFSET = 0x28;
+
+    // Base byte offset for pin level read.
+    static constexpr size_t READ_PIN_LEVEL_BASE_BYTE_OFFSET = 0x34;
 
     // Map of register offset to mutex protecting register in question.
     std::unordered_map<size_t, std::mutex> memory_mutex_map_;

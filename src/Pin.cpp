@@ -26,4 +26,8 @@ void Pin::Clear() {
   pin_manager_->ClearPin(index_);
 }
 
+bool Pin::Read() const {
+  return pin_manager_->ReadPin(index_);
+}
+
 } // namespace gpio
