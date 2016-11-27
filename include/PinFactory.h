@@ -3,15 +3,27 @@
 #include <memory>
 
 #include "PinManager.h"
+#include "InputPin.h"
+#include "OutputPin.h"
 
 namespace gpio {
 
 class PinFactory {
  public:
-  PinFactory(std::unique_ptr<PinManager> pin_manager);
+  PinFactory(std::shared_ptr<PinManager> pin_manager);
+
+  // Designates specified pin as input pin.
+  //
+  // @pre-condition: Pin is not currently in use.
+  InputPin BindInputPin(uint8_t pin_index);
+
+  // Designates specified pin as output pin.
+  //
+  // @pre-condition: Pin is not currently in use.
+  OutputPin BindOutputPin(uint8_t pin_index);
 
  private:
-  std::unique_ptr<PinManager> pin_manager_;
+  std::shared_ptr<PinManager> pin_manager_;
 };
 
 } // namespcae gpio

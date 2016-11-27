@@ -11,9 +11,12 @@ class OutputPin {
   OutputPin(Pin pin);
   ~OutputPin();
 
-  uint8_t GetPinIndex() const;
+  uint8_t GetIndex() const;
 
+  // Asserts this pin.
   void Set();
+
+  // Deasserts this pin.
   void Clear();
 
  private:

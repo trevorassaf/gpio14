@@ -11,7 +11,10 @@ class InputPin {
   InputPin(Pin pin);
   ~InputPin();
 
-  uint8_t GetPinIndex() const;
+  uint8_t GetIndex() const;
+
+  // Returns true iff pin is asserted.
+  bool Read() const;
 
  private:
   Pin pin_;
