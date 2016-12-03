@@ -7,6 +7,5 @@
 using namespace gpio;
 
 int main(int argc, char** argv) {
-  PinManager manager;
 	return 0;
 }

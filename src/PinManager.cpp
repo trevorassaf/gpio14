@@ -11,63 +11,46 @@
 #include <cstring>
 #include <stdexcept>
 #include <type_traits>
+#include <utility>
 
 #include "SysUtils.h"
 #include "ScopeGuard.h"
 
 namespace gpio {
 
-PinManager::PinManager()
-{
-	// Map gpio peripherals into memory
-	int fd = open("/dev/mem", O_RDWR | O_SYNC);
-
-  if (fd == -1) {
-    throw std::runtime_error(SysUtils::GetErrorMessage());
-  }
-
-  ScopeGuard<int> close_file_guard(fd, [] (int& fd) -> void { close(fd); });
-
-  void* memory = mmap(
-      nullptr,
-      PAGE_SIZE,
-      PROT_READ | PROT_WRITE,
-      MAP_SHARED,
-      fd,
-      GPIO_PHYSICAL_MEMORY_BYTE_OFFSET);
-
-  if (memory == MAP_FAILED) {
-    throw std::runtime_error(SysUtils::GetErrorMessage());
-  }
-
-  gpio_base_ = static_cast<volatile uint32_t*>(memory);
-
+PinManager::PinManager(
+    std::shared_ptr<MemoryConfig> memory_config,
+    std::unique_ptr<MemorySegment> memory_segment
+) : memory_config_(std::move(memory_config)),
+    memory_segment_(std::move(memory_segment)) {
   // Initialize memory locks
-  InitMutexes(SELECT_PIN_FUNCTION_BASE_BYTE_OFFSET, SELECT_PIN_FUNCTION_REGISTER_COUNT);
+  InitSelectPinFunctionMutexes();
+  InitPinFunctionMutexes(memory_config_->GetSetPinByteOffset());
+  InitPinFunctionMutexes(memory_config_->GetClearPinByteOffset());
+  InitPinFunctionMutexes(memory_config_->GetReadPinLevelByteOffset());
 }
 
-// TODO: unmap gpio memory
-PinManager::~PinManager() {}
-
 void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
-  std::lock_guard<std::mutex> register_pin_type_critical_section(pin_type_map_mutex_);
+  // Start critical section for caching pin type
+  std::lock_guard<std::mutex> cache_pin_type_critical_section(pin_type_map_mutex_);
   assert(pin_type_map_.count(pin_index) == 0);
   pin_type_map_[pin_index] = pin_type;
 
-  // Start critical section for editing gpio function register
+  // Start critical section for informing hw of new pin function
   size_t register_offset = GetSelectPinFunctionRegisterOffset(pin_index);
   assert(memory_mutex_map_.count(register_offset) == 1);
-  std::lock_guard<std::mutex> select_pin_function_critical_section(
+  std::lock_guard<std::mutex> hw_bind_pin_function_critical_section(
       memory_mutex_map_[register_offset]);
 
   // First, read existing select pin code into temporary. Next, clear current function
   // for desired pin. Then, set new function for desired pin. Finally, write code back
   // to register.
   size_t bit_offset = GetSelectPinFunctionBitOffset(pin_index);
-  uint32_t select_pin_function_codes = static_cast<uint32_t>(gpio_base_[register_offset]);
+  uint32_t select_pin_function_codes =
+      static_cast<uint32_t>(memory_segment_->Get()[register_offset]);
   select_pin_function_codes &= ~(0x111 << bit_offset);
   select_pin_function_codes |= static_cast<uint32_t>(pin_type) << bit_offset;
-  gpio_base_[register_offset] = select_pin_function_codes;
+  memory_segment_->Get()[register_offset] = select_pin_function_codes;
 }
 
 void PinManager::ReleasePin(uint8_t pin_index) {
@@ -77,30 +60,39 @@ void PinManager::ReleasePin(uint8_t pin_index) {
 }
 
 void PinManager::SetPin(uint8_t pin_index) {
-  SetBit(pin_index, SET_PIN_BASE_BYTE_OFFSET);
+  SetBit(pin_index, memory_config_->GetSetPinByteOffset());
 }
 
 void PinManager::ClearPin(uint8_t pin_index) {
-  SetBit(pin_index, SET_PIN_BASE_BYTE_OFFSET);
+  SetBit(pin_index, memory_config_->GetClearPinByteOffset());
 }
 
-bool PinManager::ReadPin(uint8_t pin_index) const {
-  return ReadBit(pin_index, READ_PIN_LEVEL_BASE_BYTE_OFFSET);
+bool PinManager::ReadPin(uint8_t pin_index) {
+  return ReadBit(pin_index, memory_config_->GetReadPinLevelByteOffset());
 }
 
 void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {
-  volatile uint32_t* reg = GetRegisterPtr(pin_index, base_byte_offset);
-  *reg |= 0x1 << GetBitOffset(pin_index);
+  size_t byte_offset = CalculateByteOffset(pin_index, base_byte_offset);
+  assert(memory_mutex_map_.count(byte_offset) == 1);
+  std::lock_guard<std::mutex> reg_mod_critical_section(
+      memory_mutex_map_.at(byte_offset));
+  memory_segment_->Get()[byte_offset] |= 0x1 << pin_index;
 }
 
 void PinManager::ClearBit(uint8_t pin_index, size_t base_byte_offset) {
-  volatile uint32_t* reg = GetRegisterPtr(pin_index, base_byte_offset);
-  *reg &= ~(0x1 << GetBitOffset(pin_index));
+  size_t byte_offset = CalculateByteOffset(pin_index, base_byte_offset);
+  assert(memory_mutex_map_.count(byte_offset) == 1);
+  std::lock_guard<std::mutex> reg_mod_critical_section(
+      memory_mutex_map_.at(byte_offset));
+  memory_segment_->Get()[byte_offset] &= ~(0x1 << pin_index);
 }
 
-bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) const {
-  volatile uint32_t* reg = GetRegisterPtr(pin_index, base_byte_offset);
-  return *reg & (0x1 << GetBitOffset(pin_index));
+bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) {
+  size_t byte_offset = CalculateByteOffset(pin_index, base_byte_offset);
+  assert(memory_mutex_map_.count(byte_offset) == 1);
+  std::lock_guard<std::mutex> reg_mod_critical_section(
+      memory_mutex_map_.at(byte_offset));
+  return memory_segment_->Get()[byte_offset] & (0x1 << pin_index);
 }
 
 size_t PinManager::GetSelectPinFunctionRegisterOffset(uint8_t pin_index) const {
@@ -111,20 +103,35 @@ size_t PinManager::GetSelectPinFunctionBitOffset(uint8_t pin_index) const {
   return (pin_index % CODES_PER_SELECT_PIN_FUNCTION_REGISTER) * BITS_PER_SELECT_PIN_FUNCTION_CODE;
 }
 
-void PinManager::InitMutexes(size_t offset, size_t register_count) {
-  size_t limit = offset + register_count * WORD_SIZE;
-  for (int i = offset; i < limit; i += WORD_SIZE) {
-    assert(memory_mutex_map_.count(i) == 0);
-    memory_mutex_map_[i]; // initialize new std::mutex
+void PinManager::InitMutexes(
+  size_t leading_byte_offset,
+  size_t bytes_per_mutex,
+  size_t num_mutexes
+) {
+  size_t limit = leading_byte_offset + bytes_per_mutex * num_mutexes;
+  for (size_t i = 0; i < limit; i += bytes_per_mutex) {
+    assert(memory_mutex_map_.count(i) == 0); 
+    memory_mutex_map_[i];
   }
 }
 
-volatile uint32_t* PinManager::GetRegisterPtr(uint8_t pin_index, size_t base_byte_offset) const {
-  return gpio_base_ + base_byte_offset / WORD_SIZE + pin_index / (WORD_SIZE * 8);
+void PinManager::InitSelectPinFunctionMutexes() {
+  InitMutexes(
+      memory_config_->GetSelectPinFunctionByteOffset(),
+      SELECT_PIN_FUNCTION_BYTES_PER_MUTEX,
+      SELECT_PIN_FUNCTION_MUTEX_COUNT);
 }
 
-size_t PinManager::GetBitOffset(uint8_t pin_index) const {
-  return pin_index / (WORD_SIZE * 8);
+void PinManager::InitPinFunctionMutexes(size_t leading_byte_offset) {
+  InitMutexes(
+      leading_byte_offset,
+      PIN_FUNCTION_BYTES_PER_MUTEX,
+      PIN_FUNCTION_MUTEX_COUNT);
+}
+
+
+size_t PinManager::CalculateByteOffset(uint8_t pin_index, size_t base_byte_offset) const {
+  return base_byte_offset + pin_index / 8;
 }
 
 } // namespace gpio

@@ -4,8 +4,11 @@
 #include <mutex>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 #include "PinType.h"
+#include "MemorySegment.h"
+#include "MemoryConfig.h"
 
 namespace gpio {
 
@@ -14,8 +17,9 @@ class PinManager {
     // Initializes gpio pin runtime context.
     //
     // @throw runtime_error: fail to map gpio hardware into memory
-		PinManager();
-		~PinManager();
+		PinManager(
+        std::shared_ptr<MemoryConfig> memory_config,
+        std::unique_ptr<MemorySegment> memory_segment);
 
     // Configures pin for designated function.
     //
@@ -33,7 +37,7 @@ class PinManager {
     void ClearPin(uint8_t pin_index);
 
     // Returns true if pin is asserted.
-    bool ReadPin(uint8_t pin_index) const;
+    bool ReadPin(uint8_t pin_index);
 
   private:
     // Asserts the specified bit.
@@ -45,7 +49,7 @@ class PinManager {
     // Returns true if specified bit is set.
     //
     // This function is not thread-safe. Protect with mutex if necessary.
-    bool ReadBit(uint8_t pin_index, size_t base_byte_offset) const;
+    bool ReadBit(uint8_t pin_index, size_t base_byte_offset);
 
     // Returns offset for register that controls pin function.
     //
@@ -59,59 +63,54 @@ class PinManager {
     // Initialize mutexes in 'memory_mutex_map_ 'that will protect access to specified
     // registers.
     //
-    // @param offset: The key of the first mutex stored in the map. Keys for mutexes
-    //    initialized in batch increment.
-    // @param register_count: The number of registers to protect. Each register
-    //    is protected by its own mutex.
+    // @param leading_byte_offset: Offset of first protected byte.
+    // @param bytes_per_mutex: Number of bytes protected by each mutex.
+    // @param num_mutexes: Number of mutexes to emplace. Each mutex is keyed on a byte offset.
+    //    The byte offsets are separated by "bytes_per_mutex."
     //
-    // Ex. offset = 0 and register_count = 3 will initialize three mutexes at keys 0, 1, and 2.
+    // Ex. InitMutexes(0, 4, 3) yields 3 mutexes at indices 0, 4, and 8.
     //
-    // @pre-condition: There may be no collisiions with existing mutexes.
-    void InitMutexes(size_t offset, size_t register_count);
+    // @pre-condition: No collisiions with existing mutexes.
+    void InitMutexes(
+        size_t leading_byte_offset,
+        size_t bytes_per_mutex,
+        size_t num_mutexes);
 
-    // Returns pointer to register of interest.
-    volatile uint32_t* GetRegisterPtr(uint8_t pin_index, size_t base_offset) const;
+    void InitSelectPinFunctionMutexes();
+    void InitPinFunctionMutexes(size_t leading_byte_offset);
 
-    // Returns bit offset corresponding to desired pin.
-    size_t GetBitOffset(uint8_t pin_index) const;
+    // Returns the byte offset for the specified pin relative to 'base_byte_offset'
+    size_t CalculateByteOffset(uint8_t pin_index, size_t base_byte_offset) const;
 
 	private:
-    // BCM2835 maps gpio peripherals into this address in physical memory. This region of
-    // of physical memory is accessed by applying mmap() to /dev/mem.
-    static constexpr size_t GPIO_PHYSICAL_MEMORY_BYTE_OFFSET = 0x2200000;
+    // Mutex information for select pin operations.
+    static constexpr size_t SELECT_PIN_FUNCTION_BYTES_PER_MUTEX = 4;
+    static constexpr size_t SELECT_PIN_FUNCTION_MUTEX_COUNT = 6;
 
-    // Used to map an entire page into memory.
-    static constexpr size_t PAGE_SIZE = 4096;
+    // Mutex information for non-select pin operations
+    static constexpr size_t PIN_FUNCTION_BYTES_PER_MUTEX = 1;
+    static constexpr size_t PIN_FUNCTION_MUTEX_COUNT = 8;
 
-    // Number of bytes in a word of memory on the BCM2835.
-    static constexpr size_t WORD_SIZE = 4;
-
-    // Select pin function constants.
-    static constexpr size_t SELECT_PIN_FUNCTION_BASE_BYTE_OFFSET = 0;
-    static constexpr size_t BITS_PER_SELECT_PIN_FUNCTION_CODE = 3;
+    // Register information for select pin operations
     static constexpr size_t CODES_PER_SELECT_PIN_FUNCTION_REGISTER = 10;
-    static constexpr size_t SELECT_PIN_FUNCTION_REGISTER_COUNT = 6;
-
-    // Base byte offset for pin assertion.
-    static constexpr size_t SET_PIN_BASE_BYTE_OFFSET = 0x1C;
-
-    // Base byte offset for pin deassertion.
-    static constexpr size_t CLEAR_PIN_BASE_BYTE_OFFSET = 0x28;
-
-    // Base byte offset for pin level read.
-    static constexpr size_t READ_PIN_LEVEL_BASE_BYTE_OFFSET = 0x34;
+    static constexpr size_t BITS_PER_SELECT_PIN_FUNCTION_CODE = 3;
 
     // Map of register offset to mutex protecting register in question.
     std::unordered_map<size_t, std::mutex> memory_mutex_map_;
 
     // Map of function type for each pin currently in use.
+    // TODO(bozkurtus): replace with lock free map
     std::unordered_map<uint8_t, PinType> pin_type_map_;
     
     // Lock protecting the 'pin_type_map_'
     std::mutex pin_type_map_mutex_;
 
-    // Pointer to base register of peripheral address space.
-    volatile uint32_t*  gpio_base_;
+    // Memory offsets for accessing mmio registers in the gpio peripherals
+    // memory segment.
+    std::shared_ptr<MemoryConfig> memory_config_;
+
+    // Gpio peripherals mmio memory segment.
+    std::unique_ptr<MemorySegment> memory_segment_;
 };
 
 } // namespace gpio
