@@ -1,11 +1,34 @@
-#include "Pin.h"
+#include "MemoryConfig.h"
+#include "MmioBcm2835MemorySegment.h"
+#include "MemorySegment.h"
 #include "PinManager.h"
-#include "PinType.h"
+#include "PinFactory.h"
+#include "OutputPin.h"
 
 #include <iostream>
-
-using namespace gpio;
+#include <memory>
+#include <utility>
+#include <thread>
+#include <chrono>
 
 int main(int argc, char** argv) {
-	return 0;
+  // Assemble PinFactory
+  auto memory_config = std::make_shared<gpio::MemoryConfig>();
+
+  auto manager = std::make_shared<gpio::PinManager>(
+      memory_config,
+      std::make_unique<gpio::MmioBcm2835MemorySegment>(memory_config));
+
+  auto factory = std::make_unique<gpio::PinFactory>(manager);
+
+  // Configure BCM pin #20 for output
+  gpio::OutputPin pin_20 = factory->BindOutputPin(20);
+
+  while (true) {
+    pin_20.Set();
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    pin_20.Clear();
+  }
+
+  return 0;
 }
