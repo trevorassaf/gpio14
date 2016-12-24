@@ -108,8 +108,10 @@ void PinManager::InitMutexes(
   size_t bytes_per_mutex,
   size_t num_mutexes
 ) {
+  std::cout << "PinManager::InitMutexes()" << std::endl;
   size_t limit = leading_byte_offset + bytes_per_mutex * num_mutexes;
   for (size_t i = 0; i < limit; i += bytes_per_mutex) {
+    std::cout << "offset: " << i << std::endl;
     assert(memory_mutex_map_.count(i) == 0); 
     memory_mutex_map_[i];
   }
