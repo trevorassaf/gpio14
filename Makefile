@@ -36,7 +36,7 @@ GPIO_OBJECT_FILES = $(GPIO_SOURCE_FILES:%.cpp=%.o)
 
 # Declaration of variables
 CC = g++
-CC_FLAGS = -w -I$(INCLUDE_DIR) -std=c++1y
+CC_FLAGS = -w -I$(INCLUDE_DIR) -std=c++1y -g
 
 # Removed files
 FILES_TO_REMOVE = \
