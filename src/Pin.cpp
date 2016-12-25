@@ -11,11 +11,13 @@ Pin::Pin(
     index_(index) {}
 
 Pin::~Pin() {
-  pin_manager_->ReleasePin(index_);
+  if (pin_manager_) {
+    pin_manager_->ReleasePin(index_);
+  }
 }
 
 uint8_t Pin::GetIndex() const {
-	return index_;
+  return index_;
 }
 
 void Pin::Set() {
