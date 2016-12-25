@@ -82,7 +82,7 @@ void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {
   assert(memory_mutex_map_.count(byte_offset) == 1);
   std::lock_guard<std::mutex> reg_mod_critical_section(
       memory_mutex_map_.at(byte_offset));
-  memory_segment_->Get()[byte_offset] |= 0b1 << pin_index;
+  memory_segment_->Get()[byte_offset] |= 0b1 << (pin_index % 8);
 }
 
 void PinManager::ClearBit(uint8_t pin_index, size_t base_byte_offset) {
@@ -90,7 +90,7 @@ void PinManager::ClearBit(uint8_t pin_index, size_t base_byte_offset) {
   assert(memory_mutex_map_.count(byte_offset) == 1);
   std::lock_guard<std::mutex> reg_mod_critical_section(
       memory_mutex_map_.at(byte_offset));
-  memory_segment_->Get()[byte_offset] &= ~(0b1 << pin_index);
+  memory_segment_->Get()[byte_offset] &= ~(0b1 << (pin_index % 8));
 }
 
 bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) {
@@ -98,7 +98,7 @@ bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) {
   assert(memory_mutex_map_.count(byte_offset) == 1);
   std::lock_guard<std::mutex> reg_mod_critical_section(
       memory_mutex_map_.at(byte_offset));
-  return memory_segment_->Get()[byte_offset] & (0b1 << pin_index);
+  return memory_segment_->Get()[byte_offset] & (0b1 << (pin_index % 8));
 }
 
 size_t PinManager::GetSelectPinFunctionRegisterOffset(uint8_t pin_index) const {
