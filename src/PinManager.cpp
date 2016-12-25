@@ -38,6 +38,9 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
 
   // Start critical section for informing hw of new pin function
   size_t register_offset = GetSelectPinFunctionRegisterOffset(pin_index);
+
+std::cout << "Register offset: " << register_offset << std::endl;
+
   assert(memory_mutex_map_.count(register_offset) == 1);
   std::lock_guard<std::mutex> hw_bind_pin_function_critical_section(
       memory_mutex_map_[register_offset]);
