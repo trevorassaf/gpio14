@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
   auto factory = std::make_unique<gpio::PinFactory>(manager);
 
   // Configure BCM pin #20 for output
+  std::cout << "Configuring pin 20 for output" << std::endl;
   gpio::OutputPin pin_20 = factory->BindOutputPin(20);
 
   while (true) {
