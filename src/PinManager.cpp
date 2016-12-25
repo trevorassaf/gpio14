@@ -41,7 +41,7 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
 
 std::cout << "Register offset: " << register_offset << std::endl;
 
-  assert(memory_mutex_map_.count(register_offset) == 1);
+  assert(memory_mutex_map_.count(register_offset * SELECT_PIN_FUNCTION_BYTES_PER_MUTEX) == 1);
   std::lock_guard<std::mutex> hw_bind_pin_function_critical_section(
       memory_mutex_map_[register_offset]);
 
