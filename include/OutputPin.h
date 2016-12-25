@@ -7,7 +7,7 @@
 namespace gpio {
 
 class OutputPin {
- public:
+public:
   OutputPin(Pin pin);
   ~OutputPin();
 
@@ -19,7 +19,14 @@ class OutputPin {
   // Deasserts this pin.
   void Clear();
 
- private:
+  OutputPin(OutputPin&& other) = default;
+  OutputPin& operator=(OutputPin&& other) = default;
+
+private:
+  OutputPin(const OutputPin& other) = delete;
+  OutputPin& operator=(const OutputPin& other) = delete;
+
+private:
   Pin pin_;
 };
 

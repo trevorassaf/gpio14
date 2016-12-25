@@ -36,7 +36,7 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
   assert(pin_type_map_.count(pin_index) == 0);
   pin_type_map_[pin_index] = pin_type;
 
-  std::cout << "Setting pin type for index: " << pin_index << std::endl;
+  std::cout << "Setting pin type for index: " << (int)pin_index << std::endl;
 
   // Start critical section for informing hw of new pin function
   size_t register_offset = GetSelectPinFunctionRegisterOffset(pin_index);
@@ -60,7 +60,7 @@ std::cout << "Register offset: " << register_offset << std::endl;
 
 void PinManager::ReleasePin(uint8_t pin_index) {
   std::lock_guard<std::mutex> unset_pin_type_critical_section(pin_type_map_mutex_);
-  std::cout << "Releasing pin type for index: " << pin_index << std::endl;
+  std::cout << "Releasing pin type for index: " << (int)pin_index << std::endl;
   assert(pin_type_map_.count(pin_index) == 1);
   pin_type_map_.erase(pin_index);
 }

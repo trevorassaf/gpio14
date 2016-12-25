@@ -11,10 +11,17 @@ class InputPin {
   InputPin(Pin pin);
   ~InputPin();
 
+  InputPin(InputPin&& other) = default;
+  InputPin& operator=(InputPin&& other) = default;
+
   uint8_t GetIndex() const;
 
   // Returns true iff pin is asserted.
   bool Read() const;
+
+private:
+  InputPin(const InputPin& other) = delete;
+  InputPin& operator=(const InputPin& other) = delete;
 
  private:
   Pin pin_;
