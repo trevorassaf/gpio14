@@ -15,12 +15,12 @@ class PinFactory {
   // Designates specified pin as input pin.
   //
   // @pre-condition: Pin is not currently in use.
-  InputPin BindInputPin(uint8_t pin_index);
+  std::unique_ptr<InputPin> BindInputPin(uint8_t pin_index);
 
   // Designates specified pin as output pin.
   //
   // @pre-condition: Pin is not currently in use.
-  OutputPin BindOutputPin(uint8_t pin_index);
+  std::unique_ptr<OutputPin> BindOutputPin(uint8_t pin_index);
 
  private:
   std::shared_ptr<PinManager> pin_manager_;

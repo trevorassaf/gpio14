@@ -23,14 +23,14 @@ int main(int argc, char** argv) {
 
   // Configure BCM pin #20 for output
   std::cout << "Configuring pin 20 for output" << std::endl;
-  gpio::OutputPin pin_20 = factory->BindOutputPin(20);
+  std::unique_ptr<gpio::OutputPin> pin_20 = factory->BindOutputPin(20);
 
   while (true) {
     std::cout << "Setting pin 20 high" << std::endl;
-    pin_20.Set();
+    pin_20->Set();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     std::cout << "Setting pin 20 low" << std::endl;
-    pin_20.Clear();
+    pin_20->Clear();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
