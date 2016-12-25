@@ -25,8 +25,10 @@ int main(int argc, char** argv) {
   gpio::OutputPin pin_20 = factory->BindOutputPin(20);
 
   while (true) {
+    std::cout << "Setting pin 20 high" << std::endl;
     pin_20.Set();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::cout << "Setting pin 20 low" << std::endl;
     pin_20.Clear();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
