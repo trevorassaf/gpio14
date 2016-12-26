@@ -89,10 +89,12 @@ bool PinManager::ReadPin(uint8_t pin_index) {
 
 void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {
   size_t byte_offset = CalculateByteOffset(pin_index, base_byte_offset);
+  volatile uint32_t *set_pin_ptr =
+      (volatile uint32_t *)memory_segment_->Get() + byte_offset;
   assert(memory_mutex_map_.count(byte_offset) == 1);
   std::lock_guard<std::mutex> reg_mod_critical_section(
       memory_mutex_map_.at(byte_offset));
-  memory_segment_->Get()[byte_offset] = (0b1 << (pin_index % 8));
+  *set_pin_ptr = (0b1 << (pin_index % 32));
 }
 
 bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) {
@@ -139,9 +141,8 @@ void PinManager::InitPinFunctionMutexes(size_t leading_byte_offset) {
       PIN_FUNCTION_MUTEX_COUNT);
 }
 
-
 size_t PinManager::CalculateByteOffset(uint8_t pin_index, size_t base_byte_offset) const {
-  return base_byte_offset + pin_index / 8;
+  return (base_byte_offset / 4) + (pin_index / 32);
 }
 
 } // namespace gpio
