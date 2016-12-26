@@ -54,7 +54,7 @@ directories:
 
 # Compile blink binary
 $(GPIO_EXEC): $(GPIO_OBJECT_FILES) 
-	@$(CC) $(GPIO_OBJECT_FILES_WITH_ROOT) -o $(BINARY_DIR)/$(GPIO_EXEC)
+	@$(CC) $(GPIO_OBJECT_FILES_WITH_ROOT) -o $(BINARY_DIR)/$(GPIO_EXEC) -lpthread
 
 # Compile source
 %.o: %.cpp
@@ -63,7 +63,7 @@ $(GPIO_EXEC): $(GPIO_OBJECT_FILES)
 		then \
 			${MKDIR_P} $(OBJECT_DIR)/$(dir $@) ; \
 	fi;
-	@$(CC) -c $(CC_FLAGS) $< -o $(OBJECT_DIR)/$@ 
+	@$(CC) -c $< -o $(OBJECT_DIR)/$@ $(CC_FLAGS) -lpthread
 
 # To remove generated files
 clean:
