@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
   volatile uint32_t* memory_segment_ptr_ = static_cast<volatile uint32_t*>(memory);
 
   // Configure pin 20 for output
-  size_t pin = 20;
+  size_t pin = 21;
 
   size_t pin_mode_reg = (pin * 3) / 32;
   uint32_t reg = memory_segment_ptr_[pin_mode_reg];
