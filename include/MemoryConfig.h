@@ -32,7 +32,7 @@ class MemoryConfig {
 
  private:
   // Offset in physical memory at which peripheral gpio register region begins.
-  static constexpr std::size_t PHYS_MEM_BYTE_OFFSET = 0x2200000;
+  static constexpr std::size_t PHYS_MEM_BYTE_OFFSET = 0x3F200000;
 
   // Number of mapped bytes. Map a full page into memory.
   // TODO(bozkurtus): maybe we don't need to map the full page...

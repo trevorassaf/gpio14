@@ -25,7 +25,6 @@
 using namespace gpio;
 
 int main(int argc, char** argv) {
-  /*
   // Assemble PinFactory
   auto memory_config = std::make_shared<gpio::MemoryConfig>();
 
@@ -47,8 +46,8 @@ int main(int argc, char** argv) {
     pin_40->Clear();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
-  */
 
+  /*
   // Initialize memory mapped gpio segment
   int fd = open("/dev/mem", O_RDWR | O_SYNC);
 
@@ -97,12 +96,6 @@ int main(int argc, char** argv) {
       << std::bitset<32>(reg) << std::endl;
 
   // Blink pin
-  /*
-  volatile uint32_t *set_pin_ptr = memory_segment_ptr_ + (0x1C / 4) + (pin / 32);
-  volatile uint32_t *clear_pin_ptr = memory_segment_ptr_ + (0x28 / 4) + (pin / 32);
-  volatile uint32_t *read_pin_ptr = memory_segment_ptr_ + (0x34 / 4) + (pin / 32);
-  */
-
   volatile uint8_t *set_pin_ptr = (volatile uint8_t*)memory_segment_ptr_ + 0x1C + (pin / 8);
   volatile uint8_t *clear_pin_ptr = (volatile uint8_t*)memory_segment_ptr_ + 0x28 + (pin / 8);
   volatile uint8_t *read_pin_ptr = (volatile uint8_t*)memory_segment_ptr_ + 0x34 + (pin / 8);
@@ -124,6 +117,7 @@ int main(int argc, char** argv) {
     std::cout << "Pin reg value after clear: " << std::bitset<32>(*read_pin_ptr) << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
+  */
 
   return 0;
 }
