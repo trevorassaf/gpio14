@@ -103,9 +103,9 @@ int main(int argc, char** argv) {
   volatile uint32_t *read_pin_ptr = memory_segment_ptr_ + (0x34 / 4) + (pin / 32);
   */
 
-  volatile uint8_t *set_pin_ptr = memory_segment_ptr_ + 0x1C + (pin / 8);
-  volatile uint8_t *clear_pin_ptr = memory_segment_ptr_ + 0x28 + (pin / 8);
-  volatile uint8_t *read_pin_ptr = memory_segment_ptr_ + 0x34 + (pin / 8);
+  volatile uint8_t *set_pin_ptr = (volatile uint8_t*)memory_segment_ptr_ + 0x1C + (pin / 8);
+  volatile uint8_t *clear_pin_ptr = (volatile uint8_t*)memory_segment_ptr_ + 0x28 + (pin / 8);
+  volatile uint8_t *read_pin_ptr = (volatile uint8_t*)memory_segment_ptr_ + 0x34 + (pin / 8);
 
   size_t pin_value_shift_idx = pin % 32;
   std::cout << "Pin Value Shift Idx: " << pin_value_shift_idx << std::endl;
