@@ -99,21 +99,22 @@ int main(int argc, char** argv) {
   // Blink pin 20
   volatile uint32_t *set_pin_ptr = memory_segment_ptr_ + 0x1C + (pin / 32);
   volatile uint32_t *clear_pin_ptr = memory_segment_ptr_ + 0x28 + (pin / 32);
+  volatile uint32_t *read_pin_ptr = memory_segment_ptr_ + 0x34 + (pin / 32);
   size_t pin_value_shift_idx = pin % 32;
   std::cout << "Pin Value Shift Idx: " << pin_value_shift_idx << std::endl;
 
   while (true) {
     // Set pin
     std::cout << "Setting pin " << pin << std::endl; 
-    std::cout << "Pin reg value before set: " << std::bitset<32>(*set_pin_ptr) << std::endl;
+    std::cout << "Pin reg value before set: " << std::bitset<32>(*read_pin_ptr) << std::endl;
     *set_pin_ptr |= (0b1 << pin_value_shift_idx);
-    std::cout << "Pin reg value after set: " << std::bitset<32>(*set_pin_ptr) << std::endl;
+    std::cout << "Pin reg value after set: " << std::bitset<32>(*read_pin_ptr) << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     // Clear pin
     std::cout << "Clearing pin " << pin << std::endl; 
-    std::cout << "Pin reg value before clear: " << std::bitset<32>(*set_pin_ptr) << std::endl;
+    std::cout << "Pin reg value before clear: " << std::bitset<32>(*read_pin_ptr) << std::endl;
     *clear_pin_ptr |= (0b1 << pin_value_shift_idx);
-    std::cout << "Pin reg value after clear: " << std::bitset<32>(*set_pin_ptr) << std::endl;
+    std::cout << "Pin reg value after clear: " << std::bitset<32>(*read_pin_ptr) << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
