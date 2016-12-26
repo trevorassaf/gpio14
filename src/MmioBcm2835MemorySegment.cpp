@@ -17,8 +17,8 @@ namespace gpio {
 MmioBcm2835MemorySegment::MmioBcm2835MemorySegment(
     std::shared_ptr<MemoryConfig> memory_config
 ) : memory_config_(std::move(memory_config)) {
-	// Map gpio peripherals into memory
-	int fd = open("/dev/mem", O_RDWR | O_SYNC);
+  // Map gpio peripherals into memory
+  int fd = open("/dev/mem", O_RDWR | O_SYNC);
 
   if (fd == -1) {
     throw std::runtime_error(SysUtils::GetErrorMessage());
