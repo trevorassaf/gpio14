@@ -40,13 +40,14 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
   std::cout << "Setting pin type for index: " << (int)pin_index << std::endl;
 
   // Start critical section for informing hw of new pin function
-  size_t register_offset = GetSelectPinFunctionRegisterOffset(pin_index) * SELECT_PIN_FUNCTION_BYTES_PER_MUTEX;
+  size_t register_offset = GetSelectPinFunctionRegisterOffset(pin_index);
+  size_t mutex_register_offset = register_offset * SELECT_PIN_FUNCTION_BYTES_PER_MUTEX;
 
   std::cout << "Register offset: " << register_offset << std::endl;
 
-  assert(memory_mutex_map_.count(register_offset) == 1);
+  assert(memory_mutex_map_.count(mutex_register_offset) == 1);
   std::lock_guard<std::mutex> hw_bind_pin_function_critical_section(
-      memory_mutex_map_[register_offset]);
+      memory_mutex_map_[mutex_register_offset]);
 
   // First, read existing select pin code into temporary. Next, clear current function
   // for desired pin. Then, set new function for desired pin. Finally, write code back
