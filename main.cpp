@@ -105,11 +105,15 @@ int main(int argc, char** argv) {
   while (true) {
     // Set pin
     std::cout << "Setting pin " << pin << std::endl; 
+    std::cout << "Pin reg value before set: " << std::bitset<32>(*set_pin_ptr) << std::endl;
     *set_pin_ptr |= 0b1 << pin_value_shift_idx;
+    std::cout << "Pin reg value after set: " << std::bitset<32>(*set_pin_ptr) << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     // Clear pin
     std::cout << "Clearing pin " << pin << std::endl; 
+    std::cout << "Pin reg value before clear: " << std::bitset<32>(*set_pin_ptr) << std::endl;
     *clear_pin_ptr |= 0b1 << pin_value_shift_idx;
+    std::cout << "Pin reg value after clear: " << std::bitset<32>(*set_pin_ptr) << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
