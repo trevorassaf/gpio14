@@ -24,11 +24,9 @@ PinManager::PinManager(
     std::unique_ptr<MemorySegment> memory_segment
 ) : memory_config_(std::move(memory_config)),
     memory_segment_(std::move(memory_segment)) {
-  // Initialize memory locks
+  // Initialize memory locks for binding pin functions. R^W memory regions do not require
+  // locks so long as access is volatile qualified.
   InitSelectPinFunctionMutexes();
-  InitPinFunctionMutexes(memory_config_->GetSetPinByteOffset());
-  InitPinFunctionMutexes(memory_config_->GetClearPinByteOffset());
-  InitPinFunctionMutexes(memory_config_->GetReadPinLevelByteOffset());
 }
 
 void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
@@ -37,13 +35,9 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
   assert(pin_type_map_.count(pin_index) == 0);
   pin_type_map_[pin_index] = pin_type;
 
-  std::cout << "Setting pin type for index: " << (int)pin_index << std::endl;
-
   // Start critical section for informing hw of new pin function
   size_t register_offset = GetSelectPinFunctionRegisterOffset(pin_index);
   size_t mutex_register_offset = register_offset * SELECT_PIN_FUNCTION_BYTES_PER_MUTEX;
-
-  std::cout << "Register offset: " << register_offset << std::endl;
 
   assert(memory_mutex_map_.count(mutex_register_offset) == 1);
   std::lock_guard<std::mutex> hw_bind_pin_function_critical_section(
@@ -57,20 +51,13 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
       (volatile uint32_t *)memory_segment_->Get();
 
   uint32_t select_pin_function_codes = gpio_memory[register_offset];
-  std::cout << "Select Pin Function Codes Before Reset: "
-            << std::bitset<32>(select_pin_function_codes) << std::endl;
   select_pin_function_codes &= ~(0b111 << bit_offset);
-  std::cout << "Select Pin Function Codes After Clear: "
-            << std::bitset<32>(select_pin_function_codes) << std::endl;
   select_pin_function_codes |= static_cast<uint32_t>(pin_type) << bit_offset;
-  std::cout << "Select Pin Function Codes After Reset: "
-            << std::bitset<32>(select_pin_function_codes) << std::endl;
   gpio_memory[register_offset] = select_pin_function_codes;
 }
 
 void PinManager::ReleasePin(uint8_t pin_index) {
   std::lock_guard<std::mutex> unset_pin_type_critical_section(pin_type_map_mutex_);
-  std::cout << "Releasing pin type for index: " << (int)pin_index << std::endl;
   assert(pin_type_map_.count(pin_index) == 1);
   pin_type_map_.erase(pin_index);
 }
@@ -91,17 +78,11 @@ void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {
   size_t byte_offset = CalculateByteOffset(pin_index, base_byte_offset);
   volatile uint32_t *set_pin_ptr =
       (volatile uint32_t *)memory_segment_->Get() + byte_offset;
-  assert(memory_mutex_map_.count(byte_offset) == 1);
-  std::lock_guard<std::mutex> reg_mod_critical_section(
-      memory_mutex_map_.at(byte_offset));
   *set_pin_ptr = (0b1 << (pin_index % 32));
 }
 
 bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) {
   size_t byte_offset = CalculateByteOffset(pin_index, base_byte_offset);
-  assert(memory_mutex_map_.count(byte_offset) == 1);
-  std::lock_guard<std::mutex> reg_mod_critical_section(
-      memory_mutex_map_.at(byte_offset));
   return memory_segment_->Get()[byte_offset] & (0b1 << (pin_index % 8));
 }
 
@@ -118,10 +99,8 @@ void PinManager::InitMutexes(
   size_t bytes_per_mutex,
   size_t num_mutexes
 ) {
-  std::cout << "PinManager::InitMutexes()" << std::endl;
   size_t limit = leading_byte_offset + bytes_per_mutex * num_mutexes;
   for (size_t i = leading_byte_offset; i < limit; i += bytes_per_mutex) {
-    std::cout << "offset: " << i << std::endl;
     assert(memory_mutex_map_.count(i) == 0); 
     memory_mutex_map_[i];
   }
