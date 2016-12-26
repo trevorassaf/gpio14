@@ -6,7 +6,7 @@ namespace gpio {
 
 enum class PinType : uint8_t {
 	INPUT		= 0b000,
-	OUTPUT	= 0b001,
+	OUTPUT	        = 0b001,
 	ALT_0		= 0b100,
 	ALT_1		= 0b101,
 	ALT_2		= 0b110,

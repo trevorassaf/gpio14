@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <bitset>
 #include <cstring>
 #include <stdexcept>
 #include <type_traits>
@@ -53,8 +54,14 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
   size_t bit_offset = GetSelectPinFunctionBitOffset(pin_index);
   uint32_t select_pin_function_codes =
       static_cast<uint32_t>(memory_segment_->Get()[register_offset]);
+  std::cout << "Select Pin Function Codes Before Reset: "
+            << std::bitset<32>(select_pin_function_codes) << std::endl;
   select_pin_function_codes &= ~(0b111 << bit_offset);
+  std::cout << "Select Pin Function Codes After Clear: "
+            << std::bitset<32>(select_pin_function_codes) << std::endl;
   select_pin_function_codes |= static_cast<uint32_t>(pin_type) << bit_offset;
+  std::cout << "Select Pin Function Codes After Reset: "
+            << std::bitset<32>(select_pin_function_codes) << std::endl;
   memory_segment_->Get()[register_offset] = select_pin_function_codes;
 }
 
@@ -82,7 +89,7 @@ void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {
   assert(memory_mutex_map_.count(byte_offset) == 1);
   std::lock_guard<std::mutex> reg_mod_critical_section(
       memory_mutex_map_.at(byte_offset));
-  memory_segment_->Get()[byte_offset] |= 0b1 << (pin_index % 8);
+  memory_segment_->Get()[byte_offset] |= (0b1 << (pin_index % 8));
 }
 
 void PinManager::ClearBit(uint8_t pin_index, size_t base_byte_offset) {
@@ -90,7 +97,7 @@ void PinManager::ClearBit(uint8_t pin_index, size_t base_byte_offset) {
   assert(memory_mutex_map_.count(byte_offset) == 1);
   std::lock_guard<std::mutex> reg_mod_critical_section(
       memory_mutex_map_.at(byte_offset));
-  memory_segment_->Get()[byte_offset] |= 0b1 << (pin_index % 8);
+  memory_segment_->Get()[byte_offset] &= ~(0b1 << (pin_index % 8));
 }
 
 bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) {
