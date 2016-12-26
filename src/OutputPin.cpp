@@ -20,4 +20,8 @@ void OutputPin::Clear() {
   pin_.Clear();
 }
 
+bool OutputPin::Read() const {
+  return pin_.Read();
+}
+
 } // namespace gpio

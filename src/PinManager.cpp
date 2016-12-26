@@ -83,7 +83,9 @@ void PinManager::SetBit(uint8_t pin_index, size_t base_byte_offset) {
 
 bool PinManager::ReadBit(uint8_t pin_index, size_t base_byte_offset) {
   size_t byte_offset = CalculateByteOffset(pin_index, base_byte_offset);
-  return memory_segment_->Get()[byte_offset] & (0b1 << (pin_index % 8));
+  volatile uint32_t *read_pin_ptr =
+      (volatile uint32_t *)memory_segment_->Get() + byte_offset;
+  return *read_pin_ptr & (0b1 << (pin_index % 32));
 }
 
 size_t PinManager::GetSelectPinFunctionRegisterOffset(uint8_t pin_index) const {

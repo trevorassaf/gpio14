@@ -19,6 +19,9 @@ public:
   // Deasserts this pin.
   void Clear();
 
+  // Returns true iff pin is hot.
+  bool Read() const;
+
   OutputPin(OutputPin&& other) = default;
   OutputPin& operator=(OutputPin&& other) = default;
 
