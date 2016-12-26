@@ -52,8 +52,10 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
   // for desired pin. Then, set new function for desired pin. Finally, write code back
   // to register.
   size_t bit_offset = GetSelectPinFunctionBitOffset(pin_index);
-  uint32_t select_pin_function_codes =
-      static_cast<uint32_t>(memory_segment_->Get()[register_offset]);
+  volatile uint32_t *gpio_memory =
+      (volatile uint32_t *)memory_segment_->Get();
+
+  uint32_t select_pin_function_codes = gpio_memory[register_offset];
   std::cout << "Select Pin Function Codes Before Reset: "
             << std::bitset<32>(select_pin_function_codes) << std::endl;
   select_pin_function_codes &= ~(0b111 << bit_offset);
@@ -62,7 +64,7 @@ void PinManager::BindPin(uint8_t pin_index, PinType pin_type) {
   select_pin_function_codes |= static_cast<uint32_t>(pin_type) << bit_offset;
   std::cout << "Select Pin Function Codes After Reset: "
             << std::bitset<32>(select_pin_function_codes) << std::endl;
-  memory_segment_->Get()[register_offset] = select_pin_function_codes;
+  gpio_memory[register_offset] = select_pin_function_codes;
 }
 
 void PinManager::ReleasePin(uint8_t pin_index) {
