@@ -15,6 +15,8 @@
 #include <utility>
 #include <stdexcept>
 #include <bitset>
+#include <cassert>
+#include <string>
 
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -25,6 +27,9 @@
 using namespace gpio;
 
 int main(int argc, char** argv) {
+  assert(argc == 2);
+  int pin_idx = std::stoi(argv[1]);
+
   // Assemble PinFactory
   auto memory_config = std::make_shared<gpio::MemoryConfig>();
 
@@ -34,16 +39,16 @@ int main(int argc, char** argv) {
 
   auto factory = std::make_unique<gpio::PinFactory>(manager);
 
-  // Configure BCM pin #4 for output
-  std::cout << "Configuring pin 4 for output" << std::endl;
-  std::unique_ptr<gpio::OutputPin> pin_4 = factory->BindOutputPin(4);
+  // Configure pin for output
+  std::cout << "Configuring pin " << pin_idx << " for output" << std::endl;
+  std::unique_ptr<gpio::OutputPin> pin = factory->BindOutputPin(pin_idx);
 
   while (true) {
-    std::cout << "Setting pin 4 high" << std::endl;
-    pin_4->Set();
+    std::cout << "Setting pin " << pin_idx << " high" << std::endl;
+    pin->Set();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    std::cout << "Setting pin 4 low" << std::endl;
-    pin_4->Clear();
+    std::cout << "Setting pin " << pin_idx << " low" << std::endl;
+    pin->Clear();
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
