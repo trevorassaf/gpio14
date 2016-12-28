@@ -60,10 +60,13 @@ int main(int argc, char** argv) {
   for (int i = 0; i < pin_ids.size(); ++i) {
     pins[i] = factory->BindOutputPin(pin_ids[i]);
     threads[i] = std::make_unique<std::thread>([&, i] () -> void {
-      pins[i]->Set();
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
-      pins[i]->Clear();
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      std::this_thread::sleep_for(std::chrono::milliseconds(i * 50));
+      while (true) {
+        pins[i]->Set();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        pins[i]->Clear();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      }
     });
   }
 
