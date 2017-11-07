@@ -1,4 +1,9 @@
 ##########################
+###### Dependencies ######
+##########################
+# clang 5.0
+
+##########################
 ######## Commands ########
 ##########################
 MKDIR_P = mkdir -p
@@ -35,8 +40,8 @@ GPIO_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(GPIO_SOURCE_FILES:%.c
 GPIO_OBJECT_FILES = $(GPIO_SOURCE_FILES:%.cpp=%.o)
 
 # Declaration of variables
-CC = g++
-CC_FLAGS = -w -I$(INCLUDE_DIR) -std=c++1y -g
+CC = clang++
+CC_FLAGS = -w -I$(INCLUDE_DIR) -std=c++14 -g -stdlib=libc++
 
 # Removed files
 FILES_TO_REMOVE = \
@@ -54,7 +59,7 @@ directories:
 
 # Compile blink binary
 $(GPIO_EXEC): $(GPIO_OBJECT_FILES) 
-	@$(CC) $(GPIO_OBJECT_FILES_WITH_ROOT) -o $(BINARY_DIR)/$(GPIO_EXEC) -lpthread
+	@$(CC) $(GPIO_OBJECT_FILES_WITH_ROOT) -o $(BINARY_DIR)/$(GPIO_EXEC) $(CC_FLAGS) -lpthread
 
 # Compile source
 %.o: %.cpp
