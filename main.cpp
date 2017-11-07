@@ -24,17 +24,15 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-using namespace gpio;
-
 int main(int argc, char** argv) {
   // Assemble PinFactory
-  auto memory_config = std::make_shared<gpio::MemoryConfig>();
+	auto memoryConfig = std::unique_ptr<gpio::MemoryConfig>();
 
-  auto manager = std::make_shared<gpio::PinManager>(
-      memory_config,
-      std::make_unique<gpio::MmioBcm2835MemorySegment>(memory_config));
+  auto pinManager = std::make_unique<gpio::PinManager>(
+      memoryConfig.get(),
+      std::make_unique<gpio::MmioBcm2835MemorySegment>(memoryConfig.get()));
 
-  auto factory = std::make_unique<gpio::PinFactory>(manager);
+  auto factory = std::make_unique<gpio::PinFactory>(pinManager.get());
 
   // Declare pin ids
   std::vector<int> pin_ids = {

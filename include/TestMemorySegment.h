@@ -9,12 +9,12 @@ namespace gpio {
 
 class TestMemorySegment : public MemorySegment {
  public:
-  TestMemorySegment(std::shared_ptr<MemoryConfig> memory_config);
+  TestMemorySegment(const MemoryConfig *memoryConfig);
   volatile uint8_t* Get() override;
 
  private:
-  std::shared_ptr<MemoryConfig> memory_config_;
-  std::unique_ptr<volatile uint8_t[]> memory_segment_ptr_;
+	const MemoryConfig *m_memoryConfig;
+  std::unique_ptr<volatile uint8_t[]> m_memorySegmentPtr;
 };
 
 } // namespace gpio

@@ -15,45 +15,42 @@
 namespace gpio {
 
 MmioBcm2835MemorySegment::MmioBcm2835MemorySegment(
-    std::shared_ptr<MemoryConfig> memory_config
-) : memory_config_(std::move(memory_config)) {
-  // Map gpio peripherals into memory
+		const MemoryConfig *memoryConfig
+) : m_memoryConfig{memoryConfig} {
+  // Map gpio peripherals to memory
   int fd = open("/dev/mem", O_RDWR | O_SYNC);
 
   if (fd == -1) {
     throw std::runtime_error(SysUtils::GetErrorMessage());
   }
 
-  ScopeGuard<int> close_file_guard(fd, [] (int& fd) { close(fd); });
+  ScopeGuard<int> closeFileGuard(fd, [] (int& fd) { close(fd); });
 
   void* memory = mmap(
       nullptr,
-      memory_config_->GetMappedBytesCount(),
+      m_memoryConfig->GetMappedBytesCount(),
       PROT_READ | PROT_WRITE,
       MAP_SHARED,
       fd,
-      memory_config_->GetPhysicalMemoryByteOffset());
+      m_memoryConfig->GetPhysicalMemoryByteOffset());
 
-  // Handle error
   if (memory == MAP_FAILED) {
     throw std::runtime_error(SysUtils::GetErrorMessage());
   }
 
-  memory_segment_ptr_ = static_cast<volatile uint8_t*>(memory);
+  m_memory = static_cast<volatile uint8_t*>(memory);
 }
 
 MmioBcm2835MemorySegment::~MmioBcm2835MemorySegment() {
-  int result = ::munmap((void *)memory_segment_ptr_, memory_config_->GetMappedBytesCount());
+  int result = ::munmap((void *)m_memory, m_memoryConfig->GetMappedBytesCount());
 
-  // Handle error
-  // TODO(bozkurtus): log here
   if (result == -1) {
     throw std::runtime_error(SysUtils::GetErrorMessage());
   }
 }
 
 volatile uint8_t* MmioBcm2835MemorySegment::Get() {
-  return memory_segment_ptr_;
+  return m_memory;
 }
 
 } // namespace gpio

@@ -5,31 +5,31 @@
 namespace gpio {
 
 Pin::Pin(
-    std::shared_ptr<PinManager> pin_manager,
+		PinManager *pinManager,
     uint8_t index)
-  : pin_manager_(std::move(pin_manager)),
-    index_(index) {}
+  : m_pinManager{std::move(pinManager)},
+    m_index{index} {}
 
 Pin::~Pin() {
-  if (pin_manager_) {
-    pin_manager_->ReleasePin(index_);
+  if (m_pinManager) {
+    m_pinManager->ReleasePin(m_index);
   }
 }
 
 uint8_t Pin::GetIndex() const {
-  return index_;
+  return m_index;
 }
 
 void Pin::Set() {
-  pin_manager_->SetPin(index_);
+  m_pinManager->SetPin(m_index);
 }
 
 void Pin::Clear() {
-  pin_manager_->ClearPin(index_);
+  m_pinManager->ClearPin(m_index);
 }
 
 bool Pin::Read() const {
-  return pin_manager_->ReadPin(index_);
+  return m_pinManager->ReadPin(m_index);
 }
 
 } // namespace gpio

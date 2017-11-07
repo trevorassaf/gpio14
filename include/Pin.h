@@ -10,7 +10,7 @@ namespace gpio {
 class Pin {
 public:
   Pin(
-      std::shared_ptr<PinManager> pin_manager,
+			PinManager *pinManager,
       uint8_t index);
 
   // Releases the pin from its registered function.
@@ -36,10 +36,10 @@ private:
   Pin& operator=(const Pin& other) = delete;
 
 private:
-  uint8_t index_;
+  uint8_t m_index;
 
   // This pin is bound to the lifetime of the PinManager.
-  std::shared_ptr<PinManager> pin_manager_;
+	PinManager *m_pinManager;
 };
 
 } // namespace gpio

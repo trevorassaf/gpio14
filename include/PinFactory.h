@@ -10,7 +10,7 @@ namespace gpio {
 
 class PinFactory {
  public:
-  PinFactory(std::shared_ptr<PinManager> pin_manager);
+  PinFactory(PinManager *pin_manager);
 
   // Designates specified pin as input pin.
   //
@@ -23,7 +23,7 @@ class PinFactory {
   std::unique_ptr<OutputPin> BindOutputPin(uint8_t pin_index);
 
  private:
-  std::shared_ptr<PinManager> pin_manager_;
+	PinManager *m_pinManager;
 };
 
 } // namespcae gpio

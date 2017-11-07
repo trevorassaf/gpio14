@@ -5,14 +5,14 @@
 namespace gpio {
 
 TestMemorySegment::TestMemorySegment(
-    std::shared_ptr<MemoryConfig> memory_config
-) : memory_config_(std::move(memory_config)) {
-  memory_segment_ptr_ = std::make_unique<volatile uint8_t[]>(
-      memory_config_->GetMappedBytesCount());
+		const MemoryConfig *memoryConfig
+) : m_memoryConfig{memoryConfig} {
+  m_memorySegmentPtr = std::make_unique<volatile uint8_t[]>(
+      m_memoryConfig->GetMappedBytesCount());
 }
 
 volatile uint8_t* TestMemorySegment::Get() {
-  return memory_segment_ptr_.get();
+  return m_memorySegmentPtr.get();
 }
 
 } // namespace gpio

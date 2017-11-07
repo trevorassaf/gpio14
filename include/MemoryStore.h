@@ -11,8 +11,8 @@ namespace gpio {
 class MemoryStore {
   public:
    MemoryStore(
-       std::shared_ptr<MemoryConfig> memory_config,
-       std::unique_ptr<MemorySegment> memory_segment);
+			 const MemoryConfig *memoryConfig,
+       std::unique_ptr<MemorySegment> m_memorySegment);
 
    volatile uint64_t* GetSelectPinFunctionPtr();
    volatile uint64_t* GetSetPinPtr();
@@ -21,10 +21,10 @@ class MemoryStore {
 
   private:
    // Offsets for accessing gpio memory registers.
-   std::shared_ptr<MemoryConfig> memory_config_;
+	 const MemoryConfig *m_memoryConfig;
 
    // Pointer to the memory segment that controls gpio peripherals.
-   std::unique_ptr<MemorySegment> memory_segment_;
+   std::unique_ptr<MemorySegment> m_memorySegment;
 };
 
 } // namespace gpio

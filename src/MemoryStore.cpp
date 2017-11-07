@@ -5,29 +5,29 @@
 namespace gpio {
 
 MemoryStore::MemoryStore(
-    std::shared_ptr<MemoryConfig> memory_config,
-    std::unique_ptr<MemorySegment> memory_segment
-) : memory_config_(std::move(memory_config)),
-    memory_segment_(std::move(memory_segment)) {}
+		const MemoryConfig *memoryConfig,
+    std::unique_ptr<MemorySegment> memorySegment
+) : m_memoryConfig{memoryConfig},
+    m_memorySegment{std::move(memorySegment)} {}
 
 volatile uint64_t* MemoryStore::GetSelectPinFunctionPtr() {
   return reinterpret_cast<volatile uint64_t*>(
-      memory_segment_->Get() + memory_config_->GetSelectPinFunctionByteOffset());
+      m_memorySegment->Get() + m_memoryConfig->GetSelectPinFunctionByteOffset());
 }
 
 volatile uint64_t* MemoryStore::GetSetPinPtr() {
   return reinterpret_cast<volatile uint64_t*>(
-      memory_segment_->Get() + memory_config_->GetSetPinByteOffset());
+      m_memorySegment->Get() + m_memoryConfig->GetSetPinByteOffset());
 }
 
 volatile uint64_t* MemoryStore::GetClearPinPtr() {
   return reinterpret_cast<volatile uint64_t*>(
-      memory_segment_->Get() + memory_config_->GetClearPinByteOffset());
+      m_memorySegment->Get() + m_memoryConfig->GetClearPinByteOffset());
 }
 
 volatile uint64_t* MemoryStore::GetReadPinLevelPtr() {
   return reinterpret_cast<volatile uint64_t*>(
-      memory_segment_->Get() + memory_config_->GetReadPinLevelByteOffset());
+      m_memorySegment->Get() + m_memoryConfig->GetReadPinLevelByteOffset());
 }
 
 } // namespace gpio
