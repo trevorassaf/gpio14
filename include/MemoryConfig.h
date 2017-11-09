@@ -5,6 +5,14 @@
 
 namespace gpio {
 
+/**
+ * Defines memory addresses and offsets that are pertinent to GPIO peripherals.
+ *
+ * TODO(bozkurtus): This file actually blends Bcm2835 memory parameters and GPIO-specific
+ * Bcm2835 parameters. Separate these out into two files.
+ *
+ * Note: RPi 1 starts peripheral memory at 0x20000000, but RPi 2/3 starts at 0x3F000000
+ */
 class MemoryConfig {
  public:
   size_t GetPhysicalMemoryByteOffset() const {
