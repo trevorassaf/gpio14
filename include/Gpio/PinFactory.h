@@ -2,11 +2,11 @@
 
 #include <memory>
 
-#include "PinManager.h"
-#include "InputPin.h"
-#include "OutputPin.h"
+#include "Gpio/PinManager.h"
+#include "Gpio/InputPin.h"
+#include "Gpio/OutputPin.h"
 
-namespace gpio {
+namespace Gpio {
 
 class PinFactory {
  public:

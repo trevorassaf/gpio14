@@ -3,10 +3,10 @@
 #include <cstdint>
 #include <memory>
 
-#include "MemoryConfig.h"
-#include "MemorySegment.h"
+#include "Memory/MemoryConfig.h"
+#include "Memory/MemorySegment.h"
 
-namespace gpio {
+namespace Memory {
 
 class MemoryStore {
   public:
@@ -27,4 +27,4 @@ class MemoryStore {
    std::unique_ptr<MemorySegment> m_memorySegment;
 };
 
-} // namespace gpio
+} // namespace Memory

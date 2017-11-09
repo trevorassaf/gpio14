@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "MemorySegment.h"
-#include "MemoryConfig.h"
+#include "Memory/MemorySegment.h"
+#include "Memory/MemoryConfig.h"
 
-namespace gpio {
+namespace Memory {
 
 class TestMemorySegment : public MemorySegment {
  public:
@@ -17,4 +17,4 @@ class TestMemorySegment : public MemorySegment {
   std::unique_ptr<volatile uint8_t[]> m_memorySegmentPtr;
 };
 
-} // namespace gpio
+} // namespace Memory

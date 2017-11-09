@@ -1,4 +1,4 @@
-#include "MmioBcm2835MemorySegment.h"
+#include "Memory/MmioBcm2835MemorySegment.h"
 
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -9,10 +9,13 @@
 #include <utility>
 #include <stdexcept>
 
-#include "SysUtils.h"
-#include "ScopeGuard.h"
+#include "Utility/SysUtils.h"
+#include "Utility/ScopeGuard.h"
 
-namespace gpio {
+using Utility::ScopeGuard;
+using Utility::SysUtils;
+
+namespace Memory {
 
 MmioBcm2835MemorySegment::MmioBcm2835MemorySegment(
 		const MemoryConfig *memoryConfig
@@ -53,4 +56,4 @@ volatile uint8_t* MmioBcm2835MemorySegment::Get() {
   return m_memory;
 }
 
-} // namespace gpio
+} // namespace Memory

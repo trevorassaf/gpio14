@@ -1,8 +1,8 @@
-#include "InputPin.h"
+#include "Gpio/InputPin.h"
 
 #include <utility>
 
-namespace gpio {
+namespace Gpio {
 
 InputPin::InputPin(Pin pin) : pin_(std::move(pin)) {}
 
@@ -16,4 +16,4 @@ bool InputPin::Read() const {
   return pin_.Read();
 }
 
-} // namespace gpio
+} // namespace Gpio

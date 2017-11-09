@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace gpio {
+namespace Gpio {
 
 enum class PinType : uint8_t {
 	INPUT		= 0b000,
@@ -15,4 +15,4 @@ enum class PinType : uint8_t {
 	ALT_5		= 0b010
 };
 
-} // namespace gpio
+} // namespace Gpio

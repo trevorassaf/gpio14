@@ -1,10 +1,10 @@
-#include "PinFactory.h"
+#include "Gpio/PinFactory.h"
 
 #include <utility>
 
-#include "PinType.h"
+#include "Gpio/PinType.h"
 
-namespace gpio {
+namespace Gpio {
 
 PinFactory::PinFactory(PinManager *pinManager)
     : m_pinManager{pinManager} {}
@@ -21,4 +21,4 @@ std::unique_ptr<OutputPin> PinFactory::BindOutputPin(uint8_t pinIndex) {
   return std::make_unique<OutputPin>(std::move(pin));
 }
 
-} // namespace gpio
+} // namespace Gpio

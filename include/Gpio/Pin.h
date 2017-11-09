@@ -3,9 +3,9 @@
 #include <cstdint>
 #include <memory>
 
-#include "PinManager.h"
+#include "Gpio/PinManager.h"
 
-namespace gpio {
+namespace Gpio {
 
 class Pin {
 public:
@@ -42,4 +42,4 @@ private:
 	PinManager *m_pinManager;
 };
 
-} // namespace gpio
+} // namespace Gpio

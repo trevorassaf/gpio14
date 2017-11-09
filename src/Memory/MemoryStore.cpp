@@ -1,8 +1,8 @@
-#include "MemoryStore.h"
+#include "Memory/MemoryStore.h"
 
 #include <utility>
 
-namespace gpio {
+namespace Memory {
 
 MemoryStore::MemoryStore(
 		const MemoryConfig *memoryConfig,
@@ -30,4 +30,4 @@ volatile uint64_t* MemoryStore::GetReadPinLevelPtr() {
       m_memorySegment->Get() + m_memoryConfig->GetReadPinLevelByteOffset());
 }
 
-} // namespace gpio
+} // namespace Memory

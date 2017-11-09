@@ -1,4 +1,4 @@
-#include "PinManager.h"
+#include "Gpio/PinManager.h"
 
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -14,10 +14,10 @@
 #include <type_traits>
 #include <utility>
 
-#include "SysUtils.h"
-#include "ScopeGuard.h"
+using Memory::MemoryConfig;
+using Memory::MemorySegment;
 
-namespace gpio {
+namespace Gpio {
 
 PinManager::PinManager(
 		const MemoryConfig *memoryConfig,
@@ -126,4 +126,4 @@ size_t PinManager::CalculateByteOffset(uint8_t pinIndex, size_t baseByteOffset) 
   return (baseByteOffset / 4) + (pinIndex / 32);
 }
 
-} // namespace gpio
+} // namespace Gpio

@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-#include "Pin.h"
+#include "Gpio/Pin.h"
 
-namespace gpio {
+namespace Gpio {
 
 class InputPin {
  public:
@@ -27,4 +27,4 @@ private:
   Pin pin_;
 };
 
-} // namespace gpio
+} // namespace Gpio

@@ -1,8 +1,8 @@
-#include "Pin.h"
+#include "Gpio/Pin.h"
 
 #include <utility>
 
-namespace gpio {
+namespace Gpio {
 
 Pin::Pin(
 		PinManager *pinManager,
@@ -32,4 +32,4 @@ bool Pin::Read() const {
   return m_pinManager->ReadPin(m_index);
 }
 
-} // namespace gpio
+} // namespace Gpio

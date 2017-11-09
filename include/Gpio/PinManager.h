@@ -6,11 +6,11 @@
 #include <unordered_map>
 #include <memory>
 
-#include "PinType.h"
-#include "MemorySegment.h"
-#include "MemoryConfig.h"
+#include "Gpio/PinType.h"
+#include "Memory/MemorySegment.h"
+#include "Memory/MemoryConfig.h"
 
-namespace gpio {
+namespace Gpio {
 
 class PinManager {
 public:
@@ -18,8 +18,8 @@ public:
   //
   // @throw runtime_error: fail to map gpio hardware into memory
   PinManager(
-			const MemoryConfig *memoryConfig,
-      std::unique_ptr<MemorySegment> memorySegment);
+			const Memory::MemoryConfig *memoryConfig,
+      std::unique_ptr<Memory::MemorySegment> memorySegment);
 
   // Configures pin for designated function.
   //
@@ -104,10 +104,10 @@ private:
 
   // Memory offsets for accessing mmio registers in the gpio peripherals
   // memory segment.
-	const MemoryConfig *m_memoryConfig;
+	const Memory::MemoryConfig *m_memoryConfig;
 
   // Gpio peripherals mmio memory segment.
-  std::unique_ptr<MemorySegment> m_memorySegment;
+  std::unique_ptr<Memory::MemorySegment> m_memorySegment;
 };
 
-} // namespace gpio
+} // namespace Gpio

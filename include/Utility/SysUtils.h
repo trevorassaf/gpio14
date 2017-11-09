@@ -7,7 +7,7 @@
 #include <memory>
 #include <utility>
 
-namespace gpio {
+namespace Utility {
 
 class SysUtils {
 	public:
@@ -31,8 +31,9 @@ class SysUtils {
 			strerror_r(error_num, buffer.get(), ERROR_STRING_BUFFER_SIZE);
 			return std::string(buffer.get(), ERROR_STRING_BUFFER_SIZE);
 		}
+
 	private:
 		static constexpr size_t ERROR_STRING_BUFFER_SIZE = 256;
 };
 
-} // namespace gpio
+} // namespace Utility

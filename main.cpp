@@ -1,11 +1,9 @@
-#include "MemoryConfig.h"
-#include "MmioBcm2835MemorySegment.h"
-#include "MemorySegment.h"
-#include "PinManager.h"
-#include "PinFactory.h"
-#include "OutputPin.h"
-#include "ScopeGuard.h"
-#include "SysUtils.h"
+#include "Memory/MemoryConfig.h"
+#include "Memory/MmioBcm2835MemorySegment.h"
+#include "Memory/MemorySegment.h"
+#include "Gpio/PinManager.h"
+#include "Gpio/PinFactory.h"
+#include "Gpio/OutputPin.h"
 
 #include <iostream>
 #include <memory>
@@ -24,15 +22,23 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+using Gpio::InputPin;
+using Gpio::OutputPin;
+using Gpio::PinFactory;
+using Gpio::PinManager;
+using Memory::MemoryConfig;
+using Memory::MemorySegment;
+using Memory::MmioBcm2835MemorySegment;
+
 int main(int argc, char** argv) {
   // Assemble PinFactory
-	auto memoryConfig = std::unique_ptr<gpio::MemoryConfig>();
+	auto memoryConfig = std::unique_ptr<MemoryConfig>();
 
-  auto pinManager = std::make_unique<gpio::PinManager>(
+  auto pinManager = std::make_unique<PinManager>(
       memoryConfig.get(),
-      std::make_unique<gpio::MmioBcm2835MemorySegment>(memoryConfig.get()));
+      std::make_unique<MmioBcm2835MemorySegment>(memoryConfig.get()));
 
-  auto factory = std::make_unique<gpio::PinFactory>(pinManager.get());
+  auto factory = std::make_unique<PinFactory>(pinManager.get());
 
   // Declare pin ids
   std::vector<int> pin_ids = {
@@ -51,7 +57,7 @@ int main(int argc, char** argv) {
     21
   };
 
-  auto pins = std::make_unique<std::unique_ptr<gpio::OutputPin>[]>(pin_ids.size());
+  auto pins = std::make_unique<std::unique_ptr<Gpio::OutputPin>[]>(pin_ids.size());
   auto threads = std::make_unique<std::unique_ptr<std::thread>[]>(pin_ids.size());
 
   // Configure pin for output

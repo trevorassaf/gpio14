@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "MemorySegment.h"
-#include "MemoryConfig.h"
+#include "Memory/MemorySegment.h"
+#include "Memory/MemoryConfig.h"
 
-namespace gpio
+namespace Memory
 {
 
 class MmioBcm2835MemorySegment : public MemorySegment
@@ -21,4 +21,4 @@ class MmioBcm2835MemorySegment : public MemorySegment
   volatile uint8_t* m_memory;
 };
 
-} // namespace gpio
+} // namespace Memory

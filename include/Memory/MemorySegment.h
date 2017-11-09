@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace gpio {
+namespace Memory {
 
 class MemorySegment {
  public:
@@ -10,4 +10,4 @@ class MemorySegment {
   virtual ~MemorySegment() {}
 };
 
-} // namespace gpio
+} // namespace Memory

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-namespace gpio {
+namespace Memory {
 
 /**
  * Defines memory addresses and offsets that are pertinent to GPIO peripherals.
@@ -60,4 +60,4 @@ class MemoryConfig {
   static constexpr size_t READ_PIN_LEVEL_BYTE_OFFSET = 0x34;
 };
 
-} // namespace gpio
+} // namespace Memory

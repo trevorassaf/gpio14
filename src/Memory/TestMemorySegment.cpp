@@ -1,8 +1,8 @@
-#include "TestMemorySegment.h"
+#include "Memory/TestMemorySegment.h"
 
 #include <utility>
 
-namespace gpio {
+namespace Memory {
 
 TestMemorySegment::TestMemorySegment(
 		const MemoryConfig *memoryConfig
@@ -15,4 +15,4 @@ volatile uint8_t* TestMemorySegment::Get() {
   return m_memorySegmentPtr.get();
 }
 
-} // namespace gpio
+} // namespace Memory
