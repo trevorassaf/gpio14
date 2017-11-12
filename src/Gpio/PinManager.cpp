@@ -14,15 +14,18 @@
 #include <type_traits>
 #include <utility>
 
-using Memory::MemoryConfig;
+using Gpio::MemoryConfig;
+using Memory::MmioConfig;
 using Memory::MemorySegment;
 
 namespace Gpio {
 
 PinManager::PinManager(
+		const MmioConfig *mmioConfig,
 		const MemoryConfig *memoryConfig,
     std::unique_ptr<MemorySegment> memorySegment
-) : m_memoryConfig{memoryConfig},
+) : m_mmioConfig{mmioConfig},
+		m_memoryConfig{memoryConfig},
     m_memorySegment{std::move(memorySegment)} {
   // Initialize memory locks for binding pin functions. R^W memory regions do not require
   // locks so long as access is volatile qualified.

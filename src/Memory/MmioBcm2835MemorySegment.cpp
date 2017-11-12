@@ -18,8 +18,8 @@ using Utility::SysUtils;
 namespace Memory {
 
 MmioBcm2835MemorySegment::MmioBcm2835MemorySegment(
-		const MemoryConfig *memoryConfig
-) : m_memoryConfig{memoryConfig} {
+		const MmioConfig *mmioConfig
+) : m_mmioConfig{mmioConfig} {
   // Map gpio peripherals to memory
   int fd = open("/dev/mem", O_RDWR | O_SYNC);
 
@@ -31,11 +31,11 @@ MmioBcm2835MemorySegment::MmioBcm2835MemorySegment(
 
   void* memory = mmap(
       nullptr,
-      m_memoryConfig->GetMappedBytesCount(),
+      m_mmioConfig->GetMappedBytesCount(),
       PROT_READ | PROT_WRITE,
       MAP_SHARED,
       fd,
-      m_memoryConfig->GetPhysicalMemoryByteOffset());
+      m_mmioConfig->GetPhysicalMemoryByteOffset());
 
   if (memory == MAP_FAILED) {
     throw std::runtime_error(SysUtils::GetErrorMessage());
@@ -45,7 +45,7 @@ MmioBcm2835MemorySegment::MmioBcm2835MemorySegment(
 }
 
 MmioBcm2835MemorySegment::~MmioBcm2835MemorySegment() {
-  int result = ::munmap((void *)m_memory, m_memoryConfig->GetMappedBytesCount());
+  int result = ::munmap((void *)m_memory, m_mmioConfig->GetMappedBytesCount());
 
   if (result == -1) {
     throw std::runtime_error(SysUtils::GetErrorMessage());

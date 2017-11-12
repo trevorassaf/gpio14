@@ -5,10 +5,10 @@
 namespace Memory {
 
 TestMemorySegment::TestMemorySegment(
-		const MemoryConfig *memoryConfig
-) : m_memoryConfig{memoryConfig} {
+		const MmioConfig *mmioConfig
+) : m_mmioConfig{mmioConfig} {
   m_memorySegmentPtr = std::make_unique<volatile uint8_t[]>(
-      m_memoryConfig->GetMappedBytesCount());
+      m_mmioConfig->GetMappedBytesCount());
 }
 
 volatile uint8_t* TestMemorySegment::Get() {
