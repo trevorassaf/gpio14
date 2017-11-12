@@ -1,4 +1,4 @@
-#include "I2c/BscMasterRegisters.h"
+#include "I2c/Registers/BscMasterRegisters.h"
 
 #include <utility>
 

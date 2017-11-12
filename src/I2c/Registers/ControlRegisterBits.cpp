@@ -1,4 +1,4 @@
-#include "I2c/ControlRegisterBits.h"
+#include "I2c/Registers/ControlRegisterBits.h"
 
 namespace 
 {

@@ -1,4 +1,4 @@
-#include "I2c/DataDelayRegisterBits.h"
+#include "I2c/Registers/DataDelayRegisterBits.h"
 
 namespace
 {

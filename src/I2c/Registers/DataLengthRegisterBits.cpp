@@ -1,4 +1,4 @@
-#include "I2c/DataLengthRegisterBits.h"
+#include "I2c/Registers/DataLengthRegisterBits.h"
 
 namespace I2c
 {

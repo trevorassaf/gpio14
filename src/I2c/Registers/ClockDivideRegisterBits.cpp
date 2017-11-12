@@ -1,4 +1,4 @@
-#include "I2c/ClockDivideRegisterBits.h"
+#include "I2c/Registers/ClockDivideRegisterBits.h"
 
 namespace I2c
 {

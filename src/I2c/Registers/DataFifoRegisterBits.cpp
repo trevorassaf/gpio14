@@ -1,4 +1,4 @@
-#include "I2c/DataFifoRegisterBits.h"
+#include "I2c/Registers/DataFifoRegisterBits.h"
 
 namespace I2c
 {

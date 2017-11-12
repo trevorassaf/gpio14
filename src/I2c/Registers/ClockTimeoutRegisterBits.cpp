@@ -1,4 +1,4 @@
-#include "I2c/ClockTimeoutRegisterBits.h"
+#include "I2c/Registers/ClockTimeoutRegisterBits.h"
 
 namespace I2c
 {

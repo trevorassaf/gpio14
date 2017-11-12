@@ -1,4 +1,4 @@
-#include "I2c/SlaveAddressRegisterBits.h"
+#include "I2c/Registers/SlaveAddressRegisterBits.h"
 
 namespace I2c
 {
