@@ -4,7 +4,7 @@
 
 namespace
 {
-constexpr uint16_t REGISTER_RESET_VALUE = 0x30;
+constexpr uint16_t REGISTER_RESET_CODE = 0x30;
 } // namespace
 
 namespace I2c
@@ -13,8 +13,8 @@ class DataDelayRegister
 {
 public:
 	DataDelayRegister()
-		: m_fallingEdgeDelay{REGISTER_RESET_VALUE},
-			m_risingEdgeDelay{REGISTER_RESET_VALUE} {}
+		: m_fallingEdgeDelay{REGISTER_RESET_CODE},
+			m_risingEdgeDelay{REGISTER_RESET_CODE} {}
 
 	DataDelayRegister(
 			uint16_t fallingEdgeDelay,
@@ -34,8 +34,8 @@ class DataDelayRegisterBuilder
 {
 public:
 	DataDelayRegisterBuilder()
-		: m_fallingEdgeDelay{REGISTER_RESET_VALUE},
-			m_risingEdgeDelay{REGISTER_RESET_VALUE} {}
+		: m_fallingEdgeDelay{REGISTER_RESET_CODE},
+			m_risingEdgeDelay{REGISTER_RESET_CODE} {}
 
 	DataDelayRegisterBuilder &SetFallingEdgeDelay(uint16_t delay)
 	{
@@ -43,9 +43,21 @@ public:
 			return *this;
 	}
 
+	DataDelayRegisterBuilder &ResetFallingEdgeDelay()
+	{
+			m_fallingEdgeDelay = REGISTER_RESET_CODE;
+			return *this;
+	}
+
 	DataDelayRegisterBuilder &SetRisingEdgeDelay(uint16_t delay)
 	{
 			m_risingEdgeDelay = delay;
+			return *this;
+	}
+
+	DataDelayRegisterBuilder &ResetRisingEdgeDelay()
+	{
+			m_risingEdgeDelay = REGISTER_RESET_CODE;
 			return *this;
 	}
 
