@@ -12,6 +12,10 @@ namespace I2c
 class DataDelayRegister
 {
 public:
+	DataDelayRegister()
+		: m_fallingEdgeDelay{REGISTER_RESET_VALUE},
+			m_risingEdgeDelay{REGISTER_RESET_VALUE} {}
+
 	DataDelayRegister(
 			uint16_t fallingEdgeDelay,
 			uint16_t risingEdgeDelay)
