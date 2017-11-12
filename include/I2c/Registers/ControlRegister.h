@@ -55,42 +55,45 @@ public:
 			m_readTransfer{false}
 	{}
 
-ControlRegisterBuilder &EnableI2c()
+ControlRegisterBuilder &EnableI2c(bool value)
 {
-		m_i2cEnabled = true;
+		m_i2cEnabled = value;
 		return *this;
 }
 
-ControlRegisterBuilder &EnableRxInterupts()
+ControlRegisterBuilder &EnableRxInterupts(bool value)
 {
-		m_rxInteruptsEnabled = true;
+		m_rxInteruptsEnabled = value;
 		return *this;
 }
 
-ControlRegisterBuilder &EnableTxInterupts()
+ControlRegisterBuilder &EnableTxInterupts(bool value)
 {
-		m_txInteruptsEnabled = true;
-		return *this;
-}
-ControlRegisterBuilder &EnableDoneInterupts()
-{
-		m_doneInteruptsEnabled = true;
-		return *this;
-}
-ControlRegisterBuilder &StartTransfer()
-{
-		m_startTransfer = true;
-		return *this;
-}
-ControlRegisterBuilder &ClearFifo()
-{
-		m_clearFifo = true;
+		m_txInteruptsEnabled = value;
 		return *this;
 }
 
-ControlRegisterBuilder &ReadTransfer()
+ControlRegisterBuilder &EnableDoneInterupts(bool value)
 {
-		m_readTransfer = true;
+		m_doneInteruptsEnabled = value;
+		return *this;
+}
+
+ControlRegisterBuilder &StartTransfer(bool value)
+{
+		m_startTransfer = value;
+		return *this;
+}
+
+ControlRegisterBuilder &ClearFifo(bool value)
+{
+		m_clearFifo = value;
+		return *this;
+}
+
+ControlRegisterBuilder &ReadTransfer(bool value)
+{
+		m_readTransfer = value;
 		return *this;
 }
 
