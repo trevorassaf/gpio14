@@ -3,7 +3,7 @@
 #include <functional>
 #include <utility>
 
-namespace Utility {
+namespace Utils {
 
 template <typename T>
 class ScopeGuard {
@@ -21,4 +21,4 @@ class ScopeGuard {
   std::function<void(T&)> deleter_;
 };
 
-} // namespace Utility
+} // namespace Utils

@@ -9,11 +9,11 @@
 #include <utility>
 #include <stdexcept>
 
-#include "Utility/SysUtils.h"
-#include "Utility/ScopeGuard.h"
+#include "Utils/SysUtils.h"
+#include "Utils/ScopeGuard.h"
 
-using Utility::ScopeGuard;
-using Utility::SysUtils;
+using Utils::ScopeGuard;
+using Utils::SysUtils;
 
 namespace Memory {
 

@@ -7,7 +7,7 @@
 #include <memory>
 #include <utility>
 
-namespace Utility {
+namespace Utils {
 
 class SysUtils {
 	public:
@@ -36,4 +36,4 @@ class SysUtils {
 		static constexpr size_t ERROR_STRING_BUFFER_SIZE = 256;
 };
 
-} // namespace Utility
+} // namespace Utils
