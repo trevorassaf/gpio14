@@ -20,7 +20,7 @@ public:
 	volatile const uint32_t * GetDataLengthRegister() const;
 	volatile const uint32_t * GetSlaveAddressRegister() const;
 	volatile const uint32_t * GetDataFifoRegister() const;
-	volatile const uint32_t * GeClockDividerRegister() const;
+	volatile const uint32_t * GetClockDivideRegister() const;
 	volatile const uint32_t * GetDataDelayRegister() const;
 	volatile const uint32_t * GetClockStretchTimeoutRegister() const;
 
@@ -29,7 +29,7 @@ public:
 	volatile uint32_t * GetDataLengthRegister();
 	volatile uint32_t * GetSlaveAddressRegister();
 	volatile uint32_t * GetDataFifoRegister();
-	volatile uint32_t * GeClockDividerRegister();
+	volatile uint32_t * GetClockDivideRegister();
 	volatile uint32_t * GetDataDelayRegister();
 	volatile uint32_t * GetClockStretchTimeoutRegister();
 

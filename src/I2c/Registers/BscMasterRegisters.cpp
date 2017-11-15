@@ -37,9 +37,9 @@ volatile const uint32_t * BscMasterRegisters::GetDataFifoRegister() const
   return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetDataFifoOffset());
 }
 
-volatile const uint32_t * BscMasterRegisters::GeClockDividerRegister() const
+volatile const uint32_t * BscMasterRegisters::GetClockDivideRegister() const
 {
-  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetClockDividerOffset());
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetClockDivideOffset());
 }
 
 volatile const uint32_t * BscMasterRegisters::GetDataDelayRegister() const
@@ -77,9 +77,9 @@ volatile uint32_t * BscMasterRegisters::GetDataFifoRegister()
   return reinterpret_cast<volatile uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetDataFifoOffset());
 }
 
-volatile uint32_t * BscMasterRegisters::GeClockDividerRegister()
+volatile uint32_t * BscMasterRegisters::GetClockDivideRegister()
 {
-  return reinterpret_cast<volatile uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetClockDividerOffset());
+  return reinterpret_cast<volatile uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetClockDivideOffset());
 }
 
 volatile uint32_t * BscMasterRegisters::GetDataDelayRegister()

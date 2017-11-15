@@ -19,7 +19,7 @@ size_t MemoryConfig::GetStatusOffset() const { return STATUS_REGISTER_OFFSET; }
 size_t MemoryConfig::GetDataLengthOffset() const { return DATA_LENGTH_REGISTER_OFFSET; }
 size_t MemoryConfig::GetSlaveAddressOffset() const { return SLAVE_ADDRESS_REGISTER_OFFSET; }
 size_t MemoryConfig::GetDataFifoOffset() const { return DATA_FIFO_REGISTER_OFFSET; }
-size_t MemoryConfig::GetClockDividerOffset() const { return CLOCK_DIVIDER_REGISTER_OFFSET; }
+size_t MemoryConfig::GetClockDivideOffset() const { return CLOCK_DIVIDER_REGISTER_OFFSET; }
 size_t MemoryConfig::GetDataDelayOffset() const { return DATA_DELAY_REGISTER_OFFSET; }
 size_t MemoryConfig::GetClockStretchTimeoutOffset() const { return CLOCK_STRETCH_TIMEOUT_REGISTER_OFFSET; }
 } // namespace I2c
