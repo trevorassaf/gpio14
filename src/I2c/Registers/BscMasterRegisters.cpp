@@ -12,6 +12,46 @@ BscMasterRegisters::BscMasterRegisters(
 	: m_mmioSegment{std::move(mmioSegment)},
 		m_memoryConfig{memoryConfig} {}
 
+volatile const uint32_t * BscMasterRegisters::GetControlRegister() const
+{
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetControlOffset());
+}
+
+volatile const uint32_t * BscMasterRegisters::GetStatusRegister() const
+{
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetStatusOffset());
+}
+
+volatile const uint32_t * BscMasterRegisters::GetDataLengthRegister() const
+{
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetDataLengthOffset());
+}
+
+volatile const uint32_t * BscMasterRegisters::GetSlaveAddressRegister() const
+{
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetSlaveAddressOffset());
+}
+
+volatile const uint32_t * BscMasterRegisters::GetDataFifoRegister() const
+{
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetDataFifoOffset());
+}
+
+volatile const uint32_t * BscMasterRegisters::GeClockDividerRegister() const
+{
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetClockDividerOffset());
+}
+
+volatile const uint32_t * BscMasterRegisters::GetDataDelayRegister() const
+{
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetDataDelayOffset());
+}
+
+volatile const uint32_t * BscMasterRegisters::GetClockStretchTimeoutRegister() const
+{
+  return reinterpret_cast<volatile const uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetClockStretchTimeoutOffset());
+}
+
 volatile uint32_t * BscMasterRegisters::GetControlRegister()
 {
   return reinterpret_cast<volatile uint32_t *>(m_mmioSegment->Get() + m_memoryConfig->GetControlOffset());

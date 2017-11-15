@@ -15,6 +15,7 @@ class MmioBcm2835MemorySegment : public MemorySegment
   ~MmioBcm2835MemorySegment() override;
 
   volatile uint8_t* Get() override;
+  volatile const uint8_t* Get() const override;
 
  private:
 	const MmioConfig *m_mmioConfig;
