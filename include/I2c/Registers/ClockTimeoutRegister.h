@@ -43,6 +43,12 @@ public:
 			return *this;
 	}
 
+	ClockTimeoutRegisterBuilder &FromMmio(uint32_t bits)
+	{
+			SetTimeout(static_cast<uint16_t>(bits));
+			return *this;
+	}
+
 	ClockTimeoutRegister Build() const
 	{
 			return ClockTimeoutRegister{m_timeoutValue};

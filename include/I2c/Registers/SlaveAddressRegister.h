@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <cstdint>
-#include <numeric_limits>
+#include <limits>
 
 namespace
 {
@@ -10,7 +10,7 @@ constexpr uint8_t MAX_SLAVE_ADDRESS = 128;
 
 void checkSlaveAddress(uint8_t slaveAddress)
 {
-		::assert(slaveAddress < MAX_SLAVE_ADDRESS);
+		assert(slaveAddress < MAX_SLAVE_ADDRESS);
 }
 } // namespace
 
@@ -23,6 +23,8 @@ public:
 	{
 			checkSlaveAddress(slaveAddress);
 	}
+
+	SlaveAddressRegister(uint32_t bits) : SlaveAddressRegister{static_cast<uint8_t>(bits)} {}
 
 	uint8_t GetAddress() const { return m_slaveAddress; }
 
@@ -37,8 +39,14 @@ public:
 
 	SlaveAddressRegisterBuilder &SetAddress(uint8_t address)
 	{
-			checkSlaveAddress(slaveAddress);
+			checkSlaveAddress(address);
 			m_slaveAddress = address;
+			return *this;
+	}
+
+	SlaveAddressRegisterBuilder &FromMmioRegister(uint32_t bits)
+	{
+			SetAddress(static_cast<uint8_t>(bits));
 			return *this;
 	}
 

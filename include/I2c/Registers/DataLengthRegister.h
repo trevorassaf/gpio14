@@ -26,6 +26,12 @@ public:
 			return *this;
 	}
 
+	DataLengthRegisterBuilder &FromMmioRegister(uint32_t bits)
+	{
+			SetLength(static_cast<uint16_t>(bits));
+			return *this;
+	}
+
 	DataLengthRegister Build() const
 	{
 			return DataLengthRegister{m_length};

@@ -15,6 +15,8 @@ public:
 
 	StatusRegister(std::bitset<NUM_BITS> bits);
 
+	StatusRegister(uint32_t bits);
+
 	StatusRegister(
 			bool clockStretchTimeout,
 			bool ackError,
@@ -57,6 +59,8 @@ public:
 	StatusRegisterBuilder &SetFifoNeedsWriting(bool value);
 	StatusRegisterBuilder &SetTransferDone(bool value);
 	StatusRegisterBuilder &SetTransferActive(bool value);
+
+	StatusRegisterBuilder &FromMmioRegister(uint32_t bits);
 
 	StatusRegister Build() const;
 

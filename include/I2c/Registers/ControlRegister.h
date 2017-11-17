@@ -48,6 +48,8 @@ public:
 	ControlRegisterBuilder &SetClearFifo(bool value);
 	ControlRegisterBuilder &SetReadTransfer(bool value);
 
+	ControlRegisterBuilder &FromMmioRegister(uint32_t bits);
+
 	ControlRegister Build() const;
 
 private:

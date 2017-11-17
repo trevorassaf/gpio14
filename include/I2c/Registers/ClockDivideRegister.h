@@ -16,6 +16,8 @@ public:
 
 	ClockDivideRegister(uint16_t divisor) : m_divisor{divisor} {}
 
+	ClockDivideRegister(uint32_t bits) : ClockDivideRegister{static_cast<uint16_t>(bits)} {}
+
 	uint16_t GetDivisor() const { return m_divisor; }
 
 private:
@@ -36,6 +38,12 @@ public:
 	ClockDivideRegisterBuilder &ResetDivisor()
 	{
 			m_divisor = DEFAULT_DIVISOR_CODE;
+			return *this;
+	}
+
+	ClockDivideRegisterBuilder &FromMmioRegister(uint32_t bits)
+	{
+			SetDivisor(static_cast<uint16_t>(bits));
 			return *this;
 	}
 

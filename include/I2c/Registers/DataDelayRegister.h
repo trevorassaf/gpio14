@@ -61,6 +61,14 @@ public:
 			return *this;
 	}
 
+	DataDelayRegisterBuilder &FromMmioRegister(uint32_t bits)
+	{
+			// First 16 bits define rising-edge delay. Last 16 bits define falling-edge delay.
+			SetRisingEdgeDelay(static_cast<uint16_t>(bits));
+			SetFallingEdgeDelay(static_cast<uint16_t>(bits >> 16));
+			return *this;
+	}
+
 	DataDelayRegister Build() const
 	{
 			return DataDelayRegister{m_fallingEdgeDelay, m_risingEdgeDelay};
