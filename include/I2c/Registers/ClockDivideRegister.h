@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "I2c/Registers/MmioRegister.h"
+
 namespace
 {
 constexpr uint16_t DEFAULT_DIVISOR_CODE = 0x05DC;
@@ -9,7 +11,7 @@ constexpr uint16_t DEFAULT_DIVISOR_CODE = 0x05DC;
 
 namespace I2c
 {
-class ClockDivideRegister
+class ClockDivideRegister : public MmioRegister
 {
 public:
 	ClockDivideRegister() : m_divisor{DEFAULT_DIVISOR_CODE} {}
@@ -19,6 +21,8 @@ public:
 	ClockDivideRegister(uint32_t bits) : ClockDivideRegister{static_cast<uint16_t>(bits)} {}
 
 	uint16_t GetDivisor() const { return m_divisor; }
+
+	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_divisor); }
 
 private:
 	uint16_t m_divisor;

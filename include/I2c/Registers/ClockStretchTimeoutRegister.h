@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "I2c/Registers/ClockStretchTimeoutRegister.h"
+
 namespace
 {
 constexpr uint16_t TIMEOUT_RESET_CODE = 0x40;
@@ -9,7 +11,7 @@ constexpr uint16_t TIMEOUT_RESET_CODE = 0x40;
 
 namespace I2c
 {
-class ClockStretchTimeoutRegister
+class ClockStretchTimeoutRegister : public MmioRegister
 {
 public:
 	ClockStretchTimeoutRegister() : m_timeoutValue{TIMEOUT_RESET_CODE} {}
@@ -17,10 +19,9 @@ public:
 	ClockStretchTimeoutRegister(uint16_t timeoutValue)
 		: m_timeoutValue{timeoutValue} {}
 
-	uint16_t GetTimeoutValue() const
-	{
-			return m_timeoutValue;
-	}
+	uint16_t GetTimeoutValue() const { return m_timeoutValue; }
+
+	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_timeoutValue); }
 
 private:
 	const uint16_t m_timeoutValue;

@@ -61,6 +61,21 @@ bool ControlRegister::IsStartTransfer() const { return m_bits.test(BitIndex::Mod
 bool ControlRegister::IsClearFifo() const { return m_bits.test(BitIndex::Model::CLEAR_FIFO); }
 bool ControlRegister::IsReadTransfer() const { return m_bits.test(BitIndex::Model::READ_TRANSFER); }
 
+uint32_t ControlRegister::ToMmioRegister() const
+{
+		uint32_t mmioRegister = 0;
+
+		mmioRegister |= IsI2cEnabled() < BitIndex::Mmio::I2C_ENABLE;
+		mmioRegister |= IsRxInteruptsEnabled() < BitIndex::Mmio::RX_INTR;
+		mmioRegister |= IsTxInteruptsEnabled() < BitIndex::Mmio::TX_INTR;
+		mmioRegister |= IsDoneInteruptsEnabled() < BitIndex::Mmio::DONE_INTR;
+		mmioRegister |= IsStartTransfer() < BitIndex::Mmio::START_TRANSFER;
+		mmioRegister |= IsClearFifo() < BitIndex::Mmio::CLEAR_FIFO;
+		mmioRegister |= IsReadTransfer() < BitIndex::Mmio::READ_TRANSFER;
+
+		return mmioRegister;
+}
+
 ControlRegisterBuilder::ControlRegisterBuilder() : m_bits{} {}
 
 ControlRegisterBuilder& ControlRegisterBuilder::SetI2cEnabled(bool value)

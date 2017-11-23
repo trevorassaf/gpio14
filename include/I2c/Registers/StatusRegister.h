@@ -3,9 +3,11 @@
 #include <bitset>
 #include <cstdlib>
 
+#include "I2c/Registers/MmioRegister.h"
+
 namespace I2c
 {
-class StatusRegister
+class StatusRegister : public MmioRegister
 {
 public:
 	static constexpr size_t NUM_BITS = 10;
@@ -39,6 +41,8 @@ public:
 	bool IsFifoNeedsWriting() const;
 	bool IsTransferDone() const;
 	bool IsTransferActive() const;
+
+	uint32_t ToMmioRegister() const override;
 
 private:
 	const std::bitset<NUM_BITS> m_bits;

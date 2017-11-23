@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <limits>
 
+#include "I2c/Registers/MmioRegister.h"
+
 namespace
 {
 constexpr uint8_t MAX_SLAVE_ADDRESS = 128;
@@ -16,7 +18,7 @@ void checkSlaveAddress(uint8_t slaveAddress)
 
 namespace I2c
 {
-class SlaveAddressRegister
+class SlaveAddressRegister : public MmioRegister
 {
 public:
 	SlaveAddressRegister(uint8_t slaveAddress) : m_slaveAddress{slaveAddress}
@@ -27,6 +29,8 @@ public:
 	SlaveAddressRegister(uint32_t bits) : SlaveAddressRegister{static_cast<uint8_t>(bits)} {}
 
 	uint8_t GetAddress() const { return m_slaveAddress; }
+
+	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_slaveAddress); }
 
 private:
 	const uint8_t m_slaveAddress; 

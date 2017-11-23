@@ -2,28 +2,20 @@
 
 #include <cstdint>
 
-namespace
-{
-constexpr uint16_t REGISTER_RESET_CODE = 0x30;
-} // namespace
+#include "I2c/Registers/MmioRegister.h"
 
 namespace I2c
 {
-class DataDelayRegister
+class DataDelayRegister : public MmioRegister
 {
 public:
-	DataDelayRegister()
-		: m_fallingEdgeDelay{REGISTER_RESET_CODE},
-			m_risingEdgeDelay{REGISTER_RESET_CODE} {}
+	DataDelayRegister();
+	DataDelayRegister(uint16_t fallingEdgeDelay, uint16_t risingEdgeDelay);
 
-	DataDelayRegister(
-			uint16_t fallingEdgeDelay,
-			uint16_t risingEdgeDelay)
-		: m_fallingEdgeDelay{fallingEdgeDelay},
-			m_risingEdgeDelay{risingEdgeDelay} {}
+	uint16_t GetFallingEdgeDelay() const;
+	uint16_t GetRisingEdgeDelay() const;
 
-	uint16_t GetFallingEdgeDelay() const { return m_fallingEdgeDelay; }
-	uint16_t GetRisingEdgeDelay() const { return m_risingEdgeDelay; }
+	uint32_t ToMmioRegister() const override;
 
 private:
 	const uint16_t m_fallingEdgeDelay;
@@ -33,46 +25,15 @@ private:
 class DataDelayRegisterBuilder
 {
 public:
-	DataDelayRegisterBuilder()
-		: m_fallingEdgeDelay{REGISTER_RESET_CODE},
-			m_risingEdgeDelay{REGISTER_RESET_CODE} {}
+	DataDelayRegisterBuilder();
 
-	DataDelayRegisterBuilder &SetFallingEdgeDelay(uint16_t delay)
-	{
-			m_fallingEdgeDelay = delay;
-			return *this;
-	}
+	DataDelayRegisterBuilder &SetFallingEdgeDelay(uint16_t delay);
+	DataDelayRegisterBuilder &ResetFallingEdgeDelay();
+	DataDelayRegisterBuilder &SetRisingEdgeDelay(uint16_t delay);
+	DataDelayRegisterBuilder &ResetRisingEdgeDelay();
+	DataDelayRegisterBuilder &FromMmioRegister(uint32_t bits);
 
-	DataDelayRegisterBuilder &ResetFallingEdgeDelay()
-	{
-			m_fallingEdgeDelay = REGISTER_RESET_CODE;
-			return *this;
-	}
-
-	DataDelayRegisterBuilder &SetRisingEdgeDelay(uint16_t delay)
-	{
-			m_risingEdgeDelay = delay;
-			return *this;
-	}
-
-	DataDelayRegisterBuilder &ResetRisingEdgeDelay()
-	{
-			m_risingEdgeDelay = REGISTER_RESET_CODE;
-			return *this;
-	}
-
-	DataDelayRegisterBuilder &FromMmioRegister(uint32_t bits)
-	{
-			// First 16 bits define rising-edge delay. Last 16 bits define falling-edge delay.
-			SetRisingEdgeDelay(static_cast<uint16_t>(bits));
-			SetFallingEdgeDelay(static_cast<uint16_t>(bits >> 16));
-			return *this;
-	}
-
-	DataDelayRegister Build() const
-	{
-			return DataDelayRegister{m_fallingEdgeDelay, m_risingEdgeDelay};
-	}
+	DataDelayRegister Build() const;
 
 private:
 	uint16_t m_fallingEdgeDelay;

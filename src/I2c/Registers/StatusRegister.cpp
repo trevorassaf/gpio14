@@ -114,6 +114,24 @@ bool StatusRegister::IsTransferActive() const
   return m_bits.test(BitIndex::Model::TRANSFER_ACTIVE);
 }
 
+uint32_t StatusRegister::ToMmioRegister() const
+{
+		uint32_t mmioRegister = 0;
+
+		mmioRegister |= IsClockStretchTimeout() << BitIndex::Mmio::CLOCK_STRETCH;
+		mmioRegister |= IsAckError() << BitIndex::Mmio::ACK_ERROR;
+		mmioRegister |= IsFifoFull() << BitIndex::Mmio::FIFO_FULL;
+		mmioRegister |= IsFifoEmpty() << BitIndex::Mmio::FIFO_EMPTY;
+		mmioRegister |= IsFifoContainsData() << BitIndex::Mmio::FIFO_CONTAINS_DATA;
+		mmioRegister |= IsFifoCanAcceptData() << BitIndex::Mmio::FIFO_CAN_ACCEPT_DATA;
+		mmioRegister |= IsFifoNeedsReading() << BitIndex::Mmio::FIFO_NEEDS_READING;
+		mmioRegister |= IsFifoNeedsWriting() << BitIndex::Mmio::FIFO_NEEDS_WRITING;
+		mmioRegister |= IsTransferDone() << BitIndex::Mmio::TRANSFER_DONE;
+		mmioRegister |= IsTransferActive() << BitIndex::Mmio::TRANSFER_ACTIVE;
+
+		return mmioRegister;
+}
+
 StatusRegisterBuilder::StatusRegisterBuilder() : m_bits{} {}
 
 StatusRegisterBuilder &StatusRegisterBuilder::SetClockStretchTimeout(bool value)

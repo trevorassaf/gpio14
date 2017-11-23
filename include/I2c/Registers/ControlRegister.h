@@ -2,9 +2,11 @@
 
 #include <bitset>
 
+#include "I2c/Registers/MmioRegister.h"
+
 namespace I2c
 {
-class ControlRegister
+class ControlRegister : public MmioRegister
 {
 public:
 	static constexpr size_t NUM_BITS = 7;
@@ -30,6 +32,8 @@ public:
 	bool IsStartTransfer() const;
 	bool IsClearFifo() const;
 	bool IsReadTransfer() const;
+
+	uint32_t ToMmioRegister() const override;
 
 private:
 	const std::bitset<NUM_BITS> m_bits;
