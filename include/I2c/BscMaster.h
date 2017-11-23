@@ -29,6 +29,15 @@ public:
 	DataDelayRegister ReadDataDelayRegister() const;
 	ClockStretchTimeoutRegister ReadClockStretchTimeoutRegister() const;
 
+	void WriteControlRegister(const ControlRegister &reg);
+	void WriteStatusRegister(const StatusRegister &reg);
+	void WriteDataLengthRegister(const DataLengthRegister &reg);
+	void WriteSlaveAddressRegister(const SlaveAddressRegister &reg);
+	void WriteDataFifoRegister(const DataFifoRegister &reg);
+	void WriteClockDivideRegister(const ClockDivideRegister &reg);
+	void WriteDataDelayRegister(const DataDelayRegister &reg);
+	void WriteClockStretchTimeoutRegister(const ClockStretchTimeoutRegister &reg);
+
 private:
 	std::unique_ptr<BscMasterRegisters> m_registers;
 };

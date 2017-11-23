@@ -59,4 +59,44 @@ ClockStretchTimeoutRegister BscMaster::ReadClockStretchTimeoutRegister() const
 			.Build();
 }
 
+void BscMaster::WriteControlRegister(const ControlRegister &reg)
+{
+		*m_registers->GetControlRegister() = reg.ToMmioRegister();
+}
+
+void BscMaster::WriteStatusRegister(const StatusRegister &reg)
+{
+		*m_registers->GetStatusRegister() = reg.ToMmioRegister();
+}
+
+void BscMaster::WriteDataLengthRegister(const DataLengthRegister &reg)
+{
+		*m_registers->GetDataLengthRegister() = reg.ToMmioRegister();
+}
+
+void BscMaster::WriteSlaveAddressRegister(const SlaveAddressRegister &reg)
+{
+		*m_registers->GetSlaveAddressRegister() = reg.ToMmioRegister();
+}
+
+void BscMaster::WriteDataFifoRegister(const DataFifoRegister &reg)
+{
+		*m_registers->GetDataFifoRegister() = reg.ToMmioRegister();
+}
+
+void BscMaster::WriteClockDivideRegister(const ClockDivideRegister &reg)
+{
+		*m_registers->GetClockDivideRegister() = reg.ToMmioRegister();
+}
+
+void BscMaster::WriteDataDelayRegister(const DataDelayRegister &reg)
+{
+		*m_registers->GetDataDelayRegister() = reg.ToMmioRegister();
+}
+
+void BscMaster::WriteClockStretchTimeoutRegister(const ClockStretchTimeoutRegister &reg)
+{
+		*m_registers->GetClockStretchTimeoutRegister() = reg.ToMmioRegister();
+}
+
 } // namespace I2c
