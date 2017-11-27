@@ -13,6 +13,7 @@ RM_R = rm -rf
 ######## Binaries ########
 ##########################
 GPIO_EXEC = gpio
+I2C_SCAN_EXEC = i2c-scan
 
 ##########################
 ####### Directories ######
@@ -25,7 +26,8 @@ INCLUDE_DIR = include
 ##########################
 ####### Main Files #######
 ##########################
-MAIN_SOURCE = main.cpp
+GPIO_MAIN_SOURCE = gpio_main.cpp
+I2C_SCAN_MAIN_SOURCE = i2c_scan_main.cpp
 
 ##########################
 ######### Recipes ########
@@ -34,10 +36,15 @@ MAIN_SOURCE = main.cpp
 # Scan for source files 
 SOURCE_FILES := $(shell find $(SOURCE_DIR) -name '*.cpp')
 
-# Client object paths
-GPIO_SOURCE_FILES = $(SOURCE_FILES) $(MAIN_SOURCE) 
+# GPIO object paths
+GPIO_SOURCE_FILES = $(SOURCE_FILES) $(GPIO_MAIN_SOURCE) 
 GPIO_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(GPIO_SOURCE_FILES:%.cpp=%.o))
 GPIO_OBJECT_FILES = $(GPIO_SOURCE_FILES:%.cpp=%.o)
+
+# I2C_SCAN object paths
+I2C_SCAN_SOURCE_FILES = $(SOURCE_FILES) $(I2C_SCAN_MAIN_SOURCE) 
+I2C_SCAN_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(I2C_SCAN_SOURCE_FILES:%.cpp=%.o))
+I2C_SCAN_OBJECT_FILES = $(I2C_SCAN_SOURCE_FILES:%.cpp=%.o)
 
 # Declaration of variables
 CC = clang++
@@ -52,7 +59,7 @@ FILES_TO_REMOVE = \
 .PHONY: directories
 
 # Build all binaries
-all: directories $(GPIO_EXEC)
+all: directories $(GPIO_EXEC) $(I2C_SCAN_EXEC)
 
 directories:
 	${MKDIR_P} $(BINARY_DIR)
@@ -60,6 +67,9 @@ directories:
 # Compile blink binary
 $(GPIO_EXEC): $(GPIO_OBJECT_FILES) 
 	@$(CC) $(GPIO_OBJECT_FILES_WITH_ROOT) -o $(BINARY_DIR)/$(GPIO_EXEC) $(CC_FLAGS) -lpthread
+
+$(I2C_SCAN_EXEC): $(I2C_SCAN_OBJECT_FILES) 
+	@$(CC) $(I2C_SCAN_OBJECT_FILES_WITH_ROOT) -o $(BINARY_DIR)/$(I2C_SCAN_EXEC) $(CC_FLAGS) -lpthread
 
 # Compile source
 %.o: %.cpp

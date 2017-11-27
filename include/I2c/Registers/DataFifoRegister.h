@@ -12,8 +12,6 @@ class DataFifoRegister : public MmioRegister
 public:
 	explicit DataFifoRegister(uint8_t data);
 
-	explicit DataFifoRegister(uint32_t bits);
-
 	uint8_t GetData() const;
 
 	uint32_t ToMmioRegister() const;

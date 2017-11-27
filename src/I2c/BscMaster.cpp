@@ -35,7 +35,7 @@ SlaveAddressRegister BscMaster::ReadSlaveAddressRegister() const
 
 DataFifoRegister BscMaster::ReadDataFifoRegister() const
 {
-		return DataFifoRegister{*m_registers->GetDataFifoRegister()};
+		return DataFifoRegister{static_cast<uint8_t>(*m_registers->GetDataFifoRegister())};
 }
 
 ClockDivideRegister BscMaster::ReadClockDivideRegister() const
