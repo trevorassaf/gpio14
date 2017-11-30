@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <sstream>
 
 #include "I2c/Registers/DataFifoRegister.h"
 
@@ -20,4 +21,11 @@ public:
 private:
 	const uint8_t m_data;
 };
+
+std::ostream &operator<<(std::ostream &stream, const DataFifoRegister &reg)
+{
+		stream << "DATA: " << reg.GetData() << " (Fifo data byte)" << std::endl;
+		return stream;
+}
+
 } // namespace I2c

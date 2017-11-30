@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <sstream>
 
 #include "I2c/Registers/MmioRegister.h"
 
@@ -27,6 +28,12 @@ public:
 private:
 	uint16_t m_divisor;
 };
+
+std::ostream &operator<<(std::ostream &stream, const ClockDivideRegister &reg)
+{
+		stream << "CDIV : " << reg.GetDivisor() << " (Clock divisor)" << std::endl;
+		return stream;
+}
 
 class ClockDivideRegisterBuilder
 {

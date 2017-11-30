@@ -76,6 +76,18 @@ uint32_t ControlRegister::ToMmioRegister() const
 		return mmioRegister;
 }
 
+std::ostream& operator<<(std::ostream &stream, const ControlRegister &reg)
+{
+		stream << "I2CEN: " << reg.IsI2cEnabled() << " (I2c enabled)" << std::endl
+					 << "INTR:  " << reg.IsRxInteruptsEnabled() << " (Rx interupts enabled)" << std::endl
+					 << "INTT:  " << reg.IsTxInteruptsEnabled() << " (Tx interupts enabled)" << std::endl
+					 << "INTD:  " << reg.IsDoneInteruptsEnabled() << " (Done interupts enabled)" << std::endl
+					 << "ST:    " << reg.IsStartTransfer() << " (Start transfer)" << std::endl
+					 << "CLEAR: " << reg.IsClearFifo() << " (Clear fifo)" << std::endl
+					 << "READ:  " << reg.IsReadTransfer() << " (Read transfer)" << std::endl;
+		return stream;
+}
+
 ControlRegisterBuilder::ControlRegisterBuilder() : m_bits{} {}
 
 ControlRegisterBuilder& ControlRegisterBuilder::SetI2cEnabled(bool value)

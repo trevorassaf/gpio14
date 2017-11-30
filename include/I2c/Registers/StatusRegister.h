@@ -2,6 +2,7 @@
 
 #include <bitset>
 #include <cstdlib>
+#include <sstream>
 
 #include "I2c/Registers/MmioRegister.h"
 
@@ -47,6 +48,8 @@ public:
 private:
 	const std::bitset<NUM_BITS> m_bits;
 };
+
+std::ostream& operator<<(std::ostream &stream, const StatusRegister &reg);
 
 class StatusRegisterBuilder
 {

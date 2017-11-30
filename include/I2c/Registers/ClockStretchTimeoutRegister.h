@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <sstream>
 
 #include "I2c/Registers/ClockStretchTimeoutRegister.h"
 
@@ -26,6 +27,12 @@ public:
 private:
 	const uint16_t m_timeoutValue;
 };
+
+std::ostream &operator<<(std::ostream &stream, const ClockStretchTimeoutRegister &reg)
+{
+		stream << "TOUT: " << reg.GetTimeoutValue() << " (Clock stretch timeout value)" << std::endl;
+		return stream;
+}
 
 class ClockStretchTimeoutRegisterBuilder
 {

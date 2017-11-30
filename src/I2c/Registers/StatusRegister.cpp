@@ -132,6 +132,21 @@ uint32_t StatusRegister::ToMmioRegister() const
 		return mmioRegister;
 }
 
+std::ostream &operator<<(std::ostream &stream, const StatusRegister &reg)
+{
+		stream << "CLKT: " << reg.IsClockStretchTimeout() << " (Clock stretch timeout)" << std::endl
+					 << "ERR:  " << reg.IsAckError() << " (Ack error)" << std::endl
+					 << "RXF:  " << reg.IsFifoFull() << " (Is fifo full)" << std::endl
+					 << "TXE:  " << reg.IsFifoEmpty() << " (Is fifo empty)" << std::endl
+					 << "RXD:  " << reg.IsFifoContainsData() << " (Fifo contains data)" << std::endl
+					 << "TXD:  " << reg.IsFifoCanAcceptData() << " (Fifo can accept data)" << std::endl
+					 << "RXR:  " << reg.IsFifoNeedsReading() << " (Fifo needs reading)" << std::endl
+					 << "TXW:  " << reg.IsFifoNeedsWriting() << " (Fifo needs writing)" << std::endl
+					 << "DONE: " << reg.IsTransferDone() << " (Transfer done)" << std::endl
+					 << "TA:   " << reg.IsTransferActive() << " (Transfer active)" << std::endl;
+		return stream;
+}
+
 StatusRegisterBuilder::StatusRegisterBuilder() : m_bits{} {}
 
 StatusRegisterBuilder &StatusRegisterBuilder::SetClockStretchTimeout(bool value)

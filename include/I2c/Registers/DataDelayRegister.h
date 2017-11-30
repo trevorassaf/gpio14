@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <sstream>
 
 #include "I2c/Registers/MmioRegister.h"
 
@@ -21,6 +22,8 @@ private:
 	const uint16_t m_fallingEdgeDelay;
 	const uint16_t m_risingEdgeDelay;
 };
+
+std::ostream &operator<<(std::ostream &stream, const DataDelayRegister &reg);
 
 class DataDelayRegisterBuilder
 {

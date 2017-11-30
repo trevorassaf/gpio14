@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdint>
 #include <limits>
+#include <sstream>
 
 #include "I2c/Registers/MmioRegister.h"
 
@@ -35,6 +36,12 @@ public:
 private:
 	const uint8_t m_slaveAddress; 
 };
+
+std::ostream &operator<<(std::ostream &stream, const SlaveAddressRegister &reg)
+{
+		stream << "ADDR: " << std::hex << reg.GetAddress() << " (Slave address register)" << std::endl;
+		return stream;
+}
 
 class SlaveAddressRegisterBuilder
 {

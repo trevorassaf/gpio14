@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bitset>
+#include <sstream>
 
 #include "I2c/Registers/MmioRegister.h"
 
@@ -38,6 +39,8 @@ public:
 private:
 	const std::bitset<NUM_BITS> m_bits;
 };
+
+std::ostream& operator<<(std::ostream &stream, const ControlRegister &reg);
 
 class ControlRegisterBuilder
 {

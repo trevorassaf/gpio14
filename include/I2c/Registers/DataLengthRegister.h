@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <sstream>
 
 #include "I2c/Registers/DataLengthRegister.h"
 
@@ -18,6 +19,12 @@ public:
 private:
 	const uint16_t m_length;
 };
+
+std::ostream &operator<<(std::ostream &stream, const DataLengthRegister &reg)
+{
+		stream << "DLEN: " << reg.GetLength() << std::endl;
+		return stream;
+}
 
 class DataLengthRegisterBuilder
 {

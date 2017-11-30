@@ -44,6 +44,13 @@ uint32_t DataDelayRegister::ToMmioRegister() const
 		return mmioBits;
 }
 
+std::ostream &operator<<(std::ostream &stream, const DataDelayRegister &reg)
+{
+		stream << "FEDL: " << reg.GetFallingEdgeDelay() << " (Falling edge delay)" << std::endl
+					 << "REDL: " << reg.GetRisingEdgeDelay() << " (Rising edge delay)" << std::endl;
+		return stream;
+}
+
 DataDelayRegisterBuilder::DataDelayRegisterBuilder()
 		: m_fallingEdgeDelay{REGISTER_RESET_CODE},
 			m_risingEdgeDelay{REGISTER_RESET_CODE} {}
