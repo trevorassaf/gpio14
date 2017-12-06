@@ -19,17 +19,17 @@ public:
 
 	ControlRegister(
 			bool i2cEnabled,
-			bool rxInteruptsEnabled,
+			bool rxInteruptEnabled,
 			bool txInterruptsEnabled,
-			bool doneInteruptsEnabled,
+			bool doneInteruptEnabled,
 			bool startTransfer,
 			bool clearFifo,
 			bool readTransfer);
 
 	bool IsI2cEnabled() const;
-	bool IsRxInteruptsEnabled() const;
-	bool IsTxInteruptsEnabled() const;
-	bool IsDoneInteruptsEnabled() const;
+	bool IsRxInteruptEnabled() const;
+	bool IsTxInteruptEnabled() const;
+	bool IsDoneInteruptEnabled() const;
 	bool IsStartTransfer() const;
 	bool IsClearFifo() const;
 	bool IsReadTransfer() const;
@@ -48,9 +48,9 @@ public:
 	ControlRegisterBuilder();
 
 	ControlRegisterBuilder &SetI2cEnabled(bool value);
-	ControlRegisterBuilder &SetRxInteruptsEnabled(bool value);
-	ControlRegisterBuilder &SetTxInteruptsEnabled(bool value);
-	ControlRegisterBuilder &SetDoneInteruptsEnabled(bool value);
+	ControlRegisterBuilder &SetRxInteruptEnabled(bool value);
+	ControlRegisterBuilder &SetTxInteruptEnabled(bool value);
+	ControlRegisterBuilder &SetDoneInteruptEnabled(bool value);
 	ControlRegisterBuilder &SetStartTransfer(bool value);
 	ControlRegisterBuilder &SetClearFifo(bool value);
 	ControlRegisterBuilder &SetReadTransfer(bool value);

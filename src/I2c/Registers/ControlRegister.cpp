@@ -37,26 +37,26 @@ ControlRegister::ControlRegister(std::bitset<NUM_BITS> bits) : m_bits{std::move(
 
 ControlRegister::ControlRegister(
 		bool i2cEnabled,
-		bool rxInteruptsEnabled,
-		bool txInteruptsEnabled,
-		bool doneInteruptsEnabled,
+		bool rxInteruptEnabled,
+		bool txInteruptEnabled,
+		bool doneInteruptEnabled,
 		bool startTransfer,
 		bool clearFifo,
 		bool readTransfer)
 : m_bits{Utils::to_bitset(
 			i2cEnabled,
-			rxInteruptsEnabled,
-			txInteruptsEnabled,
-			doneInteruptsEnabled,
+			rxInteruptEnabled,
+			txInteruptEnabled,
+			doneInteruptEnabled,
 			startTransfer,
 			clearFifo,
 			readTransfer)}
 {}
 
 bool ControlRegister::IsI2cEnabled() const { return m_bits.test(BitIndex::Model::I2C_ENABLE); }
-bool ControlRegister::IsRxInteruptsEnabled() const { return m_bits.test(BitIndex::Model::RX_INTR); }
-bool ControlRegister::IsTxInteruptsEnabled() const { return m_bits.test(BitIndex::Model::TX_INTR); }
-bool ControlRegister::IsDoneInteruptsEnabled() const { return m_bits.test(BitIndex::Model::DONE_INTR); }
+bool ControlRegister::IsRxInteruptEnabled() const { return m_bits.test(BitIndex::Model::RX_INTR); }
+bool ControlRegister::IsTxInteruptEnabled() const { return m_bits.test(BitIndex::Model::TX_INTR); }
+bool ControlRegister::IsDoneInteruptEnabled() const { return m_bits.test(BitIndex::Model::DONE_INTR); }
 bool ControlRegister::IsStartTransfer() const { return m_bits.test(BitIndex::Model::START_TRANSFER); }
 bool ControlRegister::IsClearFifo() const { return m_bits.test(BitIndex::Model::CLEAR_FIFO); }
 bool ControlRegister::IsReadTransfer() const { return m_bits.test(BitIndex::Model::READ_TRANSFER); }
@@ -66,9 +66,9 @@ uint32_t ControlRegister::ToMmioRegister() const
 		uint32_t mmioRegister = 0;
 
 		mmioRegister |= IsI2cEnabled() < BitIndex::Mmio::I2C_ENABLE;
-		mmioRegister |= IsRxInteruptsEnabled() < BitIndex::Mmio::RX_INTR;
-		mmioRegister |= IsTxInteruptsEnabled() < BitIndex::Mmio::TX_INTR;
-		mmioRegister |= IsDoneInteruptsEnabled() < BitIndex::Mmio::DONE_INTR;
+		mmioRegister |= IsRxInteruptEnabled() < BitIndex::Mmio::RX_INTR;
+		mmioRegister |= IsTxInteruptEnabled() < BitIndex::Mmio::TX_INTR;
+		mmioRegister |= IsDoneInteruptEnabled() < BitIndex::Mmio::DONE_INTR;
 		mmioRegister |= IsStartTransfer() < BitIndex::Mmio::START_TRANSFER;
 		mmioRegister |= IsClearFifo() < BitIndex::Mmio::CLEAR_FIFO;
 		mmioRegister |= IsReadTransfer() < BitIndex::Mmio::READ_TRANSFER;
@@ -79,9 +79,9 @@ uint32_t ControlRegister::ToMmioRegister() const
 std::ostream& operator<<(std::ostream &stream, const ControlRegister &reg)
 {
 		stream << "I2CEN: " << reg.IsI2cEnabled() << " (I2c enabled)" << std::endl
-					 << "INTR:  " << reg.IsRxInteruptsEnabled() << " (Rx interupts enabled)" << std::endl
-					 << "INTT:  " << reg.IsTxInteruptsEnabled() << " (Tx interupts enabled)" << std::endl
-					 << "INTD:  " << reg.IsDoneInteruptsEnabled() << " (Done interupts enabled)" << std::endl
+					 << "INTR:  " << reg.IsRxInteruptEnabled() << " (Rx interupts enabled)" << std::endl
+					 << "INTT:  " << reg.IsTxInteruptEnabled() << " (Tx interupts enabled)" << std::endl
+					 << "INTD:  " << reg.IsDoneInteruptEnabled() << " (Done interupts enabled)" << std::endl
 					 << "ST:    " << reg.IsStartTransfer() << " (Start transfer)" << std::endl
 					 << "CLEAR: " << reg.IsClearFifo() << " (Clear fifo)" << std::endl
 					 << "READ:  " << reg.IsReadTransfer() << " (Read transfer)" << std::endl;
@@ -96,19 +96,19 @@ ControlRegisterBuilder& ControlRegisterBuilder::SetI2cEnabled(bool value)
 		return *this;
 }
 
-ControlRegisterBuilder& ControlRegisterBuilder::SetRxInteruptsEnabled(bool value)
+ControlRegisterBuilder& ControlRegisterBuilder::SetRxInteruptEnabled(bool value)
 {
 		m_bits[BitIndex::Model::RX_INTR] = value;
 		return *this;
 }
 
-ControlRegisterBuilder& ControlRegisterBuilder::SetTxInteruptsEnabled(bool value)
+ControlRegisterBuilder& ControlRegisterBuilder::SetTxInteruptEnabled(bool value)
 {
 		m_bits[BitIndex::Model::TX_INTR] = value;
 		return *this;
 }
 
-ControlRegisterBuilder& ControlRegisterBuilder::SetDoneInteruptsEnabled(bool value)
+ControlRegisterBuilder& ControlRegisterBuilder::SetDoneInteruptEnabled(bool value)
 {
 		m_bits[BitIndex::Model::DONE_INTR] = value;
 		return *this;
@@ -135,9 +135,9 @@ ControlRegisterBuilder& ControlRegisterBuilder::SetReadTransfer(bool value)
 ControlRegisterBuilder& ControlRegisterBuilder::FromMmioRegister(uint32_t bits)
 {
 		SetI2cEnabled(bits & BitIndex::Mmio::I2C_ENABLE);
-		SetRxInteruptsEnabled(bits & BitIndex::Mmio::RX_INTR);
-		SetTxInteruptsEnabled(bits & BitIndex::Mmio::TX_INTR);
-		SetDoneInteruptsEnabled(bits & BitIndex::Mmio::DONE_INTR);
+		SetRxInteruptEnabled(bits & BitIndex::Mmio::RX_INTR);
+		SetTxInteruptEnabled(bits & BitIndex::Mmio::TX_INTR);
+		SetDoneInteruptEnabled(bits & BitIndex::Mmio::DONE_INTR);
 		SetStartTransfer(bits & BitIndex::Mmio::START_TRANSFER);
 		SetClearFifo(bits & BitIndex::Mmio::CLEAR_FIFO);
 		SetReadTransfer(bits & BitIndex::Mmio::READ_TRANSFER);
