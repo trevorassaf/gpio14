@@ -209,6 +209,14 @@ StatusRegisterBuilder &StatusRegisterBuilder::SetTransferActive(bool value)
 		return *this;
 }
 
+StatusRegisterBuilder &StatusRegisterBuilder::SetClearStatusBits()
+{
+		SetClockStretchTimeout(true);
+		SetAckError(true);
+		SetTransferDone(true);
+		return *this;
+}
+
 StatusRegisterBuilder &StatusRegisterBuilder::FromMmioRegister(uint32_t bits)
 {
 		SetClockStretchTimeout(bits & BitIndex::Mmio::CLOCK_STRETCH);

@@ -67,6 +67,7 @@ public:
 	StatusRegisterBuilder &SetTransferDone(bool value);
 	StatusRegisterBuilder &SetTransferActive(bool value);
 
+	StatusRegisterBuilder &SetClearStatusBits();
 	StatusRegisterBuilder &FromMmioRegister(uint32_t bits);
 
 	StatusRegister Build() const;
