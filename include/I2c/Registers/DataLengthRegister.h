@@ -3,50 +3,35 @@
 #include <cstdint>
 #include <sstream>
 
-#include "I2c/Registers/DataLengthRegister.h"
+#include "I2c/Registers/MmioRegister.h"
 
 namespace I2c
 {
 class DataLengthRegister : public MmioRegister
 {
 public:
-	DataLengthRegister(uint16_t length) : m_length{length} {}
+	DataLengthRegister(uint16_t length);
 
-	uint16_t GetLength() const { return m_length; }
+	uint16_t GetLength() const;
 
-	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_length); }
+	uint32_t ToMmioRegister() const;
 
 private:
 	uint16_t m_length;
 };
 
-std::ostream &operator<<(std::ostream &stream, const DataLengthRegister &reg)
-{
-		stream << "DLEN: " << reg.GetLength() << std::endl;
-		return stream;
-}
+std::ostream &operator<<(std::ostream &stream, const DataLengthRegister &reg);
 
 class DataLengthRegisterBuilder
 {
 public:
-	DataLengthRegisterBuilder() : m_length{false} {}
+	DataLengthRegisterBuilder();
 
-	DataLengthRegisterBuilder &SetLength(uint16_t length)
-	{
-			m_length = length;
-			return *this;
-	}
+	DataLengthRegisterBuilder &SetLength(uint16_t length);
 
-	DataLengthRegisterBuilder &FromMmioRegister(uint32_t bits)
-	{
-			SetLength(static_cast<uint16_t>(bits));
-			return *this;
-	}
+	DataLengthRegisterBuilder &FromMmioRegister(uint32_t bits);
 
-	DataLengthRegister Build() const
-	{
-			return DataLengthRegister{m_length};
-	}
+	DataLengthRegister Build() const;
 
 private:
 	uint16_t m_length;

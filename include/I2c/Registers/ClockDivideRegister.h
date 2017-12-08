@@ -5,63 +5,36 @@
 
 #include "I2c/Registers/MmioRegister.h"
 
-namespace
-{
-constexpr uint16_t DEFAULT_DIVISOR_CODE = 0x05DC;
-} // namespace
-
 namespace I2c
 {
 class ClockDivideRegister : public MmioRegister
 {
 public:
-	ClockDivideRegister() : m_divisor{DEFAULT_DIVISOR_CODE} {}
+	ClockDivideRegister();
 
-	ClockDivideRegister(uint16_t divisor) : m_divisor{divisor} {}
+	ClockDivideRegister(uint16_t divisor);
 
-	ClockDivideRegister(uint32_t bits) : ClockDivideRegister{static_cast<uint16_t>(bits)} {}
+	ClockDivideRegister(uint32_t bits);
 
-	uint16_t GetDivisor() const { return m_divisor; }
+	uint16_t GetDivisor() const;
 
-	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_divisor); }
+	uint32_t ToMmioRegister() const override;
 
 private:
 	uint16_t m_divisor;
 };
 
-std::ostream &operator<<(std::ostream &stream, const ClockDivideRegister &reg)
-{
-		stream << "CDIV : " << reg.GetDivisor() << " (Clock divisor)" << std::endl;
-		return stream;
-}
+std::ostream &operator<<(std::ostream &stream, const ClockDivideRegister &reg);
 
 class ClockDivideRegisterBuilder
 {
 public:
-	ClockDivideRegisterBuilder() : m_divisor{DEFAULT_DIVISOR_CODE} {}
+	ClockDivideRegisterBuilder();
 
-	ClockDivideRegisterBuilder &SetDivisor(uint16_t divisor)
-	{
-			m_divisor = divisor;
-			return *this;
-	}
-
-	ClockDivideRegisterBuilder &ResetDivisor()
-	{
-			m_divisor = DEFAULT_DIVISOR_CODE;
-			return *this;
-	}
-
-	ClockDivideRegisterBuilder &FromMmioRegister(uint32_t bits)
-	{
-			SetDivisor(static_cast<uint16_t>(bits));
-			return *this;
-	}
-
-	ClockDivideRegister Build() const
-	{
-			return ClockDivideRegister{m_divisor};
-	}
+	ClockDivideRegisterBuilder &SetDivisor(uint16_t divisor);
+	ClockDivideRegisterBuilder &ResetDivisor();
+	ClockDivideRegisterBuilder &FromMmioRegister(uint32_t bits);
+	ClockDivideRegister Build() const;
 
 private:
 	uint16_t m_divisor;
