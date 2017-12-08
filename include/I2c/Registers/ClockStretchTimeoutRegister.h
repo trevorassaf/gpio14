@@ -25,7 +25,7 @@ public:
 	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_timeoutValue); }
 
 private:
-	const uint16_t m_timeoutValue;
+	uint16_t m_timeoutValue;
 };
 
 std::ostream &operator<<(std::ostream &stream, const ClockStretchTimeoutRegister &reg)

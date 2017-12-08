@@ -46,7 +46,7 @@ public:
 	uint32_t ToMmioRegister() const override;
 
 private:
-	const std::bitset<NUM_BITS> m_bits;
+	std::bitset<NUM_BITS> m_bits;
 };
 
 std::ostream& operator<<(std::ostream &stream, const StatusRegister &reg);

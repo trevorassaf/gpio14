@@ -34,10 +34,13 @@ public:
 	bool IsClearFifo() const;
 	bool IsReadTransfer() const;
 
+	ControlRegister(const ControlRegister &reg);
+	ControlRegister &operator=(const ControlRegister &reg);
+
 	uint32_t ToMmioRegister() const override;
 
 private:
-	const std::bitset<NUM_BITS> m_bits;
+	std::bitset<NUM_BITS> m_bits;
 };
 
 std::ostream& operator<<(std::ostream &stream, const ControlRegister &reg);

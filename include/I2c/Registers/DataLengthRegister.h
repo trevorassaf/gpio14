@@ -17,7 +17,7 @@ public:
 	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_length); }
 
 private:
-	const uint16_t m_length;
+	uint16_t m_length;
 };
 
 std::ostream &operator<<(std::ostream &stream, const DataLengthRegister &reg)

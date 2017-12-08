@@ -34,7 +34,7 @@ public:
 	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_slaveAddress); }
 
 private:
-	const uint8_t m_slaveAddress; 
+	uint8_t m_slaveAddress; 
 };
 
 std::ostream &operator<<(std::ostream &stream, const SlaveAddressRegister &reg)

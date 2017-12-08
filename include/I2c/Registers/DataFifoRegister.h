@@ -19,7 +19,7 @@ public:
 	uint32_t ToMmioRegister() const override { return static_cast<uint32_t>(m_data); }
 
 private:
-	const uint8_t m_data;
+	uint8_t m_data;
 };
 
 std::ostream &operator<<(std::ostream &stream, const DataFifoRegister &reg)

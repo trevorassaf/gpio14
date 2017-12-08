@@ -19,8 +19,8 @@ public:
 	uint32_t ToMmioRegister() const override;
 
 private:
-	const uint16_t m_fallingEdgeDelay;
-	const uint16_t m_risingEdgeDelay;
+	uint16_t m_fallingEdgeDelay;
+	uint16_t m_risingEdgeDelay;
 };
 
 std::ostream &operator<<(std::ostream &stream, const DataDelayRegister &reg);
