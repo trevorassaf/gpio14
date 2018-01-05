@@ -46,9 +46,15 @@ I2C_SCAN_SOURCE_FILES = $(SOURCE_FILES) $(I2C_SCAN_MAIN_SOURCE)
 I2C_SCAN_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(I2C_SCAN_SOURCE_FILES:%.cpp=%.o))
 I2C_SCAN_OBJECT_FILES = $(I2C_SCAN_SOURCE_FILES:%.cpp=%.o)
 
-# Declaration of variables
-CC = clang++-3.5
-CC_FLAGS = -w -I$(INCLUDE_DIR) -std=c++14 -g
+# Compiler
+CC_RASPBERRYPI = clang++-3.5
+CC_LINUX = clang++
+CC = ${CC_LINUX}
+
+# Compilation flags
+CC_FLAGS_RASPBERRYPI = -w -I$(INCLUDE_DIR) -std=c++14 -g
+CC_FLAGS_LINUX = ${CC_FLAGS_RASPBERRYPI} -stdlib=libc++
+CC_FLAGS = ${CC_FLAGS_LINUX}
 
 # Removed files
 FILES_TO_REMOVE = \
@@ -59,7 +65,15 @@ FILES_TO_REMOVE = \
 .PHONY: directories
 
 # Build all binaries
-all: directories $(GPIO_EXEC) $(I2C_SCAN_EXEC)
+all: detect-host directories $(GPIO_EXEC) $(I2C_SCAN_EXEC)
+
+detect-host:
+	@host_name=$(uname -a)
+	@if [ $$host_name == *"raspberrypi"* ] ; \
+		then \
+			CC=${CC_RASPBERRYPI} ; \
+			CC_FLAGS=${CC_FLAGS_RASPBERRYPI} ; \
+	fi;
 
 directories:
 	${MKDIR_P} $(BINARY_DIR)
