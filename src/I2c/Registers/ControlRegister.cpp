@@ -1,5 +1,7 @@
 #include "I2c/Registers/ControlRegister.h"
 
+#include <iostream>
+
 #include <utility>
 
 #include "Utils/StlUtils.h"
@@ -65,13 +67,13 @@ uint32_t ControlRegister::ToMmioRegister() const
 {
 		uint32_t mmioRegister = 0;
 
-		mmioRegister |= IsI2cEnabled() < BitIndex::Mmio::I2C_ENABLE;
-		mmioRegister |= IsRxInteruptEnabled() < BitIndex::Mmio::RX_INTR;
-		mmioRegister |= IsTxInteruptEnabled() < BitIndex::Mmio::TX_INTR;
-		mmioRegister |= IsDoneInteruptEnabled() < BitIndex::Mmio::DONE_INTR;
-		mmioRegister |= IsStartTransfer() < BitIndex::Mmio::START_TRANSFER;
-		mmioRegister |= IsClearFifo() < BitIndex::Mmio::CLEAR_FIFO;
-		mmioRegister |= IsReadTransfer() < BitIndex::Mmio::READ_TRANSFER;
+		mmioRegister |= IsI2cEnabled() << BitIndex::Mmio::I2C_ENABLE;
+		mmioRegister |= IsRxInteruptEnabled() << BitIndex::Mmio::RX_INTR;
+		mmioRegister |= IsTxInteruptEnabled() << BitIndex::Mmio::TX_INTR;
+		mmioRegister |= IsDoneInteruptEnabled() << BitIndex::Mmio::DONE_INTR;
+		mmioRegister |= IsStartTransfer() << BitIndex::Mmio::START_TRANSFER;
+		mmioRegister |= IsClearFifo() << BitIndex::Mmio::CLEAR_FIFO;
+		mmioRegister |= IsReadTransfer() << BitIndex::Mmio::READ_TRANSFER;
 
 		return mmioRegister;
 }

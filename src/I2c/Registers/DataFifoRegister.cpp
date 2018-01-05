@@ -10,7 +10,7 @@ uint32_t DataFifoRegister::ToMmioRegister() const { return static_cast<uint32_t>
 
 std::ostream &operator<<(std::ostream &stream, const DataFifoRegister &reg)
 {
-		stream << "DATA: " << reg.GetData() << " (Fifo data byte)" << std::endl;
+		stream << "DATA: " << (int)reg.GetData() << " (Fifo data byte)" << std::endl;
 		return stream;
 }
 
