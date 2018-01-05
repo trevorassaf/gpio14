@@ -2,6 +2,7 @@
 
 #include <bitset>
 #include <cstdlib>
+#include <tuple>
 #include <utility>
 
 namespace Utils

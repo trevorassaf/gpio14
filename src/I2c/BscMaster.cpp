@@ -22,7 +22,7 @@ StatusRegister BscMaster::ReadStatusRegister() const
 DataLengthRegister BscMaster::ReadDataLengthRegister() const
 {
 		return (DataLengthRegisterBuilder{})
-			.FromMmioRegister(*m_registers->GetStatusRegister())
+			.FromMmioRegister(*m_registers->GetDataLengthRegister())
 			.Build();
 }
 
@@ -48,7 +48,7 @@ ClockDivideRegister BscMaster::ReadClockDivideRegister() const
 DataDelayRegister BscMaster::ReadDataDelayRegister() const
 {
 		return (DataDelayRegisterBuilder{})
-			.FromMmioRegister(*m_registers->GetClockDivideRegister())
+			.FromMmioRegister(*m_registers->GetDataDelayRegister())
 			.Build();
 }
 

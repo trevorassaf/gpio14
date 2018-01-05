@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -ex 
+
+sudo i2cset -y 1 0x39 0x80 0x03 b

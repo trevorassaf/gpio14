@@ -47,8 +47,8 @@ I2C_SCAN_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(I2C_SCAN_SOURCE_F
 I2C_SCAN_OBJECT_FILES = $(I2C_SCAN_SOURCE_FILES:%.cpp=%.o)
 
 # Declaration of variables
-CC = clang++
-CC_FLAGS = -w -I$(INCLUDE_DIR) -std=c++14 -g -stdlib=libc++
+CC = clang++-3.5
+CC_FLAGS = -w -I$(INCLUDE_DIR) -std=c++14 -g
 
 # Removed files
 FILES_TO_REMOVE = \
