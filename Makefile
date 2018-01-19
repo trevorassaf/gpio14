@@ -53,13 +53,16 @@ CC = ${CC_LINUX}
 
 # Compilation flags
 CC_FLAGS_RASPBERRYPI = -w -I$(INCLUDE_DIR) -std=c++14 -g
-CC_FLAGS_LINUX = ${CC_FLAGS_RASPBERRYPI} -stdlib=libc++
-CC_FLAGS = ${CC_FLAGS_LINUX}
+CC_FLAGS_LINUX = $(CC_FLAGS_RASPBERRYPI) -stdlib=libc++
+CC_FLAGS = $(CC_FLAGS_LINUX)
 
 # Removed files
 FILES_TO_REMOVE = \
 		$(BINARY_DIR)/ \
 		$(OBJECT_DIR)/
+
+IS_HOST_RASPBERRYPI = $(shell uname -a | grep raspberrypi)
+NON_RASPBERRYPI_TEST_STRING = ""
 
 # Create compilation directories
 .PHONY: directories
@@ -68,15 +71,14 @@ FILES_TO_REMOVE = \
 all: detect-host directories $(GPIO_EXEC) $(I2C_SCAN_EXEC)
 
 detect-host:
-	@host_name=$(uname -a)
-	@if [ $$host_name == *"raspberrypi"* ] ; \
+	@if [ "${IS_HOST_RASPBERRYPI}" = "${NON_RASPBERRYPI_TEST_STRING}" ] ; \
 		then \
-			CC=${CC_RASPBERRYPI} ; \
-			CC_FLAGS=${CC_FLAGS_RASPBERRYPI} ; \
+			CC="${CC_RASPBERRYPI}" ; \
+			CC_FLAGS="${CC_FLAGS_RASPBERRYPI}" ; \
 	fi;
 
 directories:
-	${MKDIR_P} $(BINARY_DIR)
+	@${MKDIR_P} $(BINARY_DIR)
 
 # Compile blink binary
 $(GPIO_EXEC): $(GPIO_OBJECT_FILES) 
