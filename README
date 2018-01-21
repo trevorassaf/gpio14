@@ -1,1 +1,15 @@
 Raspberry Pi GPIO Library Using C++14
+
+[[GoogleTest]]
+
+[Headers]
+
+Move headers into external/googletest/include.
+
+[Compile]
+
+- Prepare library:
+
+g++ -isystem ${GTEST_DIR}/include -I${GTEST_DIR} -lpthread -c ${GTEST_DIR}/src/gtest-all.cc -std=c++14 ((is_linux) ? "-stdlib=libc++" : "")
+ar -rv libgtest.a gtest-all.o
+mv libgtest.a libs/
