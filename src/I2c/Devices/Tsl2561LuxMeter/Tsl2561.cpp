@@ -114,7 +114,7 @@ Tsl2561LuxValues Tsl2561::ReadLux()
 		p_MaybeWriteAndSaveCommandRegister(commandRegister);
 		Tsl2561AdcHalfWord adc1Value = m_core.ReadAdc1HalfWord();
 
-		return m_luxCalculator.ComputeLux(adc0Value.HalfWord(), adc1Value.HalfWord());
+		return m_luxCalculator.ComputeLux(adc0Value.GetHalfWord(), adc1Value.GetHalfWord());
 }
 
 void Tsl2561::ClearInterrupt()

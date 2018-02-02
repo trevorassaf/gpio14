@@ -78,7 +78,7 @@ void Tsl2561Core::p_WriteTsl2561Register(const Tsl2561Register &tsl2561Register)
 
 void Tsl2561Core::p_WriteTsl2561HalfWord(const Tsl2561HalfWord &tsl2561HalfWord)
 {
-		uint16_t buffer = tsl2561HalfWord.HalfWord();
+		uint16_t buffer = tsl2561HalfWord.GetHalfWord();
 		m_i2c->Write(reinterpret_cast<uint8_t*>(&buffer), 2);
 }
 

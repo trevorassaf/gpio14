@@ -10,7 +10,7 @@ void Tsl2561AdcHalfWord::SetHalfWord(uint16_t halfWord)
 		m_halfWord = halfWord;
 }
 
-uint16_t Tsl2561AdcHalfWord::HalfWord() const
+uint16_t Tsl2561AdcHalfWord::GetHalfWord() const
 {
 		return m_halfWord;
 }
