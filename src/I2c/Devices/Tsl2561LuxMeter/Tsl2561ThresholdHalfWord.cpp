@@ -3,6 +3,8 @@
 namespace I2c
 {
 
+Tsl2561ThresholdHalfWord::Tsl2561ThresholdHalfWord() : m_halfWord{0} {}
+
 Tsl2561ThresholdHalfWord::Tsl2561ThresholdHalfWord(uint16_t halfWord)
 	: m_halfWord{halfWord} {}
 
