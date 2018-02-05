@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdlib>
 
 namespace Utils
 {
@@ -8,7 +9,7 @@ namespace Utils
 class BitUtils
 {
 public:
-	static uint8_t SetByteWithMask(uint8_t destination, uint8_t value, uint8_t mask, uint8_t shift)
+	static uint8_t SetByteWithMask(uint8_t destination, uint8_t value, uint8_t mask, size_t shift)
 	{
 			destination &= ~mask;
 			value = value << shift;
@@ -17,10 +18,13 @@ public:
 			return destination;
 	}
 
-	static uint8_t SetBitWithMask(uint8_t destination, bool value, uint8_t mask, uint8_t shift)
+	static uint8_t SetBitWithMask(uint8_t destination, bool value, uint8_t mask, size_t shift)
 	{
-			uint8_t byteValue = static_cast<uint8_t>(value);
-			return SetByteWithMask(destination, byteValue, mask, shift);
+			return SetByteWithMask(
+					destination,
+					static_cast<uint8_t>(value),
+					mask,
+					shift);
 	}
 };
 

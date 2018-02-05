@@ -11,11 +11,12 @@ namespace I2c
 class Tsl2561TimingRegister : public Tsl2561Register
 {
 public:
+	Tsl2561TimingRegister();
 	Tsl2561TimingRegister(
 			bool isLowGain,
 			bool beginManualIntegrationCycle,
 			Tsl2561IntegrationTime integrationTime);
-	Tsl2561TimingRegister(uint8_t bits=0);
+	Tsl2561TimingRegister(uint8_t bits);
 
 	// 'True' means low gain. 'False' means high gain.
 	bool IsLowGain() const;
