@@ -13,7 +13,6 @@
 #include "Tsl2561IdRegister.h"
 #include "Tsl2561InterruptControlRegister.h"
 #include "Tsl2561TimingRegister.h"
-#include "Tsl2561ThresholdRegister.h"
 #include "Tsl2561LuxCalculator.h"
 #include "Tsl2561Core.h"
 
