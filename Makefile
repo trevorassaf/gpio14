@@ -64,7 +64,7 @@ TEST_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(TEST_AND_NON_TEST_SOU
 TEST_OBJECT_FILES = $(TEST_AND_NON_TEST_SOURCE_FILES:%.cpp=%.o)
 
 TEST_INCLUDE_FLAGS = -I$(GOOGLE_TEST_INCLUDE_DIR)
-TEST_LIBRARY_FLAGS = -lpthread -lgtest
+TEST_LIBRARY_FLAGS = -lgtest
 
 # Compiler
 CC_RASPBERRYPI = clang++-3.5
@@ -72,7 +72,7 @@ CC_LINUX = clang++
 CC = ${CC_LINUX}
 
 # Compilation flags
-CC_CORE_FLAGS_RASPBERRYPI = -w -Werror -Wall -pedantic -g -std=c++14 -I$(INCLUDE_DIR) -L$(LIBS_DIR)
+CC_CORE_FLAGS_RASPBERRYPI = -w -Werror -Wall -pedantic -g -std=c++14 -I$(INCLUDE_DIR) -L$(LIBS_DIR) -lpthread
 CC_CORE_FLAGS_LINUX = $(CC_CORE_FLAGS_RASPBERRYPI) -stdlib=libc++
 CC_CORE_FLAGS = $(CC_CORE_FLAGS_LINUX)
 

@@ -1,5 +1,3 @@
-#include "I2c/Registers/ControlRegister.h"
-#include "I2c/Registers/StatusRegister.h"
 #include "Gpio/MemoryConfig.h"
 #include "Gpio/OutputPin.h"
 #include "Gpio/PinManager.h"
@@ -24,8 +22,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-using I2c::ControlRegister;
-using I2c::StatusRegister;
 using Gpio::InputPin;
 using Gpio::MemoryConfig;
 using Gpio::OutputPin;
@@ -36,15 +32,6 @@ using Memory::MmioConfig;
 using Memory::MmioBcm2835MemorySegment;
 
 int main(int argc, char** argv) {
-
-	ControlRegister controlRegister;
-	std::cout << "Control register: \\" << std::endl << controlRegister << std::endl;
-
-	StatusRegister statusRegister;
-	std::cout << "StatusRegister: \\" << std::endl << statusRegister << std::endl;
-
-	std::cout << "Shutting down!" << std::endl;
-	exit(1);
 
   // Assemble PinFactory
 	MmioConfig gpioMmioConfig = MmioConfig::MakeGpioConfig();
