@@ -17,6 +17,8 @@ constexpr size_t PERSISTENCE_LEVEL_BIT_SHIFT = 0;
 namespace I2c
 {
 
+Tsl2561InterruptControlRegister::Tsl2561InterruptControlRegister() : m_bits{0} {}
+
 Tsl2561InterruptControlRegister::Tsl2561InterruptControlRegister(
 		Tsl2561InterruptControlMode mode,
 		Tsl2561InterruptPersistenceLevel level)

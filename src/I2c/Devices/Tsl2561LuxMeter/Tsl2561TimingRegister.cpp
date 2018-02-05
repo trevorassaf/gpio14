@@ -1,14 +1,15 @@
 #include "I2c/Devices/Tsl2561LuxMeter/Tsl2561TimingRegister.h"
 
 #include <cstdint>
+#include <cstdlib>
 
 #include "Utils/BitUtils.h"
 
 namespace
 {
-constexpr uint8_t LOW_GAIN_BIT_SHIFT = 4;
-constexpr uint8_t START_MANUAL_INTEGRATION_CYCLE_BIT_SHIFT = 3;
-constexpr uint8_t INTEGRATION_TIME_BIT_SHIFT = 0;
+constexpr size_t LOW_GAIN_BIT_SHIFT = 4;
+constexpr size_t START_MANUAL_INTEGRATION_CYCLE_BIT_SHIFT = 3;
+constexpr size_t INTEGRATION_TIME_BIT_SHIFT = 0;
 
 constexpr uint8_t LOW_GAIN_MASK = (1 << LOW_GAIN_BIT_SHIFT);
 constexpr uint8_t START_MANUAL_INTEGRATION_CYCLE_MASK = (1 << START_MANUAL_INTEGRATION_CYCLE_BIT_SHIFT);

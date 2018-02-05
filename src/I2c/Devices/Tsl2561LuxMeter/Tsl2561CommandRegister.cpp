@@ -1,6 +1,7 @@
 #include "I2c/Devices/Tsl2561LuxMeter/Tsl2561CommandRegister.h"
 
 #include <cstdint>
+#include <cstdlib>
 
 #include "Utils/BitUtils.h"
 
@@ -8,11 +9,11 @@ using Utils::BitUtils;
 
 namespace
 {
-constexpr uint8_t COMMAND_REGISTER_BIT_SHIFT = 7;
-constexpr uint8_t CLEAR_INTERRUPT_BIT_SHIFT = 6;
-constexpr uint8_t WORD_PROTOCOL_BIT_SHIFT = 5;
-constexpr uint8_t BLOCK_PROTOCOL_BIT_SHIFT = 4;
-constexpr uint8_t ADDRESS_BIT_SHIFT = 0;
+constexpr size_t COMMAND_REGISTER_BIT_SHIFT = 7;
+constexpr size_t CLEAR_INTERRUPT_BIT_SHIFT = 6;
+constexpr size_t WORD_PROTOCOL_BIT_SHIFT = 5;
+constexpr size_t BLOCK_PROTOCOL_BIT_SHIFT = 4;
+constexpr size_t ADDRESS_BIT_SHIFT = 0;
 
 constexpr uint8_t COMMAND_REGISTER_MASK = (1 << COMMAND_REGISTER_BIT_SHIFT);
 constexpr uint8_t CLEAR_INTERRUPT_MASK = (1 << CLEAR_INTERRUPT_BIT_SHIFT);

@@ -12,11 +12,13 @@ namespace I2c
 class Tsl2561InterruptControlRegister : public Tsl2561Register
 {
 public:
+	Tsl2561InterruptControlRegister();
+	
 	Tsl2561InterruptControlRegister(
 			Tsl2561InterruptControlMode mode,
 			Tsl2561InterruptPersistenceLevel level);
 
-	Tsl2561InterruptControlRegister(uint8_t bits=0);
+	Tsl2561InterruptControlRegister(uint8_t bits);
 
 	Tsl2561InterruptControlMode GetControlMode() const;
 	Tsl2561InterruptPersistenceLevel GetPersistenceLevel() const;
