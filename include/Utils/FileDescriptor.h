@@ -9,43 +9,16 @@ namespace Utils
 class FileDescriptor
 {
 public:
-	FileDescriptor() : m_fd{EMPTY_FILE_DESCRIPTOR} {}
+	FileDescriptor();
+	FileDescriptor(int fd);
+	~FileDescriptor();
 
-	FileDescriptor(int fd) : m_fd{fd} {}
+	FileDescriptor(FileDescriptor &&other);
+	FileDescriptor& operator=(FileDescriptor &&other);
 
-	~FileDescriptor()
-	{
-			Reset();
-	}
-
-	int Get() const { return m_fd; }
-
-	void Reset()
-	{
-			if (m_fd)
-			{
-				::close(m_fd);
-				m_fd = EMPTY_FILE_DESCRIPTOR;
-			}
-	}
-
-	FileDescriptor(FileDescriptor &&other)
-	{
-			m_fd = other.m_fd;
-			other.m_fd = EMPTY_FILE_DESCRIPTOR;
-	}
-
-	FileDescriptor& operator=(FileDescriptor &&other)
-	{
-			Reset();
-			m_fd = other.m_fd;
-			other.m_fd = EMPTY_FILE_DESCRIPTOR;
-	}
-
-	bool IsOpen() const
-	{
-			return m_fd != EMPTY_FILE_DESCRIPTOR;
-	}
+	int Get() const;
+	void Reset();
+	bool IsOpen() const;
 
 private:
 	FileDescriptor(const FileDescriptor &other) = delete;
