@@ -9,6 +9,7 @@ namespace I2c
 class Tsl2561IdRegister : public Tsl2561Register
 {
 public:
+	Tsl2561IdRegister();
 	Tsl2561IdRegister(uint8_t partNumber, uint8_t revisionId);
 	Tsl2561IdRegister(uint8_t bits);
 	

@@ -16,6 +16,8 @@ constexpr size_t REVISION_ID_BIT_SHIFT = 0;
 
 namespace I2c
 {
+Tsl2561IdRegister::Tsl2561IdRegister() : m_bits{0} {}
+
 Tsl2561IdRegister::Tsl2561IdRegister(uint8_t partNumber, uint8_t revisionId)
 {
 		m_bits = 0;
@@ -37,12 +39,12 @@ uint8_t Tsl2561IdRegister::GetRevisionId() const
 
 void Tsl2561IdRegister::SetPartNumber(uint8_t partNumber)
 {
-		m_bits = BitUtils::SetByteWithMask(m_bits, partNumber, PART_NUMBER_MASK);
+		m_bits = BitUtils::SetByteWithMask(m_bits, partNumber, PART_NUMBER_MASK, PART_NUMBER_BIT_SHIFT);
 }
 
 void Tsl2561IdRegister::SetRevisionId(uint8_t revisionId)
 {
-		m_bits = BitUtils::SetByteWithMask(m_bits, revisionId, REVISION_ID_MASK);
+		m_bits = BitUtils::SetByteWithMask(m_bits, revisionId, REVISION_ID_MASK, REVISION_ID_BIT_SHIFT);
 }
 
 uint8_t Tsl2561IdRegister::Bits() const

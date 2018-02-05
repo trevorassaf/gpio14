@@ -8,10 +8,16 @@ using Utils::BitUtils;
 
 namespace
 {
-constexpr uint8_t COMMAND_REGISTER_MASK_AND_VALUE = (1 << 7);
-constexpr uint8_t CLEAR_INTERRUPT_MASK_AND_VALUE = (1 << 6);
-constexpr uint8_t WORD_PROTOCOL_MASK_AND_VALUE = (1 << 5);
-constexpr uint8_t BLOCK_PROTOCOL_MASK_AND_VALUE = (1 << 4);
+constexpr uint8_t COMMAND_REGISTER_BIT_SHIFT = 7;
+constexpr uint8_t CLEAR_INTERRUPT_BIT_SHIFT = 6;
+constexpr uint8_t WORD_PROTOCOL_BIT_SHIFT = 5;
+constexpr uint8_t BLOCK_PROTOCOL_BIT_SHIFT = 4;
+constexpr uint8_t ADDRESS_BIT_SHIFT = 0;
+
+constexpr uint8_t COMMAND_REGISTER_MASK = (1 << COMMAND_REGISTER_BIT_SHIFT);
+constexpr uint8_t CLEAR_INTERRUPT_MASK = (1 << CLEAR_INTERRUPT_BIT_SHIFT);
+constexpr uint8_t WORD_PROTOCOL_MASK = (1 << WORD_PROTOCOL_BIT_SHIFT);
+constexpr uint8_t BLOCK_PROTOCOL_MASK = (1 << BLOCK_PROTOCOL_BIT_SHIFT);
 constexpr uint8_t ADDRESS_MASK = 0b00001111;
 } // namespace
 
@@ -52,17 +58,17 @@ bool Tsl2561CommandRegister::operator==(const Tsl2561CommandRegister &other) con
 
 bool Tsl2561CommandRegister::IsClearInterrupt() const
 {
-		return m_bits & CLEAR_INTERRUPT_MASK_AND_VALUE;
+		return m_bits & CLEAR_INTERRUPT_MASK;
 }
 
 bool Tsl2561CommandRegister::IsWordProtocol() const
 {
-		return m_bits & WORD_PROTOCOL_MASK_AND_VALUE;
+		return m_bits & WORD_PROTOCOL_MASK;
 }
 
 bool Tsl2561CommandRegister::IsBlockProtocol() const
 {
-		return m_bits & BLOCK_PROTOCOL_MASK_AND_VALUE;
+		return m_bits & BLOCK_PROTOCOL_MASK;
 }
 
 Tsl2561Address Tsl2561CommandRegister::GetAddress() const
@@ -72,28 +78,28 @@ Tsl2561Address Tsl2561CommandRegister::GetAddress() const
 
 void Tsl2561CommandRegister::SetClearInterrupt(bool clearInterrupt)
 {
-		uint8_t value = (clearInterrupt) ? CLEAR_INTERRUPT_MASK_AND_VALUE : 0;
+		uint8_t value = static_cast<uint8_t>(clearInterrupt);
 		m_bits = BitUtils::SetByteWithMask(
-				m_bits, value, CLEAR_INTERRUPT_MASK_AND_VALUE);
+				m_bits, value, CLEAR_INTERRUPT_MASK, CLEAR_INTERRUPT_BIT_SHIFT);
 }
 
 void Tsl2561CommandRegister::SetWordProtocol(bool isWordProtocol)
 {
-		uint8_t value = (isWordProtocol) ? WORD_PROTOCOL_MASK_AND_VALUE : 0;
-		m_bits = BitUtils::SetByteWithMask(
-				m_bits, value, WORD_PROTOCOL_MASK_AND_VALUE);
+		uint8_t value = static_cast<uint8_t>(isWordProtocol);
+		m_bits = BitUtils::SetBitWithMask(m_bits, value, WORD_PROTOCOL_MASK, WORD_PROTOCOL_BIT_SHIFT);
 }
 
 void Tsl2561CommandRegister::SetBlockProtocol(bool isBlockProtocol)
 {
-		uint8_t value = (isBlockProtocol) ? BLOCK_PROTOCOL_MASK_AND_VALUE : 0;
+		uint8_t value = static_cast<uint8_t>(isBlockProtocol);
 		m_bits = BitUtils::SetByteWithMask(
-				m_bits, value, BLOCK_PROTOCOL_MASK_AND_VALUE);
+				m_bits, value, BLOCK_PROTOCOL_MASK, BLOCK_PROTOCOL_BIT_SHIFT);
 }
 
 void Tsl2561CommandRegister::SetAddress(Tsl2561Address address)
 {
-		m_bits = BitUtils::SetByteWithMask(m_bits, static_cast<uint8_t>(address), ADDRESS_MASK);
+		m_bits = BitUtils::SetByteWithMask(
+				m_bits, static_cast<uint8_t>(address), ADDRESS_MASK, ADDRESS_BIT_SHIFT);
 }
 
 uint8_t Tsl2561CommandRegister::Bits() const
@@ -103,8 +109,8 @@ uint8_t Tsl2561CommandRegister::Bits() const
 
 void Tsl2561CommandRegister::p_SetCommandRegisterBit()
 {
-		m_bits = BitUtils::SetByteWithMask(
-				m_bits, COMMAND_REGISTER_MASK_AND_VALUE, COMMAND_REGISTER_MASK_AND_VALUE);
+		m_bits = BitUtils::SetBitWithMask(
+				m_bits, 1, COMMAND_REGISTER_MASK, COMMAND_REGISTER_BIT_SHIFT);
 }
 
 } // namespace I2c

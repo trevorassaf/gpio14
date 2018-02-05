@@ -8,9 +8,9 @@ using Utils::BitUtils;
 
 namespace
 {
-constexpr uint8_t CONTROL_MODE_MASK      = 0b00110000;
-constexpr uint8_t PERSISTENCE_LEVEL_MASK = 0b00001111;
-constexpr size_t CONTROL_MODE_BIT_SHIFT = 4;
+constexpr uint8_t CONTROL_MODE_MASK          = 0b00110000;
+constexpr uint8_t PERSISTENCE_LEVEL_MASK     = 0b00001111;
+constexpr size_t CONTROL_MODE_BIT_SHIFT      = 4;
 constexpr size_t PERSISTENCE_LEVEL_BIT_SHIFT = 0;
 } // namespace
 
@@ -47,7 +47,8 @@ void Tsl2561InterruptControlRegister::SetControlMode(
 		m_bits = BitUtils::SetByteWithMask(
 				m_bits,
 				static_cast<uint8_t>(controlMode),
-				CONTROL_MODE_MASK);
+				CONTROL_MODE_MASK,
+				CONTROL_MODE_BIT_SHIFT);
 }
 
 void Tsl2561InterruptControlRegister::SetPersistenceLevel(
@@ -56,7 +57,8 @@ void Tsl2561InterruptControlRegister::SetPersistenceLevel(
 		m_bits = BitUtils::SetByteWithMask(
 				m_bits,
 				static_cast<uint8_t>(persistenceLevel),
-				PERSISTENCE_LEVEL_MASK);
+				PERSISTENCE_LEVEL_MASK,
+				PERSISTENCE_LEVEL_BIT_SHIFT);
 }
 
 uint8_t Tsl2561InterruptControlRegister::Bits() const
