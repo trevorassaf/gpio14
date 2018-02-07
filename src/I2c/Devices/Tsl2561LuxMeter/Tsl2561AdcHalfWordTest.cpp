@@ -8,19 +8,19 @@ constexpr uint16_t HALF_WORD_MAGIC_VALUE = 0XFFFF;
 
 using I2c::Tsl2561AdcHalfWord;
 
-TEST(Tstl2561AdcHalfWordTest, DefaultInitialization)
+TEST(Tsl2561AdcHalfWordTest, DefaultInitialization)
 {
 		Tsl2561AdcHalfWord halfWord;
 		EXPECT_EQ(halfWord.GetHalfWord(), 0);
 }
 
-TEST(Tstl2561AdcHalfWordTest, Get)
+TEST(Tsl2561AdcHalfWordTest, Get)
 {
 		Tsl2561AdcHalfWord halfWord{HALF_WORD_MAGIC_VALUE};
 		EXPECT_EQ(halfWord.GetHalfWord(), HALF_WORD_MAGIC_VALUE);
 }
 
-TEST(Tstl2561AdcHalfWordTest, Set)
+TEST(Tsl2561AdcHalfWordTest, Set)
 {
 		Tsl2561AdcHalfWord halfWord{};
 		halfWord.SetHalfWord(HALF_WORD_MAGIC_VALUE);
