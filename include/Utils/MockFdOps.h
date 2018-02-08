@@ -9,9 +9,9 @@
 namespace Utils
 {
 
-typedef std::function<void(const char *path, FileDescriptor *outFd)> open_handler_t;
-typedef std::function<void(const FileDescriptor &fd, const uint8_t *buffer, size_t length)> write_handler_t;
-typedef std::function<void(const FileDescriptor &fd, uint8_t *buffer, size_t length)> read_handler_t;
+typedef std::function<void(const char *path, Fd *outFd)> open_handler_t;
+typedef std::function<void(const Fd &fd, const uint8_t *buffer, size_t length)> write_handler_t;
+typedef std::function<void(const Fd &fd, uint8_t *buffer, size_t length)> read_handler_t;
 
 class MockFdOps : public FdOps
 {
@@ -24,19 +24,19 @@ public:
 		m_writeHandler{std::move(writeHandler)},
 		m_readHandler{std::move(readHandler)} {}
 
-	FdOpResult Open(const char *path, FileDescriptor *outFd)
+	FdOpResult Open(const char *path, Fd *outFd)
 	{
 			m_openHandler(path, outFd);
 			return FdOpResult::Ok();
 	}
 
-	FdOpResult Write(const FileDescriptor &fd, const uint8_t *buffer, size_t length)
+	FdOpResult Write(const Fd &fd, const uint8_t *buffer, size_t length)
 	{
 			m_writeHandler(fd, buffer, length);
 			return FdOpResult::Ok();
 	}
 
-	FdOpResult Read(const FileDescriptor &fd, uint8_t *buffer, size_t length)
+	FdOpResult Read(const Fd &fd, uint8_t *buffer, size_t length)
 	{
 			m_readHandler(fd, buffer, length);
 			return FdOpResult::Ok();

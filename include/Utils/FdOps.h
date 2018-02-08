@@ -4,7 +4,6 @@
 #include <cstdlib>
 
 #include "Utils/FdOpResult.h"
-#include "Utils/FileDescriptor.h"
 
 namespace Utils
 {
@@ -12,9 +11,10 @@ namespace Utils
 class FdOps
 {
 public:
-	virtual FdOpResult Open(const char *path, FileDescriptor *outFd) = 0;
-	virtual FdOpResult Write(const FileDescriptor &fd, const uint8_t *buffer, size_t length) = 0;
-	virtual FdOpResult Read(const FileDescriptor &fd, uint8_t *buffer, size_t length) = 0;
+	virtual FdOpResult Open(const char *path, int *outFd) = 0;
+	virtual FdOpResult Write(int fd, const uint8_t *buffer, size_t length) = 0;
+	virtual FdOpResult Read(int fd, uint8_t *buffer, size_t length) = 0;
+	virtual FdOpResult Close(int fd) = 0;
 };
 
 } // namespace Utils

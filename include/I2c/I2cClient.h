@@ -1,10 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <string>
+#include <utility>
 
-#include "Utils/FileDescriptor.h"
-#include "Utils/FdOps.h"
+#include "Utils/Fd.h"
 
 namespace I2c
 {
@@ -12,7 +13,7 @@ namespace I2c
 class I2cClient
 {
 public:
-	I2cClient(Utils::FdOps *fdOps, const char *devicePath);
+	I2cClient(std::unique_ptr<Utils::Fd> fd);
 	~I2cClient();
 	I2cClient(I2cClient &&other);
 	I2cClient& operator=(I2cClient &&other);
@@ -26,8 +27,7 @@ private:
 	I2cClient& operator=(const I2cClient &other) = delete;
 
 private:
-	Utils::FdOps *m_fdOps;
-	Utils::FileDescriptor m_fd;
+	std::unique_ptr<Utils::Fd> m_fd;
 	uint8_t m_slaveAddress;
 };
 
