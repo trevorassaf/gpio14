@@ -72,6 +72,8 @@ Fd& Fd::operator=(Fd &&other)
 		other.m_ops = nullptr;
 		m_fd = other.m_fd;
 		other.m_fd = EMPTY_FILE_DESCRIPTOR;
+
+		return *this;
 }
 
 bool Fd::IsOpen() const
