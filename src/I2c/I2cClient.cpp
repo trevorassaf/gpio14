@@ -26,9 +26,18 @@ using Utils::SysUtils;
 namespace I2c
 {
 
+I2cClient::I2cClient()
+	: I2cClient{EMPTY_SLAVE_ADDRESS} {}
+
+I2cClient::I2cClient(uint8_t slaveAddress)
+	: I2cClient{slaveAddress, nullptr} {}
+
 I2cClient::I2cClient(std::unique_ptr<Fd> fd)
+	: I2cClient{EMPTY_SLAVE_ADDRESS, nullptr} {}
+
+I2cClient::I2cClient(uint8_t slaveAddress, std::unique_ptr<Fd> fd)
   :	m_fd{std::move(fd)},
-		m_slaveAddress{EMPTY_SLAVE_ADDRESS} {}
+		m_slaveAddress{slaveAddress} {}
 
 I2cClient::~I2cClient() {}
 
@@ -51,6 +60,11 @@ void I2cClient::Close()
 		m_slaveAddress = EMPTY_SLAVE_ADDRESS;
 }
 
+bool I2cClient::IsOpen() const
+{
+		return m_fd && m_fd->IsOpen(); 
+}
+
 void I2cClient::SetSlave(uint8_t slaveAddress)
 {
 		assert(m_fd->IsOpen());
@@ -62,6 +76,16 @@ void I2cClient::SetSlave(uint8_t slaveAddress)
 					<< std::hex << slaveAddress << std::endl;
 				throw I2cException(SysUtils::GetErrorMessage());
 		}
+}
+
+uint8_t I2cClient::GetSlave() const
+{
+		return m_slaveAddress;
+}
+
+bool I2cClient::HasSlave() const
+{
+		return m_slaveAddress != EMPTY_SLAVE_ADDRESS;
 }
 
 void I2cClient::Write(const uint8_t *buffer, size_t size)

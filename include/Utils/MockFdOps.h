@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <functional>
 
+#include "gtest/gtest.h"
+
 #include "Utils/FdOps.h"
 #include "Utils/FdOpResult.h"
 
@@ -14,91 +16,35 @@ typedef std::function<void(int fd, const uint8_t *buffer, size_t length)> write_
 typedef std::function<void(int fd, uint8_t *buffer, size_t length)> read_handler_t;
 typedef std::function<void(int)> close_handler_t;
 
-open_handler_t openHandlerFail = [] (const char *path, int *outFd)
-{
-		FAIL();
-};
-
-write_handler_t writeHandlerFail = [] (int fd, const uint8_t *buffer, size_t length)
-{
-		FAIL();
-};
-
-read_handler_t readHandlerFail = [] (int fd, uint8_t *buffer, size_t length)
-{
-		FAIL();
-};
-
-close_handler_t closeHandlerFail = [] (int fd) { FAIL(); };
-
 class MockFdOps : public FdOps
 {
 public:
-	static MockFdOps MakeFailOps()
-	{
-			MockFdOps ops;
-			ops.SetOpenHandler(openHandlerFail);
-			ops.SetWriteHandler(writeHandlerFail);
-			ops.SetReadHandler(readHandlerFail);
-			return ops;
-	}
+	static open_handler_t openHandlerFail;
+	static write_handler_t writeHandlerFail;
+	static read_handler_t readHandlerFail;
+	static close_handler_t closeHandlerFail;
 
-	MockFdOps()
-		: m_openHandler{},
-			m_writeHandler{},
-			m_readHandler{},
-			m_closeHandler{} {}
+public:
+	static MockFdOps MakeFailOps();
+
+public:
+	MockFdOps();
 
 	MockFdOps(
 			open_handler_t openHandler,
 			write_handler_t writeHandler,
 			read_handler_t readHandler,
-			close_handler_t closeHandler)
-	: m_openHandler{std::move(openHandler)},
-		m_writeHandler{std::move(writeHandler)},
-		m_readHandler{std::move(readHandler)},
-	  m_closeHandler{std::move(closeHandler)}	{}
+			close_handler_t closeHandler);
 
-	void SetOpenHandler(open_handler_t open) { m_openHandler = std::move(open); }
-	void SetWriteHandler(write_handler_t write) { m_writeHandler = std::move(write); }
-	void SetReadHandler(read_handler_t read) { m_readHandler = std::move(read); }
-	void SetCloseHandler(close_handler_t close) { m_closeHandler = std::move(close); }
+	void SetOpenHandler(open_handler_t open);
+	void SetWriteHandler(write_handler_t write);
+	void SetReadHandler(read_handler_t read);
+	void SetCloseHandler(close_handler_t close);
 
-	FdOpResult Open(const char *path, int *outFd) override
-	{
-			if (m_openHandler)
-			{
-				m_openHandler(path, outFd);
-			}
-			return FdOpResult::Ok();
-	}
-
-	FdOpResult Write(int fd, const uint8_t *buffer, size_t length) override
-	{
-			if (m_writeHandler)
-			{
-				m_writeHandler(fd, buffer, length);
-			}
-			return FdOpResult::Ok();
-	}
-
-	FdOpResult Read(int fd, uint8_t *buffer, size_t length) override
-	{
-			if (m_readHandler)
-			{
-				m_readHandler(fd, buffer, length);
-			}
-			return FdOpResult::Ok();
-	}
-
-	FdOpResult Close(int fd) override
-	{
-			if (m_closeHandler)
-			{
-				m_closeHandler(fd);
-			}
-			return FdOpResult::Ok();
-	}
+	FdOpResult Open(const char *path, int *outFd) override;
+	FdOpResult Write(int fd, const uint8_t *buffer, size_t length) override;
+	FdOpResult Read(int fd, uint8_t *buffer, size_t length) override;
+	FdOpResult Close(int fd) override;
 
 private:
 	open_handler_t m_openHandler;
