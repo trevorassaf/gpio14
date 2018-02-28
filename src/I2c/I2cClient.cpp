@@ -26,18 +26,25 @@ using Utils::SysUtils;
 namespace I2c
 {
 
-I2cClient::I2cClient()
-	: I2cClient{EMPTY_SLAVE_ADDRESS} {}
+I2cClient::I2cClient(I2cIoctlOps *ops)
+	: I2cClient{ops, EMPTY_SLAVE_ADDRESS} {}
 
-I2cClient::I2cClient(uint8_t slaveAddress)
-	: I2cClient{slaveAddress, nullptr} {}
+I2cClient::I2cClient(I2cIoctlOps *ops, uint8_t slaveAddress)
+	: I2cClient{ops, slaveAddress, nullptr} {}
 
-I2cClient::I2cClient(std::unique_ptr<Fd> fd)
-	: I2cClient{EMPTY_SLAVE_ADDRESS, nullptr} {}
+I2cClient::I2cClient(I2cIoctlOps *ops, std::unique_ptr<Fd> fd)
+	: I2cClient{ops, EMPTY_SLAVE_ADDRESS, std::move(fd)} {}
 
-I2cClient::I2cClient(uint8_t slaveAddress, std::unique_ptr<Fd> fd)
-  :	m_fd{std::move(fd)},
-		m_slaveAddress{slaveAddress} {}
+I2cClient::I2cClient(I2cIoctlOps *ops, uint8_t slaveAddress, std::unique_ptr<Fd> fd)
+	:	m_ioctlOps{ops},
+		m_slaveAddress{slaveAddress},
+  	m_fd{std::move(fd)}
+{
+		if (IsOpen())
+		{
+				SetSlave(slaveAddress);
+		}
+}
 
 I2cClient::~I2cClient() {}
 
@@ -48,10 +55,14 @@ I2cClient::I2cClient(I2cClient &&other)
 
 I2cClient& I2cClient::operator=(I2cClient &&other)
 {
+		m_ioctlOps = other.m_ioctlOps;
+		other.m_ioctlOps = nullptr;
+
 		m_fd = std::move(other.m_fd);
 
 		m_slaveAddress = other.m_slaveAddress;
 		other.m_slaveAddress = EMPTY_SLAVE_ADDRESS;
+		return *this;
 }
 
 void I2cClient::Close()
@@ -67,15 +78,9 @@ bool I2cClient::IsOpen() const
 
 void I2cClient::SetSlave(uint8_t slaveAddress)
 {
-		assert(m_fd->IsOpen());
-
+		assert(IsOpen());
 		m_slaveAddress = slaveAddress;
-		if (ioctl(m_fd->Get(), I2C_SLAVE, slaveAddress) < 0)
-		{
-				std::cout << "Failed to set I2c slave address. Slave: 0x"
-					<< std::hex << slaveAddress << std::endl;
-				throw I2cException(SysUtils::GetErrorMessage());
-		}
+		m_ioctlOps->SetSlaveAddress(m_fd->Get(), slaveAddress);
 }
 
 uint8_t I2cClient::GetSlave() const
@@ -91,6 +96,7 @@ bool I2cClient::HasSlave() const
 void I2cClient::Write(const uint8_t *buffer, size_t size)
 {
 		assert(m_slaveAddress != EMPTY_SLAVE_ADDRESS);
+		assert(IsOpen());
 		auto result = m_fd->Write(buffer, size);
 		if (!result.IsOk())
 		{
@@ -105,6 +111,7 @@ void I2cClient::Write(const uint8_t *buffer, size_t size)
 void I2cClient::Read(uint8_t *buffer, size_t size)
 {
 		assert(m_slaveAddress != EMPTY_SLAVE_ADDRESS);
+		assert(IsOpen());
 		auto result = m_fd->Read(buffer, size);
 		if (!result.IsOk())
 		{
