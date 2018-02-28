@@ -14,7 +14,7 @@ RM_R = rm -rf
 ##########################
 GPIO_EXEC = gpio
 I2C_SCAN_EXEC = i2c-scan
-TEST_EXEC = test
+UNIT_TEST_EXEC = unit-tests
 
 ##########################
 ####### Directories ######
@@ -33,17 +33,16 @@ GOOGLE_TEST_INCLUDE_DIR = $(GOOGLE_TEST_DIR)/include
 ##########################
 GPIO_MAIN_SOURCE = gpio_main.cpp
 I2C_SCAN_MAIN_SOURCE = i2c_scan_main.cpp
-TEST_MAIN_SOURCE = test_main.cpp
+UNIT_TEST_MAIN_SOURCE = unit_test_main.cpp
 
 ##########################
 ######### Recipes ########
 ##########################
-
 # Scan for source files 
 SOURCE_FILES := $(shell find $(SOURCE_DIR) -type f | grep -P '.*(?<!Test)\.cpp')
 OBJECT_FILES := 
 OBJECT_FILES_WITH_ROOT_SANS_MAIN = $(addprefix $(OBJECT_DIR)/,$(SOURCE_FILES:%.cpp=%.o))
-TEST_SOURCE_FILES := $(shell find $(SOURCE_DIR) -type f -name "*Test.cpp")
+UNIT_TEST_SOURCE_FILES := $(shell find $(SOURCE_DIR) -type f -name "*UnitTest.cpp")
 SOURCE_INCLUDE_FLAGS = -I$(INCLUDE_DIR)
 LIBS_LINKER_FLAGS = -L$(LIBS_DIR)
 
@@ -58,10 +57,9 @@ I2C_SCAN_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(I2C_SCAN_SOURCE_F
 I2C_SCAN_OBJECT_FILES = $(I2C_SCAN_SOURCE_FILES:%.cpp=%.o)
 
 # Test paths
-#TEST_AND_NON_TEST_SOURCE_FILES = $(SOURCE_FILES) $(TEST_SOURCE_FILES) $(TEST_MAIN_SOURCE)
-TEST_AND_NON_TEST_SOURCE_FILES = $(TEST_SOURCE_FILES) $(TEST_MAIN_SOURCE)
-TEST_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(TEST_AND_NON_TEST_SOURCE_FILES:%.cpp=%.o))
-TEST_OBJECT_FILES = $(TEST_AND_NON_TEST_SOURCE_FILES:%.cpp=%.o)
+UNIT_TEST_AND_NON_UNIT_TEST_SOURCE_FILES = $(UNIT_TEST_SOURCE_FILES) $(UNIT_TEST_MAIN_SOURCE)
+UNIT_TEST_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(UNIT_TEST_AND_NON_UNIT_TEST_SOURCE_FILES:%.cpp=%.o))
+UNIT_TEST_OBJECT_FILES = $(UNIT_TEST_AND_NON_UNIT_TEST_SOURCE_FILES:%.cpp=%.o)
 
 TEST_INCLUDE_FLAGS = -I$(GOOGLE_TEST_INCLUDE_DIR)
 TEST_LIBRARY_FLAGS = -lgtest
@@ -88,7 +86,7 @@ NON_RASPBERRYPI_TEST_STRING = ""
 .PHONY: directories
 
 # Build all binaries
-all: detect-host directories $(GPIO_EXEC) $(I2C_SCAN_EXEC) $(TEST_EXEC)
+all: detect-host directories $(GPIO_EXEC) $(I2C_SCAN_EXEC) $(UNIT_TEST_EXEC)
 
 detect-host:
 	@if [ "${IS_HOST_RASPBERRYPI}" = "${NON_RASPBERRYPI_TEST_STRING}" ] ; \
@@ -107,8 +105,8 @@ $(GPIO_EXEC): $(GPIO_OBJECT_FILES)
 $(I2C_SCAN_EXEC): $(I2C_SCAN_OBJECT_FILES) 
 	@$(CC) $(I2C_SCAN_OBJECT_FILES_WITH_ROOT) -o $(BINARY_DIR)/$(I2C_SCAN_EXEC) $(CC_CORE_FLAGS)
 
-$(TEST_EXEC): $(TEST_OBJECT_FILES)
-	@$(CC) -o $(BINARY_DIR)/$(TEST_EXEC) $(TEST_OBJECT_FILES_WITH_ROOT) $(OBJECT_FILES_WITH_ROOT_SANS_MAIN) $(CC_CORE_FLAGS) $(TEST_INCLUDE_FLAGS) $(TEST_LIBRARY_FLAGS)
+$(UNIT_TEST_EXEC): $(UNIT_TEST_OBJECT_FILES)
+	@$(CC) -o $(BINARY_DIR)/$(UNIT_TEST_EXEC) $(UNIT_TEST_OBJECT_FILES_WITH_ROOT) $(OBJECT_FILES_WITH_ROOT_SANS_MAIN) $(CC_CORE_FLAGS) $(TEST_INCLUDE_FLAGS) $(TEST_LIBRARY_FLAGS)
 
 # Compile non-test source
 %.o: %.cpp
