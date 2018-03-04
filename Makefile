@@ -121,7 +121,6 @@ $(DEVICE_TEST_EXEC): $(DEVICE_TEST_OBJECT_FILES)
 
 # Compile non-test source
 %.o: %.cpp
-	@echo $(CC)
 	@echo $(OBJECT_DIR)/$@
 	@if [ -e $(dir $@) ] ; \
 		then \
