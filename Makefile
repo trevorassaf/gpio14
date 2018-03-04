@@ -75,33 +75,33 @@ TEST_LIBRARY_FLAGS = -lgtest
 # Compiler
 CC_RASPBERRYPI = clang++-3.5
 CC_LINUX = clang++
-CC = ${CC_LINUX}
+CC :=
 
 # Compilation flags
 CC_CORE_FLAGS_RASPBERRYPI = -w -Werror -Wall -pedantic -g -std=c++14 -I$(INCLUDE_DIR) -L$(LIBS_DIR) -lpthread
 CC_CORE_FLAGS_LINUX = $(CC_CORE_FLAGS_RASPBERRYPI) -stdlib=libc++
-CC_CORE_FLAGS = $(CC_CORE_FLAGS_LINUX)
+CC_CORE_FLAGS :=
 
 # Removed files
 FILES_TO_REMOVE = \
 		$(BINARY_DIR)/ \
 		$(OBJECT_DIR)/
 
-IS_HOST_RASPBERRYPI = $(shell uname -a | grep raspberrypi)
-NON_RASPBERRYPI_TEST_STRING = ""
+IS_HOST_RASPBERRYPI = $(shell uname -a | grep raspberrypi -c)
+
+ifeq ($(IS_HOST_RASPBERRYPI),1)
+	CC := $(CC_RASPBERRYPI)
+	CC_CORE_FLAGS := $(CC_CORE_FLAGS_RASPBERRYPI)
+else
+	CC := $(CC_LINUX)
+	CC_CORE_FLAGS := $(CC_CORE_FLAGS_LINUX)
+endif
 
 # Create compilation directories
 .PHONY: directories
 
 # Build all binaries
-all: detect-host directories $(GPIO_EXEC) $(I2C_SCAN_EXEC) $(UNIT_TEST_EXEC) $(DEVICE_TEST_EXEC)
-
-detect-host:
-	@if [ "${IS_HOST_RASPBERRYPI}" = "${NON_RASPBERRYPI_TEST_STRING}" ] ; \
-		then \
-			CC="${CC_RASPBERRYPI}" ; \
-			CC_CORE_FLAGS="${CC_CORE_FLAGS_RASPBERRYPI}" ; \
-	fi;
+all: directories $(GPIO_EXEC) $(I2C_SCAN_EXEC) $(UNIT_TEST_EXEC) $(DEVICE_TEST_EXEC)
 
 directories:
 	@${MKDIR_P} $(BINARY_DIR)
@@ -121,6 +121,7 @@ $(DEVICE_TEST_EXEC): $(DEVICE_TEST_OBJECT_FILES)
 
 # Compile non-test source
 %.o: %.cpp
+	@echo $(CC)
 	@echo $(OBJECT_DIR)/$@
 	@if [ -e $(dir $@) ] ; \
 		then \
