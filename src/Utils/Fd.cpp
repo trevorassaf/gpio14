@@ -1,6 +1,9 @@
 #include "Utils/Fd.h"
 
 #include <iostream>
+#include <sstream>
+
+#include "Utils/FdException.h"
 
 namespace Utils
 {
@@ -18,9 +21,9 @@ Fd::Fd(FdOps *ops, const char *fileName) : Fd{ops}
 		auto result = m_ops->Open(fileName, &m_fd);
 		if (!result.IsOk())
 		{
-				// TODO: replace with exception
-			std::cout << "Fd.cpp -- Fd() -- failed to open file" << std::endl;
-			exit(1);
+			std::ostringstream ss;
+			ss << "Failed to open file " << fileName;
+			throw FdException{ss.str()};
 		}
 }
 

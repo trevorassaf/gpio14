@@ -4,8 +4,13 @@
 #include <utility>
 
 #include "Utils/Fd.h"
+#include "Utils/FdException.h"
+#include "Utils/FdOps.h"
+#include "I2c/I2cException.h"
 
 using Utils::FdOps;
+using Utils::Fd;
+using Utils::FdException;
 
 namespace I2c
 {
@@ -23,7 +28,16 @@ std::unique_ptr<I2cClient> I2cClientFactory::Make(const std::string &deviceName)
 
 std::unique_ptr<I2cClient> I2cClientFactory::Make(const char *deviceName)
 {
-		auto fd = std::make_unique<Utils::Fd>(m_fdOps, deviceName);
+		std::unique_ptr<Fd> fd;
+		try
+		{
+			fd = std::make_unique<Fd>(m_fdOps, deviceName);
+		}
+		catch (const FdException &e)
+		{
+			throw I2cException{e.what()};
+		}
+
 		return std::make_unique<I2cClient>(m_ioctlOps, std::move(fd));
 }
 
