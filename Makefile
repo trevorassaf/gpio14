@@ -24,10 +24,12 @@ BINARY_DIR = bin
 OBJECT_DIR = bits
 SOURCE_DIR = src
 INCLUDE_DIR = include
+PREBUILTS_LIBS_DIR = prebuilt-libs
 LIBS_DIR = libs
 EXTERNAL_DIR = external
-GOOGLE_TEST_DIR = $(EXTERNAL_DIR)/googletest
-GOOGLE_TEST_INCLUDE_DIR = $(GOOGLE_TEST_DIR)/include
+GOOGLETEST_DIR = $(EXTERNAL_DIR)/googletest
+GOOGLETEST_INCLUDE_DIR = $(GOOGLETEST_DIR)/include
+GOOGLETEST_SOURCE_DIR = $(GOOGLETEST_DIR)/src
 
 ##########################
 ####### Main Files #######
@@ -47,7 +49,12 @@ OBJECT_FILES_WITH_ROOT_SANS_MAIN = $(addprefix $(OBJECT_DIR)/,$(SOURCE_FILES:%.c
 UNIT_TEST_SOURCE_FILES := $(shell find $(SOURCE_DIR) -type f -name "*UnitTest.cpp")
 DEVICE_TEST_SOURCE_FILES := $(shell find $(SOURCE_DIR) -type f -name "*DeviceTest.cpp")
 SOURCE_INCLUDE_FLAGS = -I$(INCLUDE_DIR)
-LIBS_LINKER_FLAGS = -L$(LIBS_DIR)
+LIBS_LINKER_FLAGS = -L$(PREBUILTS_LIBS_DIR) -L$(LIBS_DIR)
+
+# Googletest object paths
+GOOGLETEST_GTEST_ALL_OBJECT_FILE := $(OBJECT_DIR)/gtest-all.o
+GOOGLETEST_GTEST_ALL_SOURCE_FILE := $(GOOGLETEST_SOURCE_DIR)/gtest-all.cc
+GOOGLETEST_LIBGTEST := $(LIBS_DIR)/libgtest.a
 
 # GPIO object paths
 GPIO_SOURCE_FILES = $(SOURCE_FILES) $(GPIO_MAIN_SOURCE) 
@@ -69,7 +76,7 @@ DEVICE_TEST_AND_NON_DEVICE_TEST_SOURCE_FILES = $(DEVICE_TEST_SOURCE_FILES) $(DEV
 DEVICE_TEST_OBJECT_FILES_WITH_ROOT = $(addprefix $(OBJECT_DIR)/,$(DEVICE_TEST_AND_NON_DEVICE_TEST_SOURCE_FILES:%.cpp=%.o))
 DEVICE_TEST_OBJECT_FILES = $(DEVICE_TEST_AND_NON_DEVICE_TEST_SOURCE_FILES:%.cpp=%.o)
 
-TEST_INCLUDE_FLAGS = -I$(GOOGLE_TEST_INCLUDE_DIR)
+TEST_INCLUDE_FLAGS = -I$(GOOGLETEST_INCLUDE_DIR)
 TEST_LIBRARY_FLAGS = -lgtest
 
 # Compiler
@@ -78,14 +85,15 @@ CC_LINUX = clang++
 CC :=
 
 # Compilation flags
-CC_CORE_FLAGS_RASPBERRYPI = -w -Werror -Wall -pedantic -g -std=c++14 -I$(INCLUDE_DIR) -L$(LIBS_DIR) -lpthread
+CC_CORE_FLAGS_RASPBERRYPI = -w -Werror -Wall -pedantic -g -std=c++14 -I$(INCLUDE_DIR) $(LIBS_LINKER_FLAGS) -lpthread
 CC_CORE_FLAGS_LINUX = $(CC_CORE_FLAGS_RASPBERRYPI) -stdlib=libc++
 CC_CORE_FLAGS :=
 
 # Removed files
 FILES_TO_REMOVE = \
 		$(BINARY_DIR)/ \
-		$(OBJECT_DIR)/
+		$(OBJECT_DIR)/ \
+		$(LIBS_DIR)
 
 IS_HOST_RASPBERRYPI = $(shell uname -a | grep raspberrypi -c)
 
@@ -101,10 +109,19 @@ endif
 .PHONY: directories
 
 # Build all binaries
-all: directories $(GPIO_EXEC) $(I2C_SCAN_EXEC) $(UNIT_TEST_EXEC) $(DEVICE_TEST_EXEC)
+all: directories libs $(GPIO_EXEC) $(I2C_SCAN_EXEC) $(UNIT_TEST_EXEC) $(DEVICE_TEST_EXEC)
 
 directories:
 	@${MKDIR_P} $(BINARY_DIR)
+	@${MKDIR_P} $(OBJECT_DIR)
+	@${MKDIR_P} $(LIBS_DIR)
+
+libs: googletest
+
+googletest:
+	@echo "GOOGLETEST"
+	$(CC) -isystem $(GOOGLETEST_INCLUDE_DIR) -I$(GOOGLETEST_DIR) -pthread -o $(GOOGLETEST_GTEST_ALL_OBJECT_FILE) -c $(GOOGLETEST_GTEST_ALL_SOURCE_FILE) -std=c++14 -stdlib=libc++
+	ar -rv $(GOOGLETEST_LIBGTEST) $(GOOGLETEST_GTEST_ALL_OBJECT_FILE)
 
 # Compile blink binary
 $(GPIO_EXEC): $(GPIO_OBJECT_FILES) 
