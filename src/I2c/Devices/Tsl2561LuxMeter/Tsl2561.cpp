@@ -8,13 +8,14 @@
 namespace I2c
 {
 
-Tsl2561::Tsl2561(I2cClient *i2cClient)
+Tsl2561::Tsl2561(I2cClient *i2cClient, Tsl2561I2cAddress address)
 	: m_core{i2cClient},
 	  m_luxCalculator{},
 		m_commandRegister{},
 		m_timingRegister{},
 		m_interruptControlRegister{}
 {
+		i2cClient->SetSlave(static_cast<uint8_t>(address));
 		p_PowerUp();
 
 		if (!p_IsPoweredOn())

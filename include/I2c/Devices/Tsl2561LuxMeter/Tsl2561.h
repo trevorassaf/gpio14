@@ -15,6 +15,7 @@
 #include "Tsl2561TimingRegister.h"
 #include "Tsl2561LuxCalculator.h"
 #include "Tsl2561Core.h"
+#include "Tsl2561I2cAddress.h"
 
 namespace I2c
 {
@@ -25,7 +26,7 @@ public:
 	/**
 	 * Powers up device.
 	 */
-	Tsl2561(I2cClient *i2cClient);
+	Tsl2561(I2cClient *i2cClient, Tsl2561I2cAddress address);
 
 	/**
 	 * Powers down device. Does not close I2c client.
