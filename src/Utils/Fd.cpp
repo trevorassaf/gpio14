@@ -1,5 +1,6 @@
 #include "Utils/Fd.h"
 
+#include <cassert>
 #include <iostream>
 #include <sstream>
 

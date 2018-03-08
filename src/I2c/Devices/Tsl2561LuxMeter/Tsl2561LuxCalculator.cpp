@@ -1,6 +1,7 @@
 #include "I2c/Devices/Tsl2561LuxMeter/Tsl2561LuxCalculator.h"
 
 #include <array>
+#include <cassert>
 #include <cmath>
 #include <functional>
 
