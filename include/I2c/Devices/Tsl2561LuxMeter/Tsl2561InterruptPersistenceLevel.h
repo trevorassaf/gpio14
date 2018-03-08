@@ -23,7 +23,6 @@ enum class Tsl2561InterruptPersistenceLevel : uint8_t
 		EVERY_13_CYCLES_OUT_OF_RANGE = 13,
 		EVERY_14_CYCLES_OUT_OF_RANGE = 14,
 		EVERY_15_CYCLES_OUT_OF_RANGE = 15,
-
 };
 
 } // namespace I2c

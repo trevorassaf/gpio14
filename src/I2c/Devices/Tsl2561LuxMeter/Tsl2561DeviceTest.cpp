@@ -38,5 +38,5 @@ public:
 
 TEST_F(Tsl2561DeviceTest, CheckDeviceConnection)
 {
-		auto client = m_tsl2561Factory->MakeBus1Device(SLAVE_ADDRESS);
+		auto device = m_tsl2561Factory->MakeBus1Device(SLAVE_ADDRESS);
 }
