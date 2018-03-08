@@ -129,7 +129,7 @@ TEST_F(FdTest, Write)
 TEST_F(FdTest, Read)
 {
 		const char *testBuffer = "test";
-		constexpr size_t testLength = sizeof(testBuffer);
+		constexpr size_t testLength = sizeof(testBuffer) + 1;
 
 		char inputTestBuffer[testLength];
 
