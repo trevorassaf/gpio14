@@ -28,7 +28,7 @@ protected:
 	}
 
 public:
-	static constexpr Tsl2561I2cAddress SLAVE_ADDRESS = Tsl2561I2cAddress::I2C0x30;
+	static constexpr Tsl2561I2cAddress SLAVE_ADDRESS = Tsl2561I2cAddress::I2C0x39;
 
 public:
 	RpiSystemContext m_rpiSystemContext;

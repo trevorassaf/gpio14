@@ -37,6 +37,9 @@ private:
 	I2cClient& operator=(const I2cClient &other) = delete;
 
 private:
+  void p_MaybeSetSlaveAddress(uint8_t slaveAddress);
+
+private:
 	I2cIoctlOps *m_ioctlOps;
 	uint8_t m_slaveAddress;
 	std::unique_ptr<Utils::Fd> m_fd;

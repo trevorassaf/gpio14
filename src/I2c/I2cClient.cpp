@@ -42,7 +42,7 @@ I2cClient::I2cClient(I2cIoctlOps *ops, uint8_t slaveAddress, std::unique_ptr<Fd>
 {
 		if (IsOpen())
 		{
-				SetSlave(slaveAddress);
+        p_MaybeSetSlaveAddress(slaveAddress);
 		}
 }
 
@@ -78,9 +78,7 @@ bool I2cClient::IsOpen() const
 
 void I2cClient::SetSlave(uint8_t slaveAddress)
 {
-		assert(IsOpen());
-		m_slaveAddress = slaveAddress;
-		m_ioctlOps->SetSlaveAddress(m_fd->Get(), slaveAddress);
+    p_MaybeSetSlaveAddress(slaveAddress);
 }
 
 uint8_t I2cClient::GetSlave() const
@@ -101,7 +99,7 @@ void I2cClient::Write(const uint8_t *buffer, size_t size)
 		if (!result.IsOk())
 		{
 				std::cout << "I2c write operation failed"
-					<< ". Slave: 0x" << std::hex << m_slaveAddress
+					<< ". Slave: 0x" << std::hex << (int)m_slaveAddress
 					<< ". Buffer size: " << std::dec << size
 					<< std::endl;
 				throw I2cException(SysUtils::GetErrorMessage());
@@ -116,11 +114,21 @@ void I2cClient::Read(uint8_t *buffer, size_t size)
 		if (!result.IsOk())
 		{
 				std::cout << "I2c read operation failed"
-					<< ". Slave: 0x" << std::hex << m_slaveAddress
+					<< ". Slave: 0x" << std::hex << (int)m_slaveAddress
 					<< ". Buffer size: " << std::dec << size
 					<< std::endl;
 				throw I2cException(SysUtils::GetErrorMessage());
 		}
+}
+
+void I2cClient::p_MaybeSetSlaveAddress(uint8_t slaveAddress)
+{
+    if (EMPTY_SLAVE_ADDRESS != slaveAddress)
+    {
+        assert(IsOpen());
+        m_slaveAddress = slaveAddress;
+        m_ioctlOps->SetSlaveAddress(m_fd->Get(), slaveAddress);
+    }
 }
 
 } // namespace I2c

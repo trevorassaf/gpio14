@@ -7,6 +7,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <iostream>
+
 namespace Utils
 {
 
@@ -26,16 +28,16 @@ FdOpResult BasicFdOps::Write(int fd, const uint8_t *buffer, size_t length)
 {
 		int result = ::write(fd, buffer, length);
 		return (result == length)
-			? FdOpResult::Bad(errno)
-			: FdOpResult::Ok();
+			? FdOpResult::Ok()
+			: FdOpResult::Bad(errno);
 }
 
 FdOpResult BasicFdOps::Read(int fd, uint8_t *buffer, size_t length)
 {
 		int result = ::read(fd, buffer, length);
 		return (result == length)
-			? FdOpResult::Bad(errno)
-			: FdOpResult::Ok();
+			? FdOpResult::Ok()
+			: FdOpResult::Bad(errno);
 }
 
 FdOpResult BasicFdOps::Close(int fd)
