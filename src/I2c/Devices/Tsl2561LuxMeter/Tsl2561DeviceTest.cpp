@@ -61,7 +61,7 @@ TEST_F(Tsl2561DeviceTest, ReadId)
 TEST_F(Tsl2561DeviceTest, BasicAdc)
 {
 		auto device = m_tsl2561Factory->MakeBus1Device(SLAVE_ADDRESS);
-    device->SetHighGain();
+    //device->SetLowGain();
     device->SetIntegrationTime(Tsl2561IntegrationTime::INTEGRATION_TIME_402_MS);
     std::this_thread::sleep_for(std::chrono::milliseconds{500});
     auto lux = device->ReadLux();
