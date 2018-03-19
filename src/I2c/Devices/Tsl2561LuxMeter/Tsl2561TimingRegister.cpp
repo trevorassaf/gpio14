@@ -55,7 +55,7 @@ void Tsl2561TimingRegister::SetIsLowGain(bool isLowGain)
 {
 		m_bits = BitUtils::SetBitWithMask(
 				m_bits,
-				isLowGain,
+				~isLowGain,
 				LOW_GAIN_MASK,
 				LOW_GAIN_BIT_SHIFT);
 }

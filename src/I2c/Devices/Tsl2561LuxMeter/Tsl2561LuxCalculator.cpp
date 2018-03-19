@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cmath>
 #include <functional>
+#include <iostream>
 
 namespace I2c
 {
@@ -36,15 +37,20 @@ Tsl2561LuxCalculator::Tsl2561LuxCalculator(bool isChipScale)
 Tsl2561LuxValues Tsl2561LuxCalculator::ComputeLux(
 		uint16_t adc0Value, uint16_t adc1Value) const
 {
+  std::cout << "Adc 0 value: " << adc0Value  << std::endl;
+  std::cout << "Adc 1 value: " << adc1Value  << std::endl;
+
 		Tsl2561LuxValues values;
 		values.irSpectrumLux = adc1Value;
 
 		double luxQuotient = adc0Value / adc1Value;
+    std::cout << "Lux quotient: " << luxQuotient << std::endl;
 
 		assert(m_thresholdMapping);
 
 		for (const auto& threshold : *m_thresholdMapping)
 		{
+        std::cout << "Quotient threshold: " << threshold.quotientThreshold << std::endl;
 				if (luxQuotient <= threshold.quotientThreshold)
 				{
 						values.visibleSpectrumLux =

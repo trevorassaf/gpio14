@@ -1,5 +1,7 @@
 #include "I2c/Devices/Tsl2561LuxMeter/Tsl2561Core.h"
 
+#include <iostream>
+
 namespace I2c
 {
 
