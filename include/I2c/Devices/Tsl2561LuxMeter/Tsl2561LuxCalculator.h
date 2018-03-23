@@ -17,7 +17,7 @@ public:
 	Tsl2561LuxValues ComputeLux(uint16_t rawAdc0Value, uint16_t rawAdc1Value) const;
 
 private:
-	typedef std::function<double(double, double)> calculator_t;
+	typedef std::function<double(double)> calculator_t;
 
 	struct LuxCalculatorThreshold
 	{
@@ -25,7 +25,7 @@ private:
 			calculator_t calculateVisibleSpectrumLux;
 	};
 
-	static constexpr size_t NUM_THRESHOLD_MAPPINGS = 4;
+	static constexpr size_t NUM_THRESHOLD_MAPPINGS = 7;
 
 	typedef std::array<LuxCalculatorThreshold, NUM_THRESHOLD_MAPPINGS> threshold_mapping_t;
 
