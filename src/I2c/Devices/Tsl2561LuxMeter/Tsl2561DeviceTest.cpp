@@ -61,8 +61,11 @@ TEST_F(Tsl2561DeviceTest, ReadId)
 TEST_F(Tsl2561DeviceTest, BasicAdc)
 {
 		auto device = m_tsl2561Factory->MakeBus1Device(SLAVE_ADDRESS);
-    //device->SetLowGain();
-    device->SetIntegrationTime(Tsl2561IntegrationTime::INTEGRATION_TIME_402_MS);
+//    device->SetHighGain();
+//    device->SetLowGain();
+//    device->SetIntegrationTime(Tsl2561IntegrationTime::INTEGRATION_TIME_402_MS);
+    device->SetIntegrationTime(Tsl2561IntegrationTime::INTEGRATION_TIME_101_MS);
+//    device->SetIntegrationTime(Tsl2561IntegrationTime::INTEGRATION_TIME_13_7_MS);
     std::this_thread::sleep_for(std::chrono::milliseconds{500});
     auto lux = device->ReadLux();
     std::cout << "IR spectrum: " << lux.irSpectrumLux << std::endl;

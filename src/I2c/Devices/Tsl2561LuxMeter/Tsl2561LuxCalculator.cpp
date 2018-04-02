@@ -48,12 +48,15 @@ Tsl2561LuxValues Tsl2561LuxCalculator::ComputeLux(
 
 		double adcQuotient = static_cast<double>(adc1Value) / adc0Value;
 
+    std::cout << "Adc 0 value: " << adc0Value << ". Adc 1 value: " << adc1Value << ". Adc quotient: " << adcQuotient << std::endl;
+
 		assert(m_thresholdMapping);
 
 		for (const auto& threshold : *m_thresholdMapping)
 		{
 				if (adcQuotient <= threshold.quotientThreshold)
 				{
+            std::cout << "Threshold quotient: " << threshold.quotientThreshold << std::endl;
 						values.visibleSpectrumLux =
 							threshold.calculateVisibleSpectrumLux(adcQuotient) * adc0Value;
 						return values;
