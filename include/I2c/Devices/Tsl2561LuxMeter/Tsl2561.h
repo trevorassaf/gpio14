@@ -13,7 +13,7 @@
 #include "Tsl2561IdRegister.h"
 #include "Tsl2561InterruptControlRegister.h"
 #include "Tsl2561TimingRegister.h"
-#include "Tsl2561LuxCalculator.h"
+#include "Tsl2561QuantizedLuxCalculator.h"
 #include "Tsl2561Core.h"
 #include "Tsl2561I2cAddress.h"
 
@@ -85,7 +85,7 @@ private:
 	void p_MaybeWriteAndSaveCommandRegister(const Tsl2561CommandRegister &commandRegister);
 
 private:
-	Tsl2561LuxCalculator m_luxCalculator;
+	Tsl2561QuantizedLuxCalculator m_luxCalculator;
 	Tsl2561CommandRegister m_commandRegister;
 	Tsl2561TimingRegister m_timingRegister;
 	Tsl2561InterruptControlRegister m_interruptControlRegister;

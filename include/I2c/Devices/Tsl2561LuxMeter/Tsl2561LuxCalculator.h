@@ -13,7 +13,7 @@ namespace I2c
 class Tsl2561LuxCalculator
 {
 public:
-	Tsl2561LuxCalculator(bool isChipScale=false);
+	Tsl2561LuxCalculator(bool isChipScale=true);
 	Tsl2561LuxValues ComputeLux(uint16_t rawAdc0Value, uint16_t rawAdc1Value) const;
 
 private:
