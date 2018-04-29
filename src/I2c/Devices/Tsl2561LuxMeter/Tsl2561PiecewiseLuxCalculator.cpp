@@ -1,6 +1,8 @@
 #include "I2c/Devices/Tsl2561LuxMeter/Tsl2561PiecewiseLuxCalculator.h"
 
-#include "Tsl2561LuxValues.h"
+#include <cstdlib>
+
+#include "I2c/Devices/Tsl2561LuxMeter/Tsl2561LuxValues.h"
 
 namespace
 {
@@ -64,6 +66,8 @@ constexpr size_t CHSCALE_TINT1 = 0x0FE7; // scale by 322/81 * 2^CHSCALE
 #define M8C 0x0000 // 0.000 * 2^LUX_SCALE
 } // namespace
 
+namespace I2c
+{
 Tsl2561LuxValues Tsl2561PiecewiseLuxCalculator::ComputeLux(
    uint32_t iGain,
    uint32_t tInt,
@@ -97,3 +101,4 @@ Tsl2561LuxValues Tsl2561PiecewiseLuxCalculator::ComputeLux(
 
 
 }
+} // namespace
