@@ -50,6 +50,34 @@ void Bme280::PowerOnReset()
 		}
 }
 
+Bme280HumidityControl Bme280::HumidityControl()
+{
+		uint8_t reg;
+		if (!m_core.ReadHumidityControlRegister(&reg))
+		{
+				throw I2cException{"Bme280: Failed to read humidity control register"};
+		}
+		return Bme280HumidityControl{reg};
+}
+
+void Bme280::SetHumidityControl(Bme280HumidityControl control)
+{
+		if (!m_core.WriteHumidityControlRegister(control.Register()))
+		{
+				throw I2cException{"Bme280: Failed to write humidity control reg"};
+		}
+}
+
+Bme280Status Bme280::Status()
+{
+		uint8_t reg;
+		if (!m_core.ReadStatusRegister(&reg))	
+		{
+				throw I2cException{"Bme280: Failed to read status register"};
+		}
+		return Bme280Status{reg};
+}
+
 void Bme280::p_DoClose(Bme280Core *other)
 {
 		if (other)
