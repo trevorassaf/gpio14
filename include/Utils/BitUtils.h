@@ -26,6 +26,12 @@ public:
 					mask,
 					shift);
 	}
+
+	static uint8_t GetBits(uint8_t reg, uint8_t mask, size_t shift)
+	{
+			reg &= mask;
+			return reg >> shift;
+	}
 };
 
 } // namespace Utils

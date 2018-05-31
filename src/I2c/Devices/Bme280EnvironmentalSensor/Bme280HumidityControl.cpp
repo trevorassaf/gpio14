@@ -9,40 +9,40 @@ namespace I2c
 
 bool Bme280HumidityControl::IsValid(uint8_t reg)
 {
-		return reg <= static_cast<uint8_t>(Bme280HumidityControl::oversampling_t::OVERSAMPLING_16X);
+		return reg <= static_cast<uint8_t>(Bme280Oversampling::OVERSAMPLING_16X);
 }
 
 Bme280HumidityControl Bme280HumidityControl::Skipped()
 {
-		return Bme280HumidityControl{Bme280HumidityControl::oversampling_t::SKIPPED};
+		return Bme280HumidityControl{Bme280Oversampling::SKIPPED};
 }
 
 Bme280HumidityControl Bme280HumidityControl::Oversampling1x()
 {
-		return Bme280HumidityControl{Bme280HumidityControl::oversampling_t::OVERSAMPLING_1X};
+		return Bme280HumidityControl{Bme280Oversampling::OVERSAMPLING_1X};
 }
 
 Bme280HumidityControl Bme280HumidityControl::Oversampling2x()
 {
-		return Bme280HumidityControl{Bme280HumidityControl::oversampling_t::OVERSAMPLING_2X};
+		return Bme280HumidityControl{Bme280Oversampling::OVERSAMPLING_2X};
 }
 
 Bme280HumidityControl Bme280HumidityControl::Oversampling4x()
 {
-		return Bme280HumidityControl{Bme280HumidityControl::oversampling_t::OVERSAMPLING_4X};
+		return Bme280HumidityControl{Bme280Oversampling::OVERSAMPLING_4X};
 }
 
 Bme280HumidityControl Bme280HumidityControl::Oversampling8x()
 {
-		return Bme280HumidityControl{Bme280HumidityControl::oversampling_t::OVERSAMPLING_8X};
+		return Bme280HumidityControl{Bme280Oversampling::OVERSAMPLING_8X};
 }
 
 Bme280HumidityControl Bme280HumidityControl::Oversampling16x()
 {
-		return Bme280HumidityControl{Bme280HumidityControl::oversampling_t::OVERSAMPLING_16X};
+		return Bme280HumidityControl{Bme280Oversampling::OVERSAMPLING_16X};
 }
 
-Bme280HumidityControl::Bme280HumidityControl(Bme280HumidityControl::oversampling_t oversampling)
+Bme280HumidityControl::Bme280HumidityControl(Bme280Oversampling oversampling)
 	: m_oversampling{oversampling} {}
 
 Bme280HumidityControl::Bme280HumidityControl(uint8_t reg)
@@ -54,7 +54,7 @@ Bme280HumidityControl::Bme280HumidityControl(uint8_t reg)
 		}
 }
 
-Bme280HumidityControl::oversampling_t Bme280HumidityControl::Oversampling() const
+Bme280Oversampling Bme280HumidityControl::Oversampling() const
 {
 		return m_oversampling;
 }

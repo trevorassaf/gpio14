@@ -4,6 +4,7 @@
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280Core.h"
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280Status.h"
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280HumidityControl.h"
+#include "I2c/Devices/Bme280EnvironmentalSensor/Bme280MeasurementControl.h"
 #include "I2c/I2cClient.h"
 
 namespace I2c
@@ -27,11 +28,12 @@ public:
 	void PowerOnReset();
 	Bme280HumidityControl	HumidityControl();
 	void SetHumidityControl(Bme280HumidityControl control);
+	Bme280Status Status();
+	Bme280MeasurementControl MeasurementControl();
+	void SetMeasurementControl(Bme280MeasurementControl control);
 
 	// Ctrl measurement
 
-
-	Bme280Status Status();
 
 private:
 	void p_DoClose(Bme280Core *core);

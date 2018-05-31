@@ -78,6 +78,24 @@ Bme280Status Bme280::Status()
 		return Bme280Status{reg};
 }
 
+Bme280MeasurementControl Bme280::MeasurementControl()
+{
+		uint8_t reg;
+		if (!m_core.ReadMeasurementControlRegister(&reg))
+		{
+				throw I2cException{"Bme280: Failed to read measurement control register"};
+		}
+		return Bme280MeasurementControl{reg};
+}
+
+void Bme280::SetMeasurementControl(Bme280MeasurementControl control)
+{
+		if (!m_core.WriteMeasurementControlRegister(control.GetBits()))
+		{
+				throw I2cException{"Bme280: Failed to write measurement control register"};
+		}
+}
+
 void Bme280::p_DoClose(Bme280Core *other)
 {
 		if (other)
