@@ -5,19 +5,13 @@
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280Status.h"
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280HumidityControl.h"
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280MeasurementControl.h"
+#include "I2c/Devices/Bme280EnvironmentalSensor/Bme280Config.h"
 #include "I2c/I2cClient.h"
 
 namespace I2c
 {
 class Bme280
 {
-public:
-	struct status_t
-	{
-			bool measurementInProcess;
-			bool imUpdate;
-	};
-
 public:
 	Bme280(I2cClient *i2c);
 	~Bme280();
@@ -31,9 +25,8 @@ public:
 	Bme280Status Status();
 	Bme280MeasurementControl MeasurementControl();
 	void SetMeasurementControl(Bme280MeasurementControl control);
-
-	// Ctrl measurement
-
+	Bme280Config GetConfig();
+	void SetConfig(Bme280Config config);
 
 private:
 	void p_DoClose(Bme280Core *core);
