@@ -32,7 +32,7 @@ Bme280 &Bme280::operator=(Bme280 &&other)
 		return *this;
 }
 
-uint8_t Bme280::ChipId()
+uint8_t Bme280::GetChipId()
 {
 		uint8_t chipId;
 		if (!m_core.ReadIdRegister(&chipId))
@@ -50,7 +50,7 @@ void Bme280::PowerOnReset()
 		}
 }
 
-Bme280HumidityControl Bme280::HumidityControl()
+Bme280HumidityControl Bme280::GetHumidityControl()
 {
 		uint8_t reg;
 		if (!m_core.ReadHumidityControlRegister(&reg))
@@ -68,7 +68,7 @@ void Bme280::SetHumidityControl(Bme280HumidityControl control)
 		}
 }
 
-Bme280Status Bme280::Status()
+Bme280Status Bme280::GetStatus()
 {
 		uint8_t reg;
 		if (!m_core.ReadStatusRegister(&reg))	
@@ -78,7 +78,7 @@ Bme280Status Bme280::Status()
 		return Bme280Status{reg};
 }
 
-Bme280MeasurementControl Bme280::MeasurementControl()
+Bme280MeasurementControl Bme280::GetMeasurementControl()
 {
 		uint8_t reg;
 		if (!m_core.ReadMeasurementControlRegister(&reg))
@@ -94,6 +94,34 @@ void Bme280::SetMeasurementControl(Bme280MeasurementControl control)
 		{
 				throw I2cException{"Bme280: Failed to write measurement control register"};
 		}
+}
+
+Bme280Config Bme280::GetConfig()
+{
+		uint8_t reg;
+		if (!m_core.ReadConfigRegister(&reg))
+		{
+				throw I2cException{"Bme280: Failed to read config register"};
+		}
+		return Bme280Config{reg};
+}
+
+void Bme280::SetConfig(Bme280Config config)
+{
+		if (!m_core.WriteConfigRegister(config.GetBits()))
+		{
+				throw I2cException{"Bme280: Failed to write config register"};
+		}
+}
+
+bme280_bulk_readout_t Bme280::ReadSensor()
+{
+		bme280_bulk_readout_t readout;
+		if (!m_core.ReadAllSensorData(&readout))
+		{
+				throw I2cException{"Bme280: Failed to read all sensor data"};
+		}
+		return readout;
 }
 
 void Bme280::p_DoClose(Bme280Core *other)

@@ -18,15 +18,16 @@ public:
 	Bme280(Bme280 &&other);
 	Bme280 &operator=(Bme280 &&other);
 
-	uint8_t ChipId();
+	uint8_t GetChipId();
 	void PowerOnReset();
-	Bme280HumidityControl	HumidityControl();
+	Bme280HumidityControl	GetHumidityControl();
 	void SetHumidityControl(Bme280HumidityControl control);
-	Bme280Status Status();
-	Bme280MeasurementControl MeasurementControl();
+	Bme280Status GetStatus();
+	Bme280MeasurementControl GetMeasurementControl();
 	void SetMeasurementControl(Bme280MeasurementControl control);
 	Bme280Config GetConfig();
 	void SetConfig(Bme280Config config);
+	bme280_bulk_readout_t ReadSensor();
 
 private:
 	void p_DoClose(Bme280Core *core);

@@ -215,7 +215,7 @@ bool Bme280Core::ReadHumidity(uint16_t *outData)
 		return true;
 }
 
-bool Bme280Core::ReadAllSensorData(sensor_bulk_readout_t *outData)
+bool Bme280Core::ReadAllSensorData(bme280_bulk_readout_t *outData)
 {
 		assert(outData);
 		if (!p_Read(PRES_MSB_REG, reinterpret_cast<uint8_t *>(outData), sizeof(*outData)))

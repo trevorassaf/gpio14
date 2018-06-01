@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "I2c/I2cClient.h"
+#include "I2c/Devices/Bme280EnvironmentalSensor/bme280_bulk_readout.h"
 
 namespace I2c
 {
@@ -56,13 +57,6 @@ public:
 			hum_calib_bottom_half_t bottom;
 	} __attribute__((packed));
 
-	struct sensor_bulk_readout_t
-	{
-			uint32_t pressure;
-			uint32_t temperature;
-			uint16_t humidity;
-	} __attribute__((packed));
-
 public:
 	Bme280Core(I2cClient *i2c);
 	~Bme280Core();
@@ -84,7 +78,7 @@ public:
 	bool ReadPressure(uint32_t *outData);
 	bool ReadTemperature(uint32_t *outData);
 	bool ReadHumidity(uint16_t *outData);
-	bool ReadAllSensorData(sensor_bulk_readout_t *outData);
+	bool ReadAllSensorData(bme280_bulk_readout_t *outData);
 
 private:
 	void p_DoMove(Bme280Core *other);
