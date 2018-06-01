@@ -135,7 +135,7 @@ bool Bme280Core::WriteConfigRegister(uint8_t reg)
 		return true;
 }
 
-bool Bme280Core::ReadTemperatureCalibrationData(Bme280Core::temp_calib_readout_t *outData)
+bool Bme280Core::ReadTemperatureCalibrationData(bme280_temp_calib_t *outData)
 {
 		assert(outData);
 		if (!p_Read(TEMP_CALIB_BASE_REG, reinterpret_cast<uint8_t *>(outData), sizeof(*outData)))
@@ -146,7 +146,7 @@ bool Bme280Core::ReadTemperatureCalibrationData(Bme280Core::temp_calib_readout_t
 		return true;
 }
 
-bool Bme280Core::ReadPressureCalibrationData(Bme280Core::pres_calib_readout_t *outData)
+bool Bme280Core::ReadPressureCalibrationData(bme280_pres_calib_t *outData)
 {
 		assert(outData);
 		if (!p_Read(PRES_CALIB_BASE_REG, reinterpret_cast<uint8_t *>(outData), sizeof(*outData)))
@@ -157,7 +157,7 @@ bool Bme280Core::ReadPressureCalibrationData(Bme280Core::pres_calib_readout_t *o
 		return true;
 }
 
-bool Bme280Core::ReadHumidityCalibrationData(Bme280Core::hum_calib_readout_t *outData)
+bool Bme280Core::ReadHumidityCalibrationData(bme280_hum_calib_t *outData)
 {
 		assert(outData);
 		if (!p_Read(

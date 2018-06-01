@@ -6,6 +6,8 @@
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280HumidityControl.h"
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280MeasurementControl.h"
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280Config.h"
+#include "I2c/Devices/Bme280EnvironmentalSensor/bme280_bulk_readout.h"
+#include "I2c/Devices/Bme280EnvironmentalSensor/bme280_calibration.h"
 #include "I2c/I2cClient.h"
 
 namespace I2c
@@ -28,6 +30,9 @@ public:
 	Bme280Config GetConfig();
 	void SetConfig(Bme280Config config);
 	bme280_bulk_readout_t ReadSensor();
+	bme280_temp_calib_t ReadTemperatureCalibration();
+	bme280_pres_calib_t ReadPressureCalibration();
+	bme280_hum_calib_t ReadHumidityCalibration();
 
 private:
 	void p_DoClose(Bme280Core *core);

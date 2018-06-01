@@ -124,6 +124,36 @@ bme280_bulk_readout_t Bme280::ReadSensor()
 		return readout;
 }
 
+bme280_temp_calib_t Bme280::ReadTemperatureCalibration()
+{
+		bme280_temp_calib_t data;
+		if (!m_core.ReadTemperatureCalibrationData(&data))
+		{
+				throw I2cException{"Bme280: Failed to read temperature calibration data"};
+		}
+		return data;
+}
+
+bme280_pres_calib_t Bme280::ReadPressureCalibration()
+{
+		bme280_pres_calib_t data;
+		if (!m_core.ReadPressureCalibrationData(&data))
+		{
+				throw I2cException{"Bme280: Failed to read preserature calibration data"};
+		}
+		return data;
+}
+
+bme280_hum_calib_t Bme280::ReadHumidityCalibration()
+{
+		bme280_hum_calib_t data;
+		if (!m_core.ReadHumidityCalibrationData(&data))
+		{
+				throw I2cException{"Bme280: Failed to read humerature calibration data"};
+		}
+		return data;
+}
+
 void Bme280::p_DoClose(Bme280Core *other)
 {
 		if (other)

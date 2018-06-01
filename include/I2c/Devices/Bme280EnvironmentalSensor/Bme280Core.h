@@ -4,59 +4,12 @@
 
 #include "I2c/I2cClient.h"
 #include "I2c/Devices/Bme280EnvironmentalSensor/bme280_bulk_readout.h"
+#include "I2c/Devices/Bme280EnvironmentalSensor/bme280_calibration.h"
 
 namespace I2c
 {
 class Bme280Core
 {
-public:
-	struct data_readout_t
-	{
-			uint8_t presMsb;
-			uint8_t presLsb;
-			uint8_t presXlsb;
-
-			uint8_t tempMsb;
-			uint8_t tempLsb;
-			uint8_t tempXlsb;
-
-			uint8_t humMsb;
-			uint8_t humLsb;
-	} __attribute__((packed));
-
-	struct temp_calib_readout_t
-	{
-			uint16_t dig1;
-			int16_t  dig2;
-			int16_t  dig3;
-	} __attribute__((packed));
-
-	struct pres_calib_readout_t
-	{
-			uint16_t dig1;
-			int16_t  dig[8];
-	} __attribute__((packed));
-
-	struct hum_calib_top_half_t
-	{
-			uint8_t dig1;
-	} __attribute__((packed));
-
-	struct hum_calib_bottom_half_t
-	{
-			int16_t dig2;
-			uint8_t dig3;
-			int16_t dig4;
-			int16_t dig5;
-			int8_t  dig6;
-	} __attribute__((packed));
-
-	struct hum_calib_readout_t
-	{
-			hum_calib_top_half_t top;
-			hum_calib_bottom_half_t bottom;
-	} __attribute__((packed));
-
 public:
 	Bme280Core(I2cClient *i2c);
 	~Bme280Core();
@@ -71,9 +24,9 @@ public:
 	bool WriteMeasurementControlRegister(uint8_t reg);
 	bool ReadConfigRegister(uint8_t *outReg);
 	bool WriteConfigRegister(uint8_t reg);
-	bool ReadTemperatureCalibrationData(temp_calib_readout_t *outData);
-	bool ReadPressureCalibrationData(pres_calib_readout_t *outData);
-	bool ReadHumidityCalibrationData(hum_calib_readout_t *outData);
+	bool ReadTemperatureCalibrationData(bme280_temp_calib_t *outData);
+	bool ReadPressureCalibrationData(bme280_pres_calib_t *outData);
+	bool ReadHumidityCalibrationData(bme280_hum_calib_t *outData);
 
 	bool ReadPressure(uint32_t *outData);
 	bool ReadTemperature(uint32_t *outData);
