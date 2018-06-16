@@ -19,7 +19,6 @@ public:
 	~Bme280();
 	Bme280(Bme280 &&other);
 	Bme280 &operator=(Bme280 &&other);
-
 	uint8_t GetChipId();
 	void PowerOnReset();
 	Bme280HumidityControl	GetHumidityControl();

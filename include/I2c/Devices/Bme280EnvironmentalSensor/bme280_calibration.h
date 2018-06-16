@@ -12,7 +12,14 @@ struct bme280_temp_calib_t
 struct bme280_pres_calib_t
 {
 		uint16_t dig1;
-		int16_t  dig[8];
+		int16_t  dig2;
+		int16_t  dig3;
+		int16_t  dig4;
+		int16_t  dig5;
+		int16_t  dig6;
+		int16_t  dig7;
+		int16_t  dig8;
+		int16_t  dig9;
 } __attribute__((packed));
 
 struct bme280_hum_calib_top_half_t
