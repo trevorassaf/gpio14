@@ -1,7 +1,9 @@
 #pragma once
 
+#include <bitset>
 #include <cstdint>
 #include <cstdlib>
+#include <string>
 
 namespace Utils
 {
@@ -32,6 +34,40 @@ public:
 			reg &= mask;
 			return reg >> shift;
 	}
+
+  static uint32_t Rotate(uint32_t bytes)
+  {
+      uint32_t outBytes = 0;
+
+      for (size_t i = 0; i < sizeof(bytes); ++i)
+      {
+          outBytes <<= 8;
+          outBytes |= bytes & 0xFF;
+          bytes >>= 8;
+      }
+
+      return outBytes;
+  }
+
+  static uint32_t RotateBits(uint32_t bytes, size_t numBitsToRotate)
+  {
+      uint32_t outBytes = 0;
+
+      for (size_t i = 0; i < numBitsToRotate; ++i)
+      {
+          outBytes |= bytes % 2;
+          outBytes <<= 1;
+          bytes >>= 1;
+      }
+
+      return outBytes;
+  }
+
+  static std::string ToBitString(uint32_t bytes)
+  {
+      std::bitset<32> bits{bytes};
+      return bits.to_string();
+  }
 };
 
 } // namespace Utils

@@ -1,6 +1,7 @@
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280Compensator.h"
 
 #include <algorithm>
+#include <cmath>
 
 namespace I2c
 {
@@ -9,22 +10,35 @@ Bme280Compensator::Bme280Compensator(
 		bme280_temp_calib_t temperature,
 		bme280_pres_calib_t pressure,
 		bme280_hum_calib_t humidity)
-	: m_temperature{temperature},
-		m_pressure{pressure},
-		m_humidity{humidity},
+	: m_temperature(temperature),
+		m_pressure(pressure),
+		m_humidity(humidity),
 		m_tFine{0}
 {}
 
+
+/**
 int32_t Bme280Compensator::CompensateTemperature(int32_t adcT)
 {
 		int32_t var1 = ((((adcT >> 3) - (static_cast<int32_t>(m_temperature.dig1) << 1)))
 				* static_cast<int32_t>(m_temperature.dig2)) >> 11;
-		int32_t var2 = (((((adcT >> 4) - static_cast<int32_t>(m_temperature.dig1))
+		int32_t var2 = (((((adcT >> 4) - static_cast<int32_t>(m_temperatureu.dig1))
 						* ((adcT >> 4) - static_cast<int32_t>(m_temperature.dig1))) >> 12)
 					  * static_cast<int32_t>(m_temperature.dig3)) >> 14;
 		m_tFine = var1 + var2;
 		int32_t temp = (m_tFine * 5 + 128) >> 8;
 		return temp;
+}
+*/
+
+double Bme280Compensator::CompensateTemperature(int32_t adcT)
+{
+    double var1, var2, T;
+
+    var1 = (static_cast<double>(adcT)/16384.0 - static_cast<double>(m_temperature.dig1)/1024.0) * static_cast<double>(m_temperature.dig2);
+    var2 = std::pow(static_cast<double>(adcT)/131072.0 - static_cast<double>(m_pressure.dig1)/8192.0, 2) * static_cast<double>(m_temperature.dig3);
+    m_tFine = static_cast<int32_t>(var1 + var2);
+    return (var1 + var2) / 5120.0;
 }
 
 uint32_t Bme280Compensator::CompensatePressure(int32_t adcP)

@@ -29,11 +29,13 @@ public:
 	Bme280Config GetConfig();
 	void SetConfig(Bme280Config config);
 	bme280_bulk_readout_t ReadSensor();
+	uint32_t ReadTemperature();
 	bme280_temp_calib_t ReadTemperatureCalibration();
 	bme280_pres_calib_t ReadPressureCalibration();
 	bme280_hum_calib_t ReadHumidityCalibration();
 
 private:
+  uint32_t p_Form20BitSensorReadout(uint32_t readout);
 	void p_DoClose(Bme280Core *core);
 	void p_DoMove(Bme280 *other);
 

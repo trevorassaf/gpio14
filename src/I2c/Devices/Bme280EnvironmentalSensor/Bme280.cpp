@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "I2c/I2cException.h"
+#include "Utils/BitUtils.h"
 
 namespace
 {
@@ -124,6 +125,17 @@ bme280_bulk_readout_t Bme280::ReadSensor()
 		return readout;
 }
 
+uint32_t Bme280::ReadTemperature()
+{
+    uint32_t readout;
+    if (!m_core.ReadTemperature(&readout))
+    {
+        throw I2cException{"Bme280: Failed to read temperature sensor data"};
+    }
+
+    return p_Form20BitSensorReadout(readout);
+}
+
 bme280_temp_calib_t Bme280::ReadTemperatureCalibration()
 {
 		bme280_temp_calib_t data;
@@ -152,6 +164,12 @@ bme280_hum_calib_t Bme280::ReadHumidityCalibration()
 				throw I2cException{"Bme280: Failed to read humerature calibration data"};
 		}
 		return data;
+}
+
+uint32_t Bme280::p_Form20BitSensorReadout(uint32_t readout)
+{
+    uint32_t rotatedReadout = Utils::BitUtils::Rotate(readout);
+    return rotatedReadout >> 12;
 }
 
 void Bme280::p_DoClose(Bme280Core *other)

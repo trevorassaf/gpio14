@@ -13,7 +13,7 @@ public:
 			bme280_temp_calib_t temperature,
 			bme280_pres_calib_t pressure,
 			bme280_hum_calib_t humidity);
-	int32_t  CompensateTemperature(int32_t adcT);
+	double  CompensateTemperature(int32_t adcT);
 	uint32_t CompensatePressure(int32_t adcP);
 	uint32_t CompensateHumidity(int32_t adcH);
 

@@ -1,5 +1,7 @@
 #include "I2c/Devices/Bme280EnvironmentalSensor/Bme280Core.h"
 
+#include <bitset>
+#include <cassert>
 #include <iostream>
 
 #include "I2c/I2cException.h"
@@ -26,6 +28,8 @@ constexpr uint8_t HUM_MSB_REG = 0xFD;
 constexpr uint8_t HUM_LSB_REG = 0xFE;
 
 constexpr uint8_t HUM_CALIB_BASE_2_REG = 0xE1;
+
+constexpr size_t TEMP_READOUT_SIZE = 3;
 } // namespace
 
 namespace I2c
@@ -196,11 +200,13 @@ bool Bme280Core::ReadPressure(uint32_t *outData)
 bool Bme280Core::ReadTemperature(uint32_t *outData)
 {
 		assert(outData);
-		if (!p_Read(TEMP_MSB_REG, reinterpret_cast<uint8_t *>(outData), sizeof(*outData)))
+    *outData = 0;
+		if (!p_Read(TEMP_MSB_REG, reinterpret_cast<uint8_t *>(outData), 4))
 		{
 				std::cerr << "Bme280Core: Failed to read temperature data" << std::endl;
 				return false;
 		}
+
 		return true;
 }
 
