@@ -15,6 +15,8 @@ public:
 
   // Releases the pin from its registered function.
   ~Pin();
+  Pin(Pin &&other);
+  Pin &operator=(Pin &&other);
 
   // Returns the index of this pin.
   uint8_t GetIndex() const;
@@ -28,8 +30,9 @@ public:
   // Returns true iff pin is asserted.
   bool Read() const;
 
-  Pin(Pin&& other) = default;
-  Pin& operator=(Pin&& other) = default;
+private:
+  void CloseResources();
+  void StealResources(Pin *other);
 
 private:
   Pin(const Pin& other) = delete;

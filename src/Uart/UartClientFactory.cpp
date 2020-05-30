@@ -31,7 +31,9 @@ bool UartClientFactory::Make(const std::string &device_name, UartClient *out_cli
   std::unique_ptr<Fd> fd;
   try
   {
-    fd = std::make_unique<Fd>(fd_ops_, device_name.c_str());
+    fd = std::make_unique<Fd>(
+        fd_ops_,
+        device_name.c_str());
   }
   catch (const FdException &e)
   {

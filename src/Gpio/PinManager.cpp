@@ -14,6 +14,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "glog/logging.h"
+
 using Gpio::MemoryConfig;
 using Memory::MmioConfig;
 using Memory::MemorySegment;

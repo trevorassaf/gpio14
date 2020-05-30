@@ -6,8 +6,10 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <utility>
 #include <stdexcept>
+#include <utility>
+
+#include <glog/logging.h>
 
 #include "Utils/SysUtils.h"
 #include "Utils/ScopeGuard.h"
@@ -54,7 +56,7 @@ MmioBcm2835MemorySegment::~MmioBcm2835MemorySegment()
 
   if (result == -1)
 	{
-    throw std::runtime_error(SysUtils::GetErrorMessage());
+    LOG(ERROR) << "Failed to unmap bcm2835 memory: " << SysUtils::GetErrorMessage();
   }
 }
 
