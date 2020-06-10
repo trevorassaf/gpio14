@@ -7,6 +7,8 @@
 
 namespace Gpio {
 
+Pin::Pin() : m_pinManager{nullptr} {}
+
 Pin::Pin(
 		PinManager *pinManager,
     uint8_t index)
@@ -51,19 +53,17 @@ bool Pin::Read() const {
 
 void Pin::CloseResources()
 {
-  LOG(ERROR) << "Pin::CloseResources() -- call: index=" << (int)m_index;
   if (m_pinManager) {
-    LOG(ERROR) << "Pin::CloseResources() -- m_pinManager->ReleasePin()";
     m_pinManager->ReleasePin(m_index);
     m_pinManager = nullptr;
   }
-  LOG(ERROR) << "Pin::CloseResources() -- end";
 }
 
 void Pin::StealResources(Pin *other)
 {
   assert(other);
   m_index = other->m_index;
+  other->m_index = 0;
   m_pinManager = other->m_pinManager;
   other->m_pinManager = nullptr;
 }

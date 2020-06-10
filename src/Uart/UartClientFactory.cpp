@@ -1,5 +1,8 @@
 #include "Uart/UartClientFactory.h"
 
+#include <fcntl.h>
+#include <termios.h>
+
 #include <cassert>
 #include <memory>
 #include <string>
@@ -38,6 +41,28 @@ bool UartClientFactory::Make(const std::string &device_name, UartClient *out_cli
   catch (const FdException &e)
   {
     LOG(ERROR) << "Failed to open UART device: " << e.what();
+    return false;
+  }
+
+  if (tcflush(fd->Get(), TCIOFLUSH) < 0)
+  {
+    LOG(ERROR) << "Failed to tcflush. Non-fatal error: " << strerror(errno);
+  }
+
+  struct termios uart_options;
+  if (tcgetattr(fd->Get(), &uart_options) < 0)
+  {
+    LOG(ERROR) << "Failed to call tcgetattr(): " << strerror(errno);
+    return false;
+  }
+
+  speed_t baud_rate = B1000000;
+  cfsetospeed(&uart_options, baud_rate);
+  cfsetispeed(&uart_options, baud_rate);
+
+  if (tcsetattr(fd->Get(), TCSANOW, &uart_options) < 0)
+  {
+    LOG(ERROR) << "Failed to call tcsetattr(): " << strerror(errno);
     return false;
   }
 

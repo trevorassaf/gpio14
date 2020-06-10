@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 namespace Gpio {
 
@@ -14,5 +15,7 @@ enum class PinType : uint8_t {
 	ALT_4		= 0b011,
 	ALT_5		= 0b010
 };
+
+const char *ToString(PinType type);
 
 } // namespace Gpio

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 include_directories(include)
 
-add_library(gpio14
+add_library(gpio14 STATIC
   src/I2c/BasicI2cIoctlOps.cpp
   src/I2c/I2cClient.cpp
   src/I2c/I2cClientFactory.cpp
@@ -12,6 +12,7 @@ add_library(gpio14
   src/Gpio/Pin.cpp
   src/Gpio/PinFactory.cpp
   src/Gpio/PinManager.cpp
+  src/Gpio/PinType.cpp
   src/Gpio/RpiPinManager.cpp
   src/I2c/Devices/Ads1115AnalogToDigitalConverter/Ads1115.cpp
   src/Memory/MmioBcm2835MemorySegment.cpp
@@ -25,9 +26,3 @@ add_library(gpio14
 
 target_link_libraries(gpio14 glog::glog)
 
-add_executable(test_dynamixel_rotate
-  dynamixel_test.cpp)
-
-target_link_libraries(test_dynamixel_rotate gflags::gflags)
-target_link_libraries(test_dynamixel_rotate glog::glog)
-target_link_libraries(test_dynamixel_rotate gpio14)

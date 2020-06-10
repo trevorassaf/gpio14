@@ -9,6 +9,7 @@ namespace Gpio {
 
 class Pin {
 public:
+  Pin();
   Pin(
 			PinManager *pinManager,
       uint8_t index);
