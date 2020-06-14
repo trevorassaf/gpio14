@@ -60,6 +60,17 @@ bool UartClientFactory::Make(const std::string &device_name, UartClient *out_cli
   cfsetospeed(&uart_options, baud_rate);
   cfsetispeed(&uart_options, baud_rate);
 
+  // 8 bit data
+  // one stop bit
+  // none parity
+  // set raw uart mode
+
+  uart_options.c_cflag &= ~PARENB;
+  uart_options.c_cflag &= ~CSTOPB;
+  uart_options.c_cflag |= CLOCAL;
+  uart_options.c_cflag |= CREAD;
+  cfmakeraw(&uart_options);
+
   if (tcsetattr(fd->Get(), TCSANOW, &uart_options) < 0)
   {
     LOG(ERROR) << "Failed to call tcsetattr(): " << strerror(errno);

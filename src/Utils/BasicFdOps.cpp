@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <iostream>
+#include "glog/logging.h"
 
 namespace Utils
 {
@@ -35,6 +35,10 @@ FdOpResult BasicFdOps::Write(int fd, const uint8_t *buffer, size_t length)
 FdOpResult BasicFdOps::Read(int fd, uint8_t *buffer, size_t length)
 {
 		int result = ::read(fd, buffer, length);
+
+    LOG(ERROR) << "bozkurtus -- BasicFdOps::Read() -- result="
+               << result << ", expected length=" << length;
+
 		return (result == length)
 			? FdOpResult::Ok()
 			: FdOpResult::Bad(errno);

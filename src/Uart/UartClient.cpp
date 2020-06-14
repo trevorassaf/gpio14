@@ -1,5 +1,7 @@
 #include "Uart/UartClient.h"
 
+#include <errno.h>
+
 #include <cassert>
 
 #include <glog/logging.h>
@@ -75,7 +77,7 @@ bool UartClient::Read(uint8_t *buffer, size_t size)
   if (!result.IsOk())
   {
     LOG(ERROR) << "UART read operation failed. Buffer size: "
-               << size;
+               << size << ". Error: " << strerror(result.GetErrorCode());
     return false;
   }
 
